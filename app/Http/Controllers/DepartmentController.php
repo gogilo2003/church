@@ -23,7 +23,6 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -31,7 +30,11 @@ class DepartmentController extends Controller
      */
     public function store(StoreDepartmentRequest $request)
     {
-        //
+        $department = new Department();
+        $department->title = $request->title;
+        $department->save();
+
+        return redirect()->back()->with('success', 'Department stored');
     }
 
     /**
@@ -53,9 +56,13 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDepartmentRequest $request, Department $department)
+    public function update(UpdateDepartmentRequest $request)
     {
-        //
+        $department = Department::find($request->id);
+        $department->title = $request->title;
+        $department->save();
+
+        return redirect()->back()->with('success', 'Department updated');
     }
 
     /**

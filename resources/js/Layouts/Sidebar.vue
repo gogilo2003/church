@@ -13,8 +13,6 @@ defineProps({
 })
 
 onMounted(() => {
-    console.log(usePage());
-
     links.value = links.value.map(item => {
         item.show = usePage()?.props?.auth?.user?.is_admin || item.permission === usePage().props.auth.user.is_admin
         return item
