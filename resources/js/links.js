@@ -29,13 +29,13 @@ export const links = ref([
         show: true,
         permission: 0,
     },
-    {
-        name: "setup-departments",
-        caption: "Departments",
-        icon: "location",
-        show: true,
-        permission: 0,
-    },
+    // {
+    //     name: "setup-departments",
+    //     caption: "Departments",
+    //     icon: "location",
+    //     show: true,
+    //     permission: 0,
+    // },
     {
         name: "setup-contributions",
         caption: "Contributions",

@@ -7,6 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\ContributionTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,10 +54,10 @@ Route::middleware([
             Route::prefix('contributions')
                 ->name('-contributions')
                 ->group(function () {
-                    Route::get('', [DepartmentController::class, 'index']);
-                    Route::post('', [DepartmentController::class, 'store'])->name('-store');
-                    Route::patch('', [DepartmentController::class, 'update'])->name('-update');
-                    Route::delete('', [DepartmentController::class, 'destroy'])->name('-destroy');
+                    Route::get('', [ContributionTypeController::class, 'index']);
+                    Route::post('', [ContributionTypeController::class, 'store'])->name('-store');
+                    Route::patch('', [ContributionTypeController::class, 'update'])->name('-update');
+                    Route::delete('', [ContributionTypeController::class, 'destroy'])->name('-destroy');
                 });
         });
 
