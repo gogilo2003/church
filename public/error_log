@@ -1,0 +1,1 @@
+[22-Oct-2023 06:02:28 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 7.4.33. in /home/micartech/church.micartech.co.ke/vendor/composer/platform_check.php on line 24
