@@ -27,6 +27,12 @@ class ContributionTypeController extends Controller
     {
         $type = new ContributionType();
         $type->description = $request->description;
+        $type->recurrent = $request->recurrent;
+        $type->recurrence_value = $request->recurrence_value;
+        $type->recurrence_unit = $request->recurrence_unit;
+        $type->back_date = $request->back_date;
+        $type->deadline = $request->deadline;
+        $type->amount = $request->amount;
         $type->save();
 
         return redirect()->back()->with('success', 'Contribution type has been created');
@@ -53,7 +59,16 @@ class ContributionTypeController extends Controller
      */
     public function update(UpdateContributionTypeRequest $request, ContributionType $contribution)
     {
-        //
+        $type->description = $request->description;
+        $type->recurrent = $request->recurrent;
+        $type->recurrence_value = $request->recurrence_value;
+        $type->recurrence_unit = $request->recurrence_unit;
+        $type->back_date = $request->back_date;
+        $type->deadline = $request->deadline;
+        $type->amount = $request->amount;
+        $type->save();
+
+        return redirect()->back()->with('success', 'Contribution type has been created');
     }
 
     /**

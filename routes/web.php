@@ -56,7 +56,7 @@ Route::middleware([
                 ->group(function () {
                     Route::get('', [ContributionTypeController::class, 'index']);
                     Route::post('', [ContributionTypeController::class, 'store'])->name('-store');
-                    Route::patch('', [ContributionTypeController::class, 'update'])->name('-update');
+                    Route::patch('{contribution_type}', [ContributionTypeController::class, 'update'])->name('-update');
                     Route::delete('', [ContributionTypeController::class, 'destroy'])->name('-destroy');
                 });
         });
