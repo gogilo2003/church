@@ -87,7 +87,7 @@ const registerContribution = (contribution: Object) => {
                             </div>
                         </div>
                         <div class="flex flex-wrap items-center justify-center gap-2">
-                            <SecondaryButton v-if="!contribution.id" @click="registerContribution(contribution)">Register
+                            <SecondaryButton v-if="!contribution.id" @click="registerContribution(contribution)">Enroll
                             </SecondaryButton>
                             <SecondaryButton v-if="contribution.id">Pay</SecondaryButton>
                         </div>
