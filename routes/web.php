@@ -54,12 +54,14 @@ Route::middleware([
         });
 
     Route::prefix('contributions')
-        ->name('-contributions')
+        ->name('contributions')
         ->group(function () {
             Route::get('', [ContributionTypeController::class, 'index']);
+            Route::get('{contribution_type}', [ContributionTypeController::class, 'show'])->name('-show');
             Route::post('', [ContributionTypeController::class, 'store'])->name('-store');
             Route::patch('{contribution_type}', [ContributionTypeController::class, 'update'])->name('-update');
             Route::delete('', [ContributionTypeController::class, 'destroy'])->name('-destroy');
+            Route::post('register', [ContributionController::class, 'store'])->name('-register');
         });
 
     Route::prefix('users')

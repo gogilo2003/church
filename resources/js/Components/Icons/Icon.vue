@@ -18,6 +18,7 @@ import ChevronCircleForward from './ChevronCircleForward.vue';
 import Delete from './Delete.vue';
 import Image from './Image.vue';
 import IdCard from './IdCard.vue';
+import Show from './Show.vue';
 
 defineProps(['type'])
 
@@ -45,4 +46,5 @@ defineOptions({
     <Delete v-bind="$attrs" v-if="type == 'delete'" />
     <Image v-bind="$attrs" v-if="type == 'image'" />
     <IdCard v-bind="$attrs" v-if="type == 'id-card'" />
+    <Show v-bind="$attrs" v-if="type == 'show'" />
 </template>

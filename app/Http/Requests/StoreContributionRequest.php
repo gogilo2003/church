@@ -11,7 +11,7 @@ class StoreContributionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreContributionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "contribution_type" => "required|integer|exists:contribution_types,id",
+            "member" => "required|integer|exists:members,id",
+            "amount" => "nullable|numeric",
         ];
     }
 }

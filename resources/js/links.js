@@ -37,7 +37,7 @@ export const links = ref([
     //     permission: 0,
     // },
     {
-        name: "setup-contributions",
+        name: "contributions",
         caption: "Contributions",
         icon: "money",
         show: true,

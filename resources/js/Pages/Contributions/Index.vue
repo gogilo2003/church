@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '../../Layouts/AppLayout.vue';
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
+import { useForm, Link } from '@inertiajs/vue3';
 import PrimaryButton from '../../Components/PrimaryButton.vue';
 import Icon from '../../Components/Icons/Icon.vue';
 import TextInput from '../../Components/FlowBite/TextInput.vue';
@@ -9,6 +9,8 @@ import SecondaryButton from '../../Components/SecondaryButton.vue';
 import Modal from '../../Components/Modal.vue';
 import Container from '../../Components/Custom/Container.vue';
 import Swal from 'sweetalert2';
+import InputError from '../../Components/InputError.vue';
+import { formatCurrency, formatDate } from '../../helpers'
 
 const props = defineProps({
     contribution_types: Object,
@@ -42,6 +44,7 @@ const newContribution = () => {
 }
 
 const editContribution = (contributionType) => {
+
     dialogTitle.value = "Add Contribution"
     showDialog.value = true
     edit.value = true
@@ -78,7 +81,7 @@ const cancel = () => {
 
 const submit = () => {
     if (edit.value) {
-        form.patch(route('setup-contributions-update', form.id), {
+        form.patch(route('contributions-update', form.id), {
             onSuccess: () => {
                 Swal.fire({
                     icon: 'success',
@@ -94,7 +97,7 @@ const submit = () => {
             only: ['errors', 'contribution_types', 'notification']
         })
     } else {
-        form.post(route('setup-contributions-store'), {
+        form.post(route('contributions-store'), {
             onSuccess: () => {
                 Swal.fire({
                     icon: 'success',
@@ -112,16 +115,6 @@ const submit = () => {
     }
 }
 
-const formatDate = (date: string) => {
-    let dt = new Date(date);
-
-    return dt.toLocaleDateString('en-KE', {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    })
-}
 </script>
 <template>
     <Modal :show="showDialog">
@@ -168,24 +161,21 @@ const formatDate = (date: string) => {
                             <option value="month">Monthly</option>
                             <option value="year">Yearly</option>
                         </select>
+                        <InputError :message="form.errors.recurrence_unit" />
                     </div>
                     <div class="mb-6">
                         <TextInput type="number" id="inputRecurrenceValue" label="Recurrence Value"
-                            :error="form.errors.description" v-model="form.recurrence_value" />
+                            :error="form.errors.recurrence_value" v-model="form.recurrence_value" />
                     </div>
 
                 </div>
                 <div class="relative grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-                    <div class="relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                            </svg>
-                        </div>
-                        <TextInput type="date" label="Deadline" has-icon placeholder="Select date" v-model="form.deadline"
-                            :error="form.errors.deadline" />
+                    <div class="relative z-0 group">
+                        <label for="deadline"
+                            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Deadline</label>
+                        <VueDatePicker id="deadline" v-model="form.deadline"
+                            input-class-name="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                        <InputError :message="form.errors.deadline" />
                     </div>
                     <div>
                         <TextInput label="Amount" :error="form.errors.amount" v-model="form.amount" />
@@ -219,13 +209,20 @@ const formatDate = (date: string) => {
                                     <span class="first:pl-0" v-if="contribution.recurrent"
                                         v-text="`every ${contribution.recurrence_value} ${contribution.recurrence_unit}${contribution.recurrence_value > 1 ? 's' : ''}`"></span>
                                     <span class="first:pl-0" v-if="contribution.amount"
-                                        v-text="`Amount: ${new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(contribution.amount)}`"></span>
+                                        v-text="`Amount: ${formatCurrency(contribution.amount)}`"></span>
                                     <span class="first:pl-0" v-if="contribution.deadline"
                                         v-text="`Closes at: ${formatDate(contribution.deadline)}`"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="flex gap-1 self-start lg:self-end">
+                            <Link
+                                class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-full font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
+                                :href="route('contributions-show', contribution.id)">
+                            <div class="flex gap-1">
+                                <Icon type="show" class="h-4 w-4" /><span class="hidden lg:inline-flex">Details</span>
+                            </div>
+                            </Link>
                             <SecondaryButton @click="editContribution(contribution)">
                                 <div class="flex gap-1">
                                     <Icon type="edit" class="h-4 w-4" /><span class="hidden lg:inline-flex">Edit</span>

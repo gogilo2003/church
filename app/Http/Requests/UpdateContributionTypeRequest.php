@@ -25,8 +25,8 @@ class UpdateContributionTypeRequest extends FormRequest
             "id" => "required|integer|exists:contribution_types",
             "description" => "required|string",
             "recurrent" => "nullable|boolean",
-            "recurrence_unit" => "nullable|string|in:day,week,month,year",
-            "recurrence_value" => "nullable|integer",
+            "recurrence_unit" => "required_if:recurrent,true|string|in:day,week,month,year",
+            "recurrence_value" => "required_if:recurrent,true|integer",
             "deadline" => "nullable|date",
             "amount" => "nullable|numeric",
         ];

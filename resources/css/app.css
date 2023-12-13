@@ -1,3 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.dp__input {
+    --dp-border-radius: 0;
+    --dp-font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --tw-text-opacity: 1;
+    --tw-border-opacity: 1;
+    --dp-font-size: 0.875rem;
+    --dp-input-padding: 0.625rem;
+    --dp-text-color: rgb(17 24 39 / var(--tw-text-opacity));
+    --dp-background-color: transparent;
+
+    background-color: var(--dp-background-color);
+    border-radius: var(--dp-border-radius);
+    font-family: var(--dp-font-family);
+    border-top: 0px solid var(--dp-border-color) !important;
+    border-left: 0px solid var(--dp-border-color) !important;
+    border-right: 0px solid var(--dp-border-color) !important;
+    border-bottom: 2px solid var(--dp-border-color) !important;
+    border-color: rgb(209 213 219 / var(--tw-border-opacity)) !important;
+    outline: none;
+    transition: border-color .2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    width: 100%;
+    font-size: var(--dp-font-size);
+    line-height: calc(var(--dp-font-size)*1.5);
+    padding: var(--dp-input-padding);
+    color: var(--dp-text-color);
+    box-sizing: border-box;
+}
+
+.dp__input_icons {
+    display: inline-block;
+    width: var(--dp-font-size);
+    height: var(--dp-font-size);
+    stroke-width: 0;
+    font-size: var(--dp-font-size);
+    line-height: calc(var(--dp-font-size)*1.5);
+    padding: 6px 12px;
+    padding-top: 6px;
+    padding-right: 0px !important;
+    padding-bottom: 6px;
+    padding-left: 0px !important;
+    color: var(--dp-icon-color);
+    box-sizing: content-box;
+}
+
+.dp__input_icon_pad {
+    --dp-input-icon-padding: 22px;
+    padding-inline-start: var(--dp-input-icon-padding);
+}

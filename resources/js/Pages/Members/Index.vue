@@ -5,13 +5,14 @@ import Modal from '../../Components/Modal.vue'
 import { ref } from "vue";
 import PrimaryButton from '../../Components/PrimaryButton.vue'
 import Icon from '../../Components/Icons/Icon.vue';
-import Swal from 'sweetalert2'
-import { useForm, router, usePage } from '@inertiajs/vue3';
+import { useForm, router } from '@inertiajs/vue3';
 import TextInput from '../../Components/FlowBite/TextInput.vue';
 import SelectInput from '../../Components/FlowBite/SelectInput.vue';
 import SecondaryButton from '../../Components/SecondaryButton.vue';
 import Photo from './Photo.vue';
 import Show from './Show.vue';
+import Swal from 'sweetalert2';
+
 
 const props = defineProps({
     members: Array,
@@ -238,29 +239,30 @@ const deleteMember = member => {
         </div>
         <div class="p-4">
             <form @submit.prevent="submit">
-                <div class="grid gap-2 grid-cols-1 md:grid-cols-2">
+                <div class="grid gap-2 grid-cols-1 md:grid-cols-2 mb-6">
                     <TextInput id="inputFirstName" label="First Name" :error="form.errors.first_name"
                         v-model="form.first_name" />
                     <TextInput id="inputLastName" label="Last Name" :error="form.errors.last_name"
                         v-model="form.last_name" />
                 </div>
-                <div class="grid gap-2 grid-cols-1 md:grid-cols-2">
+                <div class="grid gap-2 grid-cols-1 md:grid-cols-2 mb-6">
                     <TextInput id="inputPhone" label="Phone" :error="form.errors.phone" v-model="form.phone" />
                     <TextInput id="inputEmail" label="Email" :error="form.errors.email" v-model="form.email" />
                 </div>
-                <div class="grid gap-2 grid-cols-1 md:grid-cols-2">
+                <div class="grid gap-2 grid-cols-1 md:grid-cols-2 mb-6">
                     <TextInput id="inputDateOfBirth" label="Date Of Birth" :error="form.errors.date_of_birth"
                         v-model="form.date_of_birth" />
                     <SelectInput id="inputGender" label="Gender" :error="form.errors.gender" v-model="form.gender"
                         :options="['Male', 'Female']" />
                 </div>
-                <div class="grid gap-2 grid-cols-1 md:grid-cols-3">
+                <div class="grid gap-2 grid-cols-1 md:grid-cols-3 mb-6">
                     <TextInput id="inputBoxNo" label="Box No" :error="form.errors.box_no" v-model="form.box_no" />
                     <TextInput id="inputPostCode" label="Post Code" :error="form.errors.post_code"
                         v-model="form.post_code" />
                     <TextInput id="inputTown" label="Town" :error="form.errors.town" v-model="form.town" />
                 </div>
-                <TextInput id="inputAddress" label="Address" :error="form.errors.address" v-model="form.address" />
+                <TextInput class="mb-6" id="inputAddress" label="Address" :error="form.errors.address"
+                    v-model="form.address" />
                 <div class="flex justify-between">
                     <PrimaryButton :class="{ 'opacity-30': form.processing }" :disabled="form.processing" type="submit">Save
                     </PrimaryButton>

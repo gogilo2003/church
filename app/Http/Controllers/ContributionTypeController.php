@@ -8,6 +8,7 @@ use App\Models\ContributionType;
 use App\Http\Resources\ContributionTypeResource;
 use App\Http\Requests\StoreContributionTypeRequest;
 use App\Http\Requests\UpdateContributionTypeRequest;
+use Illuminate\Support\Carbon;
 
 class ContributionTypeController extends Controller
 {
@@ -31,8 +32,8 @@ class ContributionTypeController extends Controller
         $type->recurrence_value = $request->recurrence_value;
         $type->recurrence_unit = $request->recurrence_unit;
         $type->back_date = $request->back_date;
-        $type->deadline = $request->deadline;
-        $type->amount = $request->amount;
+        $type->deadline = $request->deadline ? Carbon::parse($request->deadline) : null;
+        $type->amount = $request->amount > 0 ? $request->amount : null;
         $type->save();
 
         return redirect()->back()->with('success', 'Contribution type has been created');
@@ -41,15 +42,16 @@ class ContributionTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ContributionType $contribution)
+    public function show(ContributionType $contribution_type)
     {
-        //
+        $contribution_type->load('contributions');
+        return Inertia::render('Contributions/Show', ['contribution_type' => ContributionTypeResource::make($contribution_type)]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ContributionType $contribution)
+    public function edit(ContributionType $contribution_type)
     {
         //
     }
@@ -64,8 +66,8 @@ class ContributionTypeController extends Controller
         $contribution_type->recurrence_value = $request->recurrence_value;
         $contribution_type->recurrence_unit = $request->recurrence_unit;
         $contribution_type->back_date = $request->back_date;
-        $contribution_type->deadline = $request->deadline;
-        $contribution_type->amount = $request->amount;
+        $contribution_type->deadline = $request->deadline ? Carbon::parse($request->deadline) : null;
+        $contribution_type->amount = $request->amount > 0 ? $request->amount : null;
         $contribution_type->save();
 
         return redirect()->back()->with('success', 'Contribution type has been updated');
@@ -74,7 +76,7 @@ class ContributionTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ContributionType $contribution)
+    public function destroy(ContributionType $contribution_type)
     {
         //
     }

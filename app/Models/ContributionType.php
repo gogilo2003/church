@@ -10,6 +10,8 @@ class ContributionType extends Model
 {
     use HasFactory;
 
+    protected $casts = ['deadline' => 'date'];
+
     /**
      * Get all of the contributions for the ContributionType
      *

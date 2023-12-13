@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreContributionTypeRequest extends FormRequest
+class UpdatePaymentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -21,14 +21,8 @@ class StoreContributionTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd($this->recurrent);
         return [
-            "description" => "required|string",
-            "recurrent" => "nullable|boolean",
-            "recurrence_unit" => "required_if:recurrent,true|string|in:day,week,month,year",
-            "recurrence_value" => "required_if:recurrent,true|integer",
-            "deadline" => "nullable|date",
-            "amount" => "nullable|numeric",
+            //
         ];
     }
 }

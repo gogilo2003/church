@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreContributionRequest;
 use App\Http\Requests\UpdateContributionRequest;
 use App\Models\Contribution;
+use App\Models\ContributionType;
 
 class ContributionController extends Controller
 {
@@ -27,9 +28,17 @@ class ContributionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreContributionRequest $request)
+    public function store(StoreContributionRequest $request, ContributionType $contribution_type)
     {
-        //
+        $contribution = new Contribution();
+        $contribution->contribution_type_id = $request->contribution_type;
+        $contribution->member_id = $request->member;
+        $contribution->amount = $request->amount ? $request->amount : null;
+        $contribution->save();
+
+        $contribution->load('contribution_type');
+
+        return redirect()->back()->with('success', 'Member registered for ' . $contribution->contribution_type->description);
     }
 
     /**
