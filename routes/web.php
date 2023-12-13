@@ -51,14 +51,15 @@ Route::middleware([
                     Route::patch('', [DepartmentController::class, 'update'])->name('-update');
                     Route::delete('', [DepartmentController::class, 'destroy'])->name('-destroy');
                 });
-            Route::prefix('contributions')
-                ->name('-contributions')
-                ->group(function () {
-                    Route::get('', [ContributionTypeController::class, 'index']);
-                    Route::post('', [ContributionTypeController::class, 'store'])->name('-store');
-                    Route::patch('{contribution_type}', [ContributionTypeController::class, 'update'])->name('-update');
-                    Route::delete('', [ContributionTypeController::class, 'destroy'])->name('-destroy');
-                });
+        });
+
+    Route::prefix('contributions')
+        ->name('-contributions')
+        ->group(function () {
+            Route::get('', [ContributionTypeController::class, 'index']);
+            Route::post('', [ContributionTypeController::class, 'store'])->name('-store');
+            Route::patch('{contribution_type}', [ContributionTypeController::class, 'update'])->name('-update');
+            Route::delete('', [ContributionTypeController::class, 'destroy'])->name('-destroy');
         });
 
     Route::prefix('users')

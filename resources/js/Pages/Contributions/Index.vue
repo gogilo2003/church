@@ -5,29 +5,24 @@ import { useForm } from '@inertiajs/vue3';
 import PrimaryButton from '../../Components/PrimaryButton.vue';
 import Icon from '../../Components/Icons/Icon.vue';
 import TextInput from '../../Components/FlowBite/TextInput.vue';
-import InputError from '../../Components/InputError.vue';
-import InputLabel from '../../Components/InputLabel.vue';
 import SecondaryButton from '../../Components/SecondaryButton.vue';
 import Modal from '../../Components/Modal.vue';
 import Container from '../../Components/Custom/Container.vue';
 import Swal from 'sweetalert2';
 
-interface Contribution {
-    id: Number,
-    title: String
-}
 const props = defineProps({
     contribution_types: Object,
     notification: Object
 })
+
 const form = useForm({
     id: null,
     description: "",
     recurrent: false,
-    recurrence_value: "",
+    recurrence_value: 0,
     recurrence_unit: "",
     deadline: "",
-    amount: null,
+    amount: 0,
     back_date: false,
 })
 
@@ -40,6 +35,7 @@ const closeDialog = () => {
 }
 
 const newContribution = () => {
+    cancel()
     dialogTitle.value = "Add Contribution"
     showDialog.value = true
     edit.value = false
@@ -52,6 +48,12 @@ const editContribution = (contributionType) => {
 
     form.id = contributionType.id
     form.description = contributionType.description
+    form.recurrent = contributionType.recurrent ? true : false
+    form.recurrence_unit = contributionType.recurrence_unit
+    form.recurrence_value = contributionType.recurrence_value ? contributionType.recurrence_value.toString() : null
+    form.deadline = contributionType.deadline
+    form.amount = contributionType.amount
+    form.back_date = contributionType.back_date
 }
 const deleteContribution = (contributionType) => {
     dialogTitle.value = "Add Contribution"
@@ -67,10 +69,10 @@ const cancel = () => {
     form.id = null
     form.description = ""
     form.recurrent = false
-    form.recurrence_value = ""
+    form.recurrence_value = 0
     form.recurrence_unit = ""
     form.deadline = ""
-    form.amount = null
+    form.amount = 0
     form.back_date = false
 }
 
@@ -109,6 +111,17 @@ const submit = () => {
         })
     }
 }
+
+const formatDate = (date: string) => {
+    let dt = new Date(date);
+
+    return dt.toLocaleDateString('en-KE', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    })
+}
 </script>
 <template>
     <Modal :show="showDialog">
@@ -133,7 +146,7 @@ const submit = () => {
                         <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Recurrent</span>
                     </label>
                     <label class="relative inline-flex items-center cursor-pointer gap-2">
-                        <input type="checkbox" value="" v-model="form.backdate" class="sr-only peer">
+                        <input type="checkbox" value="" v-model="form.back_date" class="sr-only peer">
                         <div
                             class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                         </div>
@@ -142,10 +155,13 @@ const submit = () => {
                     </label>
                 </div>
                 <div v-if="form.recurrent" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                        <label for="underline_select" class="sr-only">Recurrence Unit</label>
-                        <select id="underline_select"
-                            class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                    <div class="relative group">
+                        <label for="recurrenceUnit"
+                            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Recurrence
+                            Unit</label>
+                        <select id="recurrenceUnit"
+                            class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                            v-model="form.recurrence_unit">
                             <option selected>Choose a unit</option>
                             <option value="day">Daily</option>
                             <option value="week">Weekly</option>
@@ -154,8 +170,25 @@ const submit = () => {
                         </select>
                     </div>
                     <div class="mb-6">
-                        <TextInput id="inputRecurrenceValue" label="Recurrence Value" :error="form.errors.description"
-                            v-model="form.recurrence_value" />
+                        <TextInput type="number" id="inputRecurrenceValue" label="Recurrence Value"
+                            :error="form.errors.description" v-model="form.recurrence_value" />
+                    </div>
+
+                </div>
+                <div class="relative grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                            </svg>
+                        </div>
+                        <TextInput type="date" label="Deadline" has-icon placeholder="Select date" v-model="form.deadline"
+                            :error="form.errors.deadline" />
+                    </div>
+                    <div>
+                        <TextInput label="Amount" :error="form.errors.amount" v-model="form.amount" />
                     </div>
                 </div>
                 <div class="flex gap-3 py-4">
@@ -176,13 +209,19 @@ const submit = () => {
                 </div>
                 <div class="flex flex-col gap-3">
                     <div v-for="contribution in contribution_types?.data"
-                        class="shadow p-3 rounded-lg border flex flex-col lg:flex-row items-start gap-2 md:justify-between">
+                        class="shadow py-4 px-6 rounded-xl border flex flex-col lg:flex-row items-start gap-2 md:justify-between">
                         <div class="flex gap-2 items-center">
                             <div class="flex-1">
                                 <div class="text-base font-semibold uppercase" v-text="contribution.description">
                                 </div>
-                                <div class="p-8">
-                                    <pre v-text="contribution"></pre>
+                                <div
+                                    class="flex gap-2 divide-x divide-gray-500 text-sm font-medium text-gray-500 capitalize [&>*]:pl-2">
+                                    <span class="first:pl-0" v-if="contribution.recurrent"
+                                        v-text="`every ${contribution.recurrence_value} ${contribution.recurrence_unit}${contribution.recurrence_value > 1 ? 's' : ''}`"></span>
+                                    <span class="first:pl-0" v-if="contribution.amount"
+                                        v-text="`Amount: ${new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(contribution.amount)}`"></span>
+                                    <span class="first:pl-0" v-if="contribution.deadline"
+                                        v-text="`Closes at: ${formatDate(contribution.deadline)}`"></span>
                                 </div>
                             </div>
                         </div>

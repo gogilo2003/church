@@ -57,18 +57,18 @@ class ContributionTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateContributionTypeRequest $request, ContributionType $contribution)
+    public function update(UpdateContributionTypeRequest $request, ContributionType $contribution_type)
     {
-        $type->description = $request->description;
-        $type->recurrent = $request->recurrent;
-        $type->recurrence_value = $request->recurrence_value;
-        $type->recurrence_unit = $request->recurrence_unit;
-        $type->back_date = $request->back_date;
-        $type->deadline = $request->deadline;
-        $type->amount = $request->amount;
-        $type->save();
+        $contribution_type->description = $request->description;
+        $contribution_type->recurrent = $request->recurrent;
+        $contribution_type->recurrence_value = $request->recurrence_value;
+        $contribution_type->recurrence_unit = $request->recurrence_unit;
+        $contribution_type->back_date = $request->back_date;
+        $contribution_type->deadline = $request->deadline;
+        $contribution_type->amount = $request->amount;
+        $contribution_type->save();
 
-        return redirect()->back()->with('success', 'Contribution type has been created');
+        return redirect()->back()->with('success', 'Contribution type has been updated');
     }
 
     /**

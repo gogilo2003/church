@@ -11,7 +11,7 @@ class UpdateContributionTypeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,13 @@ class UpdateContributionTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "id" => "required|integer|exists:contribution_types",
+            "description" => "required|string",
+            "recurrent" => "nullable|boolean",
+            "recurrence_unit" => "nullable|string|in:day,week,month,year",
+            "recurrence_value" => "nullable|integer",
+            "deadline" => "nullable|date",
+            "amount" => "nullable|numeric",
         ];
     }
 }
