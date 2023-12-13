@@ -29,8 +29,6 @@ const registerContribution = (contribution: Object) => {
 
     registerForm.post(route('contributions-register'), {
         onSuccess: () => {
-            console.log(props?.notification?.success);
-
             Swal.fire({
                 icon: 'success',
                 text: props?.notification?.success
@@ -95,7 +93,6 @@ const registerContribution = (contribution: Object) => {
                         </div>
                     </div>
                 </div>
-                <pre v-text="errors"></pre>
             </div>
         </Container>
     </AppLayout>
