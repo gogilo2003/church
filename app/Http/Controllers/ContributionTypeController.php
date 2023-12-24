@@ -45,7 +45,9 @@ class ContributionTypeController extends Controller
     public function show(ContributionType $contribution_type)
     {
         $contribution_type->load('contributions');
-        return Inertia::render('Contributions/Show', ['contribution_type' => ContributionTypeResource::make($contribution_type)]);
+        return Inertia::render('Contributions/Show', [
+            'contribution_type' => ContributionTypeResource::make($contribution_type)
+        ]);
     }
 
     /**

@@ -21,7 +21,7 @@ const registerForm = useForm({
 
 const amount = ref()
 
-const registerContribution = (contribution: Object) => {
+const enrollContribution = (contribution: Object) => {
 
     registerForm.contribution_type = props?.contribution_type?.id
     registerForm.member = contribution?.member?.id
@@ -87,7 +87,7 @@ const registerContribution = (contribution: Object) => {
                             </div>
                         </div>
                         <div class="flex flex-wrap items-center justify-center gap-2">
-                            <SecondaryButton v-if="!contribution.id" @click="registerContribution(contribution)">Enroll
+                            <SecondaryButton v-if="!contribution.id" @click="enrollContribution(contribution)">Enroll
                             </SecondaryButton>
                             <SecondaryButton v-if="contribution.id">Pay</SecondaryButton>
                         </div>

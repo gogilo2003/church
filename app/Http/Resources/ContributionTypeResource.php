@@ -38,7 +38,7 @@ class ContributionTypeResource extends JsonResource
                 $id = $contribution ? $contribution->id : null;
                 $date = $contribution ? $contribution->contribution_date : null;
                 $status = $contribution ? $contribution->contribution_status : null;
-                $amount = $contribution ? $contribution->amount : null;
+                $amount = $contribution ? $contribution->amount : 0;
                 $paid = $contribution ? $contribution->payments->sum('amount') : 0;
                 $balance = $contribution ? $contribution->amount - $contribution->payments->sum('amount') : 0;
 
