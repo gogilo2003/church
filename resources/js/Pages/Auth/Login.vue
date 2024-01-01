@@ -1,12 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/FlowBite/TextInput.vue';
+import AuthenticationCard from '../../Components/AuthenticationCard.vue';
+import AuthenticationCardLogo from '../../Components/AuthenticationCardLogo.vue';
+import Checkbox from '../../Components/Checkbox.vue';
+import PrimaryButton from '../../Components/PrimaryButton.vue';
+import TextInput from '../../Components/FlowBite/TextInput.vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -42,13 +40,15 @@ const submit = () => {
         </div>
 
         <form @submit.prevent="submit">
-            <div>
+            <div class="mb-6">
                 <TextInput label="Email" id="email" v-model="form.email" type="email" class="mt-1 block w-full" required
                     autofocus autocomplete="username" :error="form.errors.email" />
             </div>
 
-            <TextInput label="Password" id="password" v-model="form.password" type="password" class="mt-1 block w-full"
-                required autocomplete="current-password" :error="form.errors.password" />
+            <div class="mb-6">
+                <TextInput label="Password" id="password" v-model="form.password" type="password" class="mt-1 block w-full"
+                    required autocomplete="current-password" :error="form.errors.password" />
+            </div>
 
             <div class="block mt-4">
                 <label class="flex items-center">
