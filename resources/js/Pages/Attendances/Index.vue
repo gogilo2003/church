@@ -53,7 +53,7 @@ const showViewDialog = ref(false)
 const selectedAttendance = ref()
 
 const deleteAttendance = attendance => {
-    router.delete(route('attendances-delete', attendance.id), {
+    router.delete(route('attendance-delete', attendance.id), {
         onSuccess: () => {
             if (props?.notification?.success) {
                 Swal.fire({
@@ -72,7 +72,7 @@ const deleteAttendance = attendance => {
 
 const submit = () => {
     if (edit.value) {
-        form.patch(route('attendances-update'), {
+        form.patch(route('attendance-update', form.id), {
             onSuccess: () => {
                 Swal.fire({
                     icon: 'success',

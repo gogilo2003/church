@@ -11,7 +11,7 @@ class UpdateAttendanceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateAttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id' => 'required|integer|exists:attendances,id',
+            'title' => 'required|string|unique:attendances,title,' . $this->id . ',id',
+            'attendance_date' => 'required|date',
         ];
     }
 }

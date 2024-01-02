@@ -30,11 +30,11 @@ watch(() => toggleState.value, value => {
         <Banner />
 
         <div class="relative min-h-screen bg-gray-100">
-            <div class="fixed top-0 left-0 pl-4 overflow-hidden bg-gray-800 block transition-all duration-500"
-                :class="{ 'w-80': toggleState, 'w-20': !toggleState }">
+            <div class="fixed top-0 left-0 pl-0 md:pl-4 overflow-hidden bg-gray-800 block transition-all duration-500"
+                :class="{ 'w-80': toggleState, 'w-0 md:w-20': !toggleState }">
                 <Sidebar :toggle-state="toggleState" />
             </div>
-            <div :class="{ 'w-[calc(100%_-_20rem)] left-80': toggleState, 'left-20': !toggleState }"
+            <div :class="{ 'w-[calc(100%_-_20rem)] left-80': toggleState, 'left-0 md:left-20': !toggleState }"
                 class="absolute min-h-screen top-0 right-0 transition-all duration-500">
                 <Navbar @toggle="toggle" :page="$page.props">
                     <template #header>
@@ -42,7 +42,7 @@ watch(() => toggleState.value, value => {
                     </template>
                 </Navbar>
                 <!-- Page Content -->
-                <main>
+                <main class="min-h-full">
                     <slot />
                 </main>
             </div>

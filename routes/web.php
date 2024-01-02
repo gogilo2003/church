@@ -87,7 +87,6 @@ Route::middleware([
             Route::get('', [AttendanceController::class, 'index']);
             Route::get('show/{attendance}', [AttendanceController::class, 'show'])->name('-show');
             Route::post('', [AttendanceController::class, 'store'])->name('-store');
-            Route::get('edit/{attendance}', [AttendanceController::class, 'edit'])->name('-edit');
             Route::get('mark/{attendance}', [AttendanceController::class, 'mark'])->name('-mark');
             Route::patch('mark/{attendance}', [AttendanceController::class, 'markPost'])->name('-mark-post');
             Route::patch('{attendance}', [AttendanceController::class, 'update'])->name('-update');

@@ -63,7 +63,11 @@ class AttendanceController extends Controller
      */
     public function update(UpdateAttendanceRequest $request, Attendance $attendance)
     {
-        //
+        $attendance->title = $request->title;
+        $attendance->attendance_date = $request->attendance_date;
+        $request->user()->attendances()->save($attendance);
+
+        return redirect()->route('attendance-mark', $attendance->id)->with('success', 'Attendance updated');
     }
 
     /**
