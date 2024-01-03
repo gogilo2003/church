@@ -2,7 +2,6 @@
 import SecondaryButton from '../../Components/SecondaryButton.vue';
 import { formatCurrency, formatDate } from '../../helpers';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 import Swal from 'sweetalert2'
 
 interface iContribution {
@@ -31,6 +30,8 @@ const registerForm = useForm({
 const page = usePage()
 
 const enrollContribution = (contribution: iContribution) => {
+    console.log(contribution.end_at);
+
     registerForm.contribution_type = props?.contribution_type?.id
     registerForm.member = props.member?.id
     registerForm.amount = props?.contribution_type?.amount || contribution?.amount || prompt("Enter amount")
@@ -111,9 +112,11 @@ const makePayment = (contribution) => {
                     <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.balance)">
                     </td>
                     <td class="px-2 py-1 text-right">
-                        <SecondaryButton v-if="!contribution?.id" @click="enrollContribution(contribution)">Enroll
+                        <SecondaryButton v-if="!contribution?.id" @click="enrollContribution(contribution)" size="xs">
+                            Enroll
                         </SecondaryButton>
-                        <SecondaryButton v-if="contribution?.id" @click="makePayment(contribution)">Pay</SecondaryButton>
+                        <SecondaryButton v-if="contribution?.id" @click="makePayment(contribution)" size="xs">Pay
+                        </SecondaryButton>
                     </td>
                 </tr>
             </tbody>

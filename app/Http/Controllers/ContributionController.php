@@ -31,7 +31,7 @@ class ContributionController extends Controller
      */
     public function store(StoreContributionRequest $request, ContributionType $contribution_type)
     {
-
+        // dd($request->end_at, Carbon::parse($request->end_at));
         $contribution = new Contribution();
         $contribution->contribution_type_id = $request->contribution_type;
         $contribution->member_id = $request->member;

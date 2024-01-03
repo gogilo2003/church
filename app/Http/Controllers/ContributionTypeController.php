@@ -11,6 +11,7 @@ use App\Models\ContributionType;
 use App\Http\Resources\ContributionTypeResource;
 use App\Http\Requests\StoreContributionTypeRequest;
 use App\Http\Requests\UpdateContributionTypeRequest;
+use App\Models\Payment;
 
 class ContributionTypeController extends Controller
 {
@@ -97,10 +98,10 @@ class ContributionTypeController extends Controller
 
             $contributions_max = $this->contributionsMax($contribution_type);
 
-            if ($contributions->count() < $contributions_max) {
-                $allContributions = $this->getAllContributions($contributions, $contribution_type);
-                $contributions = $allContributions;
-            }
+            // if ($contributions->count() < $contributions_max) {
+            $allContributions = $this->getAllContributions($contributions, $contribution_type);
+            $contributions = $allContributions;
+            // }
             // dump($contributions->count(), $contributions_max, $contributions);
             $contributions = $contributions->sortByDesc('description', SORT_NATURAL)->values();
 
@@ -181,7 +182,8 @@ class ContributionTypeController extends Controller
         if ($contribution_type->recurrence_unit == 'day') {
             $locale = 'en_KE';
             $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
-            return sprintf('%s day', $nf->format($contribution_type->created_at->diffInDays($end_date)));
+            $days_count = $contribution_type->created_at->diffInDays($end_date);
+            return sprintf('%s day', $nf->format($days_count));
         }
         if ($contribution_type->recurrence_unit == 'week') {
             return sprintf('week %s', $end_date->format('w'));
@@ -217,7 +219,19 @@ class ContributionTypeController extends Controller
 
             foreach ($contributions as $i) {
                 if ($i->end_at->isSameDay($end_date)) {
-                    return $i;
+                    $payments = Payment::where('contribution_id', $i->id)->get();
+                    $paid = $payments->sum('amount');
+
+                    return (object)[
+                        "id" => $i->id,
+                        "contribution_date" => $i->contribution_date,
+                        "end_at" => $i->end_at,
+                        "description" => $description,
+                        "amount" => $i->amount,
+                        "paid" => $paid,
+                        "balance" => $i->amount - $paid,
+                        "status" => $i->status,
+                    ];
                 }
             }
 
