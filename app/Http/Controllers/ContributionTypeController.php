@@ -34,6 +34,7 @@ class ContributionTypeController extends Controller
         $type->recurrence_value = $request->recurrence_value;
         $type->recurrence_unit = $request->recurrence_unit;
         $type->back_date = $request->back_date;
+        $type->autoenroll = $request->autoenroll;
         $type->deadline = $request->deadline ? Carbon::parse($request->deadline) : null;
         $type->amount = $request->amount > 0 ? $request->amount : null;
         $type->save();
@@ -100,7 +101,7 @@ class ContributionTypeController extends Controller
                 $allContributions = $this->getAllContributions($contributions, $contribution_type);
                 $contributions = $allContributions;
             }
-
+            // dump($contributions->count(), $contributions_max, $contributions);
             $contributions = $contributions->sortByDesc('description', SORT_NATURAL)->values();
 
             return (object)[
@@ -140,6 +141,7 @@ class ContributionTypeController extends Controller
         $contribution_type->recurrence_value = $request->recurrence_value;
         $contribution_type->recurrence_unit = $request->recurrence_unit;
         $contribution_type->back_date = $request->back_date;
+        $contribution_type->autoenroll = $request->autoenroll;
         $contribution_type->deadline = $request->deadline ? Carbon::parse($request->deadline) : null;
         $contribution_type->amount = $request->amount > 0 ? $request->amount : null;
         $contribution_type->save();
@@ -169,6 +171,7 @@ class ContributionTypeController extends Controller
             } elseif ($contribution_type->recurrence_unit == 'year') {
                 $count = $contribution_type->created_at->diffInYears(now());
             }
+            ++$count;
         }
         return $count;
     }
@@ -178,7 +181,7 @@ class ContributionTypeController extends Controller
         if ($contribution_type->recurrence_unit == 'day') {
             $locale = 'en_KE';
             $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
-            return sprintf('%s day', $nf->format($contribution_type->created_at->diffInDays($end_date) + 1));
+            return sprintf('%s day', $nf->format($contribution_type->created_at->diffInDays($end_date)));
         }
         if ($contribution_type->recurrence_unit == 'week') {
             return sprintf('week %s', $end_date->format('w'));
@@ -193,7 +196,7 @@ class ContributionTypeController extends Controller
 
     public function getAllContributions($contributions, $contribution_type)
     {
-        $all = collect(range(0, $this->contributionsMax($contribution_type)))->map(function ($item) use ($contribution_type, $contributions) {
+        $all = collect(range(1, $this->contributionsMax($contribution_type)))->map(function ($item) use ($contribution_type, $contributions) {
 
             $end_date = Carbon::parse($contribution_type->created_at);
 

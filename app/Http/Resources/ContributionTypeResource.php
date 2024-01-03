@@ -26,6 +26,7 @@ class ContributionTypeResource extends JsonResource
             "deadline" => $this->deadline,
             "amount" => $this->amount,
             "back_date" => $this->back_date ? true : false,
+            "autoenroll" => $this->autoenroll ? true : false,
         ];
 
         if ($this->RelationLoaded('contributions')) {

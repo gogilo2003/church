@@ -69,7 +69,7 @@ const makePayment = (contribution) => {
                         Description
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Date
+                        Last Date
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Status
@@ -101,8 +101,8 @@ const makePayment = (contribution) => {
                         'bg-orange-400': contribution?.status == 'partial',
                         'bg-lime-400': contribution?.status == 'paid',
                         'bg-red-500': contribution?.status == 'late',
-                        'bg-gray-500': !contribution?.status,
-                    }" v-text="contribution?.status">
+                        'bg-red-200': !contribution?.status,
+                    }" v-text="contribution?.status || 'none'">
                     </td>
                     <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.amount)">
                     </td>

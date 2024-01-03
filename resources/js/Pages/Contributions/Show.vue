@@ -1,22 +1,13 @@
 <script setup lang="ts">
 import AppLayout from '../../Layouts/AppLayout.vue';
 import Container from '../../Components/Custom/Container.vue';
-import { router, useForm } from '@inertiajs/vue3';
-import Swal from 'sweetalert2';
-import { ref } from 'vue';
 import ContributionType from '../../Components/Church/ContributionType.vue';
 import Member from '../../Components/Church/Member.vue';
 
-const props = defineProps({
+defineProps({
     contribution_type: Object,
-    notification: Object,
-    errors: Object,
     members: Object,
 })
-
-
-const amount = ref()
-
 
 </script>
 <template>

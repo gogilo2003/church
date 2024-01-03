@@ -19,32 +19,75 @@ import Delete from './Delete.vue';
 import Image from './Image.vue';
 import IdCard from './IdCard.vue';
 import Show from './Show.vue';
+import { computed } from 'vue';
 
-defineProps(['type'])
+const props = defineProps({
+    type: String
+})
 
-defineOptions({
-    inheritAttrs: false
+const icon = computed(() => {
+    if (props.type == 'dashboard') {
+        return Dashboard;
+    }
+    if (props.type == 'product') {
+        return Product;
+    }
+    if (props.type == 'logout') {
+        return Logout;
+    }
+    if (props.type == 'add') {
+        return Add;
+    }
+    if (props.type == 'edit') {
+        return Edit;
+    }
+    if (props.type == 'times') {
+        return Times;
+    }
+    if (props.type == 'chart') {
+        return Chart;
+    }
+    if (props.type == 'location') {
+        return Location;
+    }
+    if (props.type == 'money') {
+        return Money;
+    }
+    if (props.type == 'home') {
+        return Home;
+    }
+    if (props.type == 'menu') {
+        return Menu;
+    }
+    if (props.type == 'people') {
+        return People;
+    }
+    if (props.type == 'settings') {
+        return Settings;
+    }
+    if (props.type == 'certificate') {
+        return Certificate;
+    }
+    if (props.type == 'chevron-circle-back') {
+        return ChevronCircleBack;
+    }
+    if (props.type == 'chevron-circle-forward') {
+        return ChevronCircleForward;
+    }
+    if (props.type == 'delete') {
+        return Delete;
+    }
+    if (props.type == 'image') {
+        return Image;
+    }
+    if (props.type == 'id-card') {
+        return IdCard;
+    }
+    if (props.type == 'show') {
+        return Show;
+    }
 })
 </script>
 <template>
-    <Dashboard v-bind="$attrs" v-if="type == 'dashboard'" />
-    <Product v-bind="$attrs" v-if="type == 'product'" />
-    <Logout v-bind="$attrs" v-if="type == 'logout'" />
-    <Add v-bind="$attrs" v-if="type == 'add'" />
-    <Edit v-bind="$attrs" v-if="type == 'edit'" />
-    <Times v-bind="$attrs" v-if="type == 'times'" />
-    <Chart v-bind="$attrs" v-if="type == 'chart'" />
-    <Location v-bind="$attrs" v-if="type == 'location'" />
-    <Money v-bind="$attrs" v-if="type == 'money'" />
-    <Home v-bind="$attrs" v-if="type == 'home'" />
-    <Menu v-bind="$attrs" v-if="type == 'menu'" />
-    <People v-bind="$attrs" v-if="type == 'people'" />
-    <Settings v-bind="$attrs" v-if="type == 'settings'" />
-    <Certificate v-bind="$attrs" v-if="type == 'certificate'" />
-    <ChevronCircleBack v-bind="$attrs" v-if="type == 'chevron-circle-back'" />
-    <ChevronCircleForward v-bind="$attrs" v-if="type == 'chevron-circle-forward'" />
-    <Delete v-bind="$attrs" v-if="type == 'delete'" />
-    <Image v-bind="$attrs" v-if="type == 'image'" />
-    <IdCard v-bind="$attrs" v-if="type == 'id-card'" />
-    <Show v-bind="$attrs" v-if="type == 'show'" />
+    <component :is="icon" />
 </template>

@@ -26,6 +26,7 @@ const form = useForm({
     deadline: "",
     amount: 0,
     back_date: false,
+    autoenroll: false,
 })
 
 const showDialog = ref(false)
@@ -57,6 +58,7 @@ const editContribution = (contributionType) => {
     form.deadline = contributionType.deadline
     form.amount = contributionType.amount
     form.back_date = contributionType.back_date
+    form.autoenroll = contributionType.autoenroll
 }
 const deleteContribution = (contributionType) => {
     dialogTitle.value = "Add Contribution"
@@ -77,6 +79,7 @@ const cancel = () => {
     form.deadline = ""
     form.amount = 0
     form.back_date = false
+    form.autoenroll = false
 }
 
 const submit = () => {
@@ -136,15 +139,25 @@ const submit = () => {
                         <div
                             class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                         </div>
-                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Recurrent</span>
+                        <span
+                            class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 whitespace-nowrap">Recurrent</span>
                     </label>
                     <label class="relative inline-flex items-center cursor-pointer gap-2">
                         <input type="checkbox" value="" v-model="form.back_date" class="sr-only peer">
                         <div
                             class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                         </div>
-                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Back Date to Registration
+                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 whitespace-nowrap">Back Date
+                            to Registration
                             date</span>
+                    </label>
+                    <label class="relative inline-flex items-center cursor-pointer gap-2">
+                        <input type="checkbox" value="" v-model="form.autoenroll" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                        </div>
+                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 whitespace-nowrap">Auto
+                            Enroll Members</span>
                     </label>
                 </div>
                 <div v-if="form.recurrent" class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -225,5 +238,4 @@ const submit = () => {
 
             </div>
         </Container>
-    </AppLayout>
-</template>
+    </AppLayout></template>

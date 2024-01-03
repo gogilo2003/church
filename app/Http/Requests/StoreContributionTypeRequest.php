@@ -28,6 +28,8 @@ class StoreContributionTypeRequest extends FormRequest
             "recurrence_value" => "required_if:recurrent,true|integer",
             "deadline" => "nullable|date",
             "amount" => "nullable|numeric",
+            "back_date" => "nullable|boolean",
+            "autoenroll" => "nullable|boolean",
         ];
     }
 }
