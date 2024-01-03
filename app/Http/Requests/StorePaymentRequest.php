@@ -11,7 +11,7 @@ class StorePaymentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class StorePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "contribution_id" => "required|integer|exists:contributions,id",
+            "amount" => "required|numeric|min:1",
+            "receipt_number" => "nullable|string",
+            "details" => "nullable|string",
+            "mode" => "nullable|string",
         ];
     }
 }

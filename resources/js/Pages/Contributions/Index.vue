@@ -10,7 +10,7 @@ import Modal from '../../Components/Modal.vue';
 import Container from '../../Components/Custom/Container.vue';
 import Swal from 'sweetalert2';
 import InputError from '../../Components/InputError.vue';
-import { formatCurrency, formatDate } from '../../helpers'
+import ContributionType from '../../Components/Church/ContributionType.vue';
 
 const props = defineProps({
     contribution_types: Object,
@@ -200,21 +200,7 @@ const submit = () => {
                 <div class="flex flex-col gap-3">
                     <div v-for="contribution in contribution_types?.data"
                         class="shadow py-4 px-6 rounded-xl border flex flex-col lg:flex-row items-start gap-2 md:justify-between">
-                        <div class="flex gap-2 items-center">
-                            <div class="flex-1">
-                                <div class="text-base font-semibold uppercase" v-text="contribution.description">
-                                </div>
-                                <div
-                                    class="flex gap-2 divide-x divide-gray-500 text-sm font-medium text-gray-500 capitalize [&>*]:pl-2">
-                                    <span class="first:pl-0" v-if="contribution.recurrent"
-                                        v-text="`every ${contribution.recurrence_value} ${contribution.recurrence_unit}${contribution.recurrence_value > 1 ? 's' : ''}`"></span>
-                                    <span class="first:pl-0" v-if="contribution.amount"
-                                        v-text="`Amount: ${formatCurrency(contribution.amount)}`"></span>
-                                    <span class="first:pl-0" v-if="contribution.deadline"
-                                        v-text="`Closes at: ${formatDate(contribution.deadline)}`"></span>
-                                </div>
-                            </div>
-                        </div>
+                        <ContributionType :item="contribution" />
                         <div class="flex gap-1 self-start lg:self-end">
                             <Link
                                 class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-full font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"

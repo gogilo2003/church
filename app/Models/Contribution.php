@@ -11,6 +11,10 @@ class Contribution extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        "end_at" => "date"
+    ];
+
     /**
      * Get the contribution_type that owns the Contribution
      *
@@ -29,5 +33,15 @@ class Contribution extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    /**
+     * Get the member that owns the Contribution
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function member(): BelongsTo
+    {
+        return $this->belongsTo(Member::class);
     }
 }

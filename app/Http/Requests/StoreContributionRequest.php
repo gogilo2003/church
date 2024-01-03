@@ -25,6 +25,7 @@ class StoreContributionRequest extends FormRequest
             "contribution_type" => "required|integer|exists:contribution_types,id",
             "member" => "required|integer|exists:members,id",
             "amount" => "nullable|numeric",
+            "end_at" => "nullable|date",
         ];
     }
 }

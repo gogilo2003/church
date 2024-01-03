@@ -42,7 +42,7 @@ watch(() => toggleState.value, value => {
                     </template>
                 </Navbar>
                 <!-- Page Content -->
-                <main class="min-h-full">
+                <main class="px-4 md:px-0">
                     <slot />
                 </main>
             </div>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -60,5 +61,15 @@ class Member extends Model
     public function attendances(): BelongsToMany
     {
         return $this->belongsToMany(Attendance::class);
+    }
+
+    /**
+     * Get all of the contributions for the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function contributions(): HasMany
+    {
+        return $this->hasMany(Contribution::class);
     }
 }

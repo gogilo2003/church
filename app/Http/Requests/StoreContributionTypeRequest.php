@@ -21,7 +21,6 @@ class StoreContributionTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd($this->recurrent);
         return [
             "description" => "required|string",
             "recurrent" => "nullable|boolean",
