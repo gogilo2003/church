@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ContributionController;
@@ -62,6 +63,15 @@ Route::middleware([
             Route::patch('{contribution_type}', [ContributionTypeController::class, 'update'])->name('-update');
             Route::delete('', [ContributionTypeController::class, 'destroy'])->name('-destroy');
             Route::post('register', [ContributionController::class, 'store'])->name('-register');
+        });
+
+    Route::prefix('payments')
+        ->name('payments')
+        ->group(function () {
+            Route::get('', [PaymentController::class, 'index']);
+            Route::post('', [PaymentController::class, 'store'])->name('-store');
+            Route::patch('', [PaymentController::class, 'update'])->name('-update');
+            Route::delete('', [PaymentController::class, 'destroy'])->name('-destroy');
         });
 
     Route::prefix('users')

@@ -30,7 +30,7 @@ class PaymentController extends Controller
     public function store(StorePaymentRequest $request)
     {
         $payment = new Payment();
-        $payment->contribution_id = $request->contribution_id;
+        $payment->contribution_id = $request->contribution;
         $payment->receipt_number = $request->receipt_number || null;
         $payment->details = $request->details || null;
         $payment->mode = $request->mode || null;

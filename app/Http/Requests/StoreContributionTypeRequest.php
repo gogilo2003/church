@@ -24,8 +24,8 @@ class StoreContributionTypeRequest extends FormRequest
         return [
             "description" => "required|string",
             "recurrent" => "nullable|boolean",
-            "recurrence_unit" => "required_if:recurrent,true|string|in:day,week,month,year",
-            "recurrence_value" => "required_if:recurrent,true|integer",
+            "recurrence_unit" => "nullable|required_if:recurrent,true|string|in:day,week,month,year",
+            "recurrence_value" => "nullable|required_if:recurrent,true|integer",
             "deadline" => "nullable|date",
             "amount" => "nullable|numeric",
             "back_date" => "nullable|boolean",
