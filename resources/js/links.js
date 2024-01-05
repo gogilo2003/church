@@ -25,7 +25,7 @@ export const links = ref([
     {
         name: "attendance",
         caption: "Attendance",
-        icon: "product",
+        icon: "attendance",
         show: true,
         permission: 0,
     },

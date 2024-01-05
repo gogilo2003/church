@@ -221,7 +221,7 @@ const closeEnrollment = () => {
             <div class="flex-1">
                 <div class="text-lg uppercase font-semibold" v-text="contribution_type?.description"></div>
                 <div class="text-sm capitalize font-medium text-gray-700"
-                    v-text="`${member?.name} (${Math.round(member?.paid / member?.amount * 100)}% | ${formatCurrency(member?.amount)})`">
+                    v-text="`${member?.name} (${Math.round(member?.paid / member?.amount * 100) || 0}% | ${formatCurrency(member?.amount)})`">
                 </div>
             </div>
             <div class="flex-none text-gray-500">

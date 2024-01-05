@@ -19,6 +19,7 @@ import Delete from './Delete.vue';
 import Image from './Image.vue';
 import IdCard from './IdCard.vue';
 import Show from './Show.vue';
+import Attendance from './Attendance.vue';
 import { computed } from 'vue';
 
 const props = defineProps({
@@ -85,6 +86,9 @@ const icon = computed(() => {
     }
     if (props.type == 'show') {
         return Show;
+    }
+    if (props.type == 'attendance') {
+        return Attendance;
     }
 })
 </script>
