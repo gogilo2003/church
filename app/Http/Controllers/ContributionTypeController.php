@@ -96,14 +96,16 @@ class ContributionTypeController extends Controller
                 ];
             });
 
-            $contributions_max = $this->contributionsMax($contribution_type);
-
-            // if ($contributions->count() < $contributions_max) {
-            $allContributions = $this->getAllContributions($contributions, $contribution_type);
-            $contributions = $allContributions;
-            // }
+            if ($contribution_type->recurrent) {
+                $allContributions = $this->getAllContributions($contributions, $contribution_type);
+                $contributions = $allContributions;
+                $contributions = $contributions->sortByDesc('end_at', SORT_NATURAL)->values();
+            } else {
+                if ($contributions->count() == 0) {
+                    $contributions = $this->getAllContributions($contributions, $contribution_type);
+                }
+            }
             // dump($contributions->count(), $contributions_max, $contributions);
-            $contributions = $contributions->sortByDesc('description', SORT_NATURAL)->values();
 
             return (object)[
                 "id" => $member->id,
@@ -112,8 +114,9 @@ class ContributionTypeController extends Controller
                 "phone" => $member->phone,
                 "email" => $member->email,
                 "gender" => $member->gender ? 'Male' : 'Female',
-                "contributions_count" => $member->contributions->count(),
-                "contributions_max" => $contributions_max,
+                "amount" => $contributions->where('status', '<>', null)->sum('amount'),
+                "paid" => $contributions->where('status', '<>', null)->sum('paid'),
+                "balance" => $contributions->where('status', '<>', null)->sum('balance'),
                 "contributions" => $contributions,
             ];
         });
@@ -198,55 +201,74 @@ class ContributionTypeController extends Controller
 
     public function getAllContributions($contributions, $contribution_type)
     {
-        $all = collect(range(1, $this->contributionsMax($contribution_type)))->map(function ($item) use ($contribution_type, $contributions) {
 
-            $end_date = Carbon::parse($contribution_type->created_at);
+        if ($contribution_type) {
+            $all = collect(
+                range(1, $this->contributionsMax($contribution_type))
+            )->map(
+                function ($item) use ($contribution_type, $contributions) {
+                    $end_date = Carbon::parse($contribution_type->created_at);
 
-            if ($contribution_type->recurrence_unit == 'day') {
-                $end_date->addDays($item);
-            }
-            if ($contribution_type->recurrence_unit == 'week') {
-                $end_date->addWeeks($item);
-            }
-            if ($contribution_type->recurrence_unit == 'month') {
-                $end_date->addMonths($item);
-            }
-            if ($contribution_type->recurrence_unit == 'year') {
-                $end_date->addYears($item);
-            }
+                    if ($contribution_type->recurrence_unit == 'day') {
+                        $end_date->addDays($item);
+                    }
+                    if ($contribution_type->recurrence_unit == 'week') {
+                        $end_date->addWeeks($item);
+                    }
+                    if ($contribution_type->recurrence_unit == 'month') {
+                        $end_date->addMonths($item);
+                    }
+                    if ($contribution_type->recurrence_unit == 'year') {
+                        $end_date->addYears($item);
+                    }
 
-            $description = $this->contributionDescription($end_date, $contribution_type);
+                    $description = $this->contributionDescription($end_date, $contribution_type);
 
-            foreach ($contributions as $i) {
-                if ($i->end_at->isSameDay($end_date)) {
-                    $payments = Payment::where('contribution_id', $i->id)->get();
-                    $paid = $payments->sum('amount');
+                    foreach ($contributions as $i) {
+                        if ($i->end_at->isSameDay($end_date)) {
+                            $payments = Payment::where('contribution_id', $i->id)->get();
+                            $paid = $payments->sum('amount');
 
+                            return (object)[
+                                "id" => $i->id,
+                                "contribution_date" => $i->contribution_date,
+                                "end_at" => $i->end_at,
+                                "description" => $description,
+                                "amount" => $i->amount,
+                                "paid" => $paid,
+                                "balance" => $i->amount - $paid,
+                                "status" => $i->status,
+                            ];
+                        }
+                    }
                     return (object)[
-                        "id" => $i->id,
-                        "contribution_date" => $i->contribution_date,
-                        "end_at" => $i->end_at,
+                        "id" => null,
+                        "contribution_date" => null,
+                        "end_at" => $end_date,
                         "description" => $description,
-                        "amount" => $i->amount,
-                        "paid" => $paid,
-                        "balance" => $i->amount - $paid,
-                        "status" => $i->status,
+                        "amount" => $contribution_type->amount ?? null,
+                        "paid" => 0,
+                        "balance" => $contribution_type->amount - 0,
+                        "status" => null,
                     ];
                 }
-            }
+            );
+            return $all;
+        }
 
-            return (object)[
+        $end_date = Carbon::parse($contribution_type->created_at);
+
+        return collect([
+            (object)[
                 "id" => null,
                 "contribution_date" => null,
                 "end_at" => $end_date,
-                "description" => $description,
-                "amount" => $contribution_type->amount ?? null,
+                "description" => $contribution_type->description,
+                "amount" => $contribution_type->amount ?? 0,
                 "paid" => 0,
                 "balance" => $contribution_type->amount - 0,
                 "status" => null,
-            ];
-        });
-
-        return $all;
+            ]
+        ]);
     }
 }

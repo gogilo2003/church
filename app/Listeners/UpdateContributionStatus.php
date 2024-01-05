@@ -27,7 +27,7 @@ class UpdateContributionStatus
         $contribution = Contribution::find($payment->contribution_id);
 
         $status = $contribution->amount
-            ? ($contribution->amount == $contribution->payments->sum('amount') ? 'complete'
+            ? ($contribution->amount == $contribution->payments->sum('amount') ? 'paid'
                 : (
                     $contribution->amount > $contribution->payments->sum('amount')
                     ? 'partial'
@@ -36,6 +36,7 @@ class UpdateContributionStatus
             )
             : 'pending';
 
-        $contribution->update('contribution_status', $status);
+        $contribution->contribution_status = $status;
+        $contribution->save();
     }
 }

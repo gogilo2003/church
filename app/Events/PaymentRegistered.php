@@ -22,7 +22,6 @@ class PaymentRegistered
      */
     public function __construct(Payment $payment)
     {
-        dd($payment);
         $this->payment = $payment;
     }
 }
