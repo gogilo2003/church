@@ -138,6 +138,7 @@ const closeEnrollment = () => {
 }
 
 </script>
+
 <template>
     <Modal :show="show" max-width="4xl">
         <!-- Pay for contribution -->
@@ -154,8 +155,8 @@ const closeEnrollment = () => {
                 <form @submit.prevent="pay">
                     <div class="px-4 py-3">
                         <div class="mb-6">
-                            <SelectInput label="Mode of Payment" :error="paymentForm.errors.mode" v-model="paymentForm.mode"
-                                class="w-full"
+                            <SelectInput label="Mode of Payment" :error="paymentForm.errors.mode"
+                                v-model="paymentForm.mode" class="w-full"
                                 :options="[{ value: 'cash', text: 'Cash' }, { value: 'mpesa', text: 'MPesa' }, { value: 'cheque', text: 'Cheque' }]" />
                         </div>
                         <div class="mb-6">
@@ -173,7 +174,8 @@ const closeEnrollment = () => {
                         </div>
                     </div>
                     <div class="flex justify-between px-4 py-3 border-t">
-                        <PrimaryButton :disabled="paymentForm.processing" :class="{ 'opacity-30': paymentForm.processing }">
+                        <PrimaryButton :disabled="paymentForm.processing"
+                            :class="{ 'opacity-30': paymentForm.processing }">
                             Pay</PrimaryButton>
                         <SecondaryButton @click="closePayment">Cancel</SecondaryButton>
                     </div>
@@ -266,12 +268,12 @@ const closeEnrollment = () => {
                             <td class="px-2 py-1" v-text="formatDate(contribution?.end_at)">
                             </td>
                             <td class="px-2 py-1 uppercase font-medium text-white text-center" :class="{
-                                'bg-slate-400': contribution?.status == 'pending',
-                                'bg-orange-400': contribution?.status == 'partial',
-                                'bg-lime-400': contribution?.status == 'paid',
-                                'bg-red-500': contribution?.status == 'late',
-                                'bg-red-200': !contribution?.status,
-                            }" v-text="contribution?.status || 'none'">
+        'bg-slate-400': contribution?.status == 'pending',
+        'bg-orange-400': contribution?.status == 'partial',
+        'bg-lime-400': contribution?.status == 'paid',
+        'bg-red-500': contribution?.status == 'late',
+        'bg-red-200': !contribution?.status,
+    }" v-text="contribution?.status || 'none'">
                             </td>
                             <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.amount)">
                             </td>
@@ -280,10 +282,12 @@ const closeEnrollment = () => {
                             <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.balance)">
                             </td>
                             <td class="px-2 py-1 text-right">
-                                <SecondaryButton v-if="!contribution?.id" @click="showEnrollDialog(contribution)" size="xs">
+                                <SecondaryButton v-if="!contribution?.id" @click="showEnrollDialog(contribution)"
+                                    size="xs">
                                     Enroll
                                 </SecondaryButton>
-                                <SecondaryButton v-if="contribution?.id" @click="makePayment(contribution)" size="xs">Pay
+                                <SecondaryButton v-if="contribution?.id && contribution?.balance"
+                                    @click="makePayment(contribution)" size="xs">Pay
                                 </SecondaryButton>
                             </td>
                         </tr>

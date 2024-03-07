@@ -30,7 +30,7 @@ watch(() => toggleState.value, value => {
         <Banner />
 
         <div class="relative min-h-screen bg-gray-100">
-            <div class="fixed top-0 left-0 pl-0 md:pl-4 overflow-hidden bg-gray-800 block transition-all duration-500"
+            <div class="fixed top-0 left-0 pl-0 md:pl-4 overflow-hidden bg-gray-900 block transition-all duration-500"
                 :class="{ 'w-80': toggleState, 'w-0 md:w-20': !toggleState }">
                 <Sidebar :toggle-state="toggleState" />
             </div>

@@ -19,8 +19,9 @@ onMounted(() => {
     }).filter(link => link.show)
 })
 </script>
+
 <template>
-    <div class="min-h-screen w-full shadow py-2 text-gray-200 flex flex-col">
+    <div class="min-h-screen w-full shadow py-2 text-gray-200 flex flex-col bg-gray-800">
 
         <div class="shrink-0 flex items-center my-8 px-3 flex-none">
             <Link :href="route('dashboard')">
@@ -36,8 +37,8 @@ onMounted(() => {
             </ul>
             <ul class="relative">
                 <li class="relative block w-76" v-for="link in linksBottom">
-                    <SBLink :method="link?.method" :as="link?.as ?? 'a'" :link="link" :active="route().current(link.name)"
-                        :toggle="toggleState" />
+                    <SBLink :method="link?.method" :as="link?.as ?? 'a'" :link="link"
+                        :active="route().current(link.name)" :toggle="toggleState" />
                 </li>
             </ul>
 
