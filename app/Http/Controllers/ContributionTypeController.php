@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use NumberFormatter;
 use App\Models\Member;
+use App\Models\Payment;
 use App\Models\Contribution;
 use Illuminate\Support\Carbon;
 use App\Models\ContributionType;
 use App\Http\Resources\ContributionTypeResource;
 use App\Http\Requests\StoreContributionTypeRequest;
 use App\Http\Requests\UpdateContributionTypeRequest;
-use App\Models\Payment;
 
 class ContributionTypeController extends Controller
 {
@@ -21,7 +21,17 @@ class ContributionTypeController extends Controller
     public function index()
     {
         $contribution_types = ContributionTypeResource::collection(ContributionType::paginate());
-        return Inertia::render('Contributions/Index', ['contribution_types' => $contribution_types]);
+        $members = Member::all()->map(function ($item) {
+            return [
+                "id" => $item->id,
+                "name" => sprintf("%s %s", $item->first_name, $item->last_name),
+                "photo" => $item->photo_url,
+                "phone" => $item->phone,
+                "email" => $item->email,
+                "postal_address" => $item->box_no ? sprintf("P.O. Box %s%s, %s", $item->box_no, $item->post_code ? "-" . $item->post_code : "", $item->town) : '',
+            ];
+        });
+        return Inertia::render('Contributions/Index', ['contribution_types' => $contribution_types, 'members' => $members]);
     }
 
     /**

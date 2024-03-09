@@ -65,7 +65,7 @@ const showEnrollDialog = (contribution: iContribution) => {
 }
 
 const enrollContribution = () => {
-    registerForm.post(route('contributions-register'), {
+    registerForm.post(route('accounts-contributions-register'), {
         only: ['notification', 'errors', 'contribution_type', 'members'],
         onSuccess: () => {
             Swal.fire({
@@ -96,7 +96,7 @@ const makePayment = (contribution) => {
 }
 
 const pay = () => {
-    paymentForm.post(route('payments-store'), {
+    paymentForm.post(route('accounts-payments-store'), {
         only: ['notification', 'errors', 'contribution_type', 'members'],
         onSuccess: () => {
             Swal.fire({
