@@ -4,8 +4,10 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TitheController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OfferingController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ContributionController;
@@ -54,25 +56,48 @@ Route::middleware([
                 });
         });
 
-    Route::prefix('contributions')
-        ->name('contributions')
+    Route::prefix('accounts')
+        ->name('accounts')
         ->group(function () {
-            Route::get('', [ContributionTypeController::class, 'index']);
-            Route::get('{contribution_type}', [ContributionTypeController::class, 'show'])->name('-show');
-            Route::post('', [ContributionTypeController::class, 'store'])->name('-store');
-            Route::patch('{contribution_type}', [ContributionTypeController::class, 'update'])->name('-update');
-            Route::delete('', [ContributionTypeController::class, 'destroy'])->name('-destroy');
-            Route::post('register', [ContributionController::class, 'store'])->name('-register');
+            Route::prefix('contributions')
+                ->name('-contributions')
+                ->group(function () {
+                    Route::get('', [ContributionTypeController::class, 'index']);
+                    Route::get('{contribution_type}', [ContributionTypeController::class, 'show'])->name('-show');
+                    Route::post('', [ContributionTypeController::class, 'store'])->name('-store');
+                    Route::patch('{contribution_type}', [ContributionTypeController::class, 'update'])->name('-update');
+                    Route::delete('', [ContributionTypeController::class, 'destroy'])->name('-destroy');
+                    Route::post('register', [ContributionController::class, 'store'])->name('-register');
+                });
+
+            Route::prefix('tithes')
+                ->name('-tithes')
+                ->group(function () {
+                    Route::get('', [TitheController::class, 'index']);
+                    Route::post('', [TitheController::class, 'store'])->name('-store');
+                    Route::patch('{tithe}', [TitheController::class, 'update'])->name('-update');
+                    Route::delete('', [TitheController::class, 'destroy'])->name('-destroy');
+                });
+
+            Route::prefix('offerings')
+                ->name('-offerings')
+                ->group(function () {
+                    Route::get('', [OfferingController::class, 'index']);
+                    Route::post('', [OfferingController::class, 'store'])->name('-store');
+                    Route::patch('{offering}', [OfferingController::class, 'update'])->name('-update');
+                    Route::delete('', [OfferingController::class, 'destroy'])->name('-destroy');
+                });
+
+            Route::prefix('payments')
+                ->name('-payments')
+                ->group(function () {
+                    Route::get('', [PaymentController::class, 'index']);
+                    Route::post('', [PaymentController::class, 'store'])->name('-store');
+                    Route::patch('', [PaymentController::class, 'update'])->name('-update');
+                    Route::delete('', [PaymentController::class, 'destroy'])->name('-destroy');
+                });
         });
 
-    Route::prefix('payments')
-        ->name('payments')
-        ->group(function () {
-            Route::get('', [PaymentController::class, 'index']);
-            Route::post('', [PaymentController::class, 'store'])->name('-store');
-            Route::patch('', [PaymentController::class, 'update'])->name('-update');
-            Route::delete('', [PaymentController::class, 'destroy'])->name('-destroy');
-        });
 
     Route::prefix('users')
         ->name('users')

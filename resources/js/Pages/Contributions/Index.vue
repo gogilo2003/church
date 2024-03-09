@@ -84,7 +84,7 @@ const cancel = () => {
 
 const submit = () => {
     if (edit.value) {
-        form.patch(route('contributions-update', form.id), {
+        form.patch(route('accounts-contributions-update', form.id), {
             onSuccess: () => {
                 Swal.fire({
                     icon: 'success',
@@ -100,7 +100,7 @@ const submit = () => {
             only: ['errors', 'contribution_types', 'notification']
         })
     } else {
-        form.post(route('contributions-store'), {
+        form.post(route('accounts-contributions-store'), {
             onSuccess: () => {
                 Swal.fire({
                     icon: 'success',
@@ -147,7 +147,8 @@ const submit = () => {
                         <div
                             class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                         </div>
-                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 whitespace-nowrap">Back Date
+                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 whitespace-nowrap">Back
+                            Date
                             to Registration
                             date</span>
                     </label>
@@ -217,7 +218,7 @@ const submit = () => {
                         <div class="flex gap-1 self-start lg:self-end">
                             <Link
                                 class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-full font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
-                                :href="route('contributions-show', contribution.id)">
+                                :href="route('accounts-contributions-show', contribution.id)">
                             <div class="flex gap-1">
                                 <Icon type="show" class="h-4 w-4" /><span class="hidden lg:inline-flex">Details</span>
                             </div>
@@ -229,7 +230,8 @@ const submit = () => {
                             </SecondaryButton>
                             <SecondaryButton class="text-red-500" @click="deleteContribution(contribution)">
                                 <div class="flex gap-1">
-                                    <Icon type="delete" class="h-4 w-4" /><span class="hidden lg:inline-flex">Delete</span>
+                                    <Icon type="delete" class="h-4 w-4" /><span
+                                        class="hidden lg:inline-flex">Delete</span>
                                 </div>
                             </SecondaryButton>
                         </div>
@@ -238,4 +240,5 @@ const submit = () => {
 
             </div>
         </Container>
-    </AppLayout></template>
+    </AppLayout>
+</template>
