@@ -6,12 +6,12 @@ defineOptions({
     inheritAttrs: false
 })
 
-defineProps({
-    modelValue: String,
-    error: String,
-    label: String,
-    options: Array
-});
+defineProps<{
+    modelValue: string | number,
+    error: string,
+    label: string,
+    options: any[]
+}>();
 
 defineEmits(['update:modelValue']);
 

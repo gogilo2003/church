@@ -11,7 +11,7 @@ class StoreOfferingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreOfferingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "type" => ["required", "numeric", "integer", "exists:offering_types,id"],
+            "offering_date" => ["required", "date", "unique:offerings,offering_date,null,id,offering_type_id," . $this->type],
+            "amount" => ["required", "numeric"],
         ];
     }
 }

@@ -10,13 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('offerings', function (Blueprint $table) {
+        Schema::create('offering_types', function (Blueprint $table) {
             $table->id();
-            $table->date('offering_date');
-            $table->decimal('amount', 10, 2);
-            $table->foreignId('user_id');
+            $table->string('name', 100);
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -25,6 +22,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('offerings');
+        Schema::dropIfExists('offering_types');
     }
 };

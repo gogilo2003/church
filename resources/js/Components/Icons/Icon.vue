@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import Dashboard from './Dashboard.vue'
 import Product from './Product.vue';
 import Logout from './Logout.vue';
@@ -20,7 +21,8 @@ import Image from './Image.vue';
 import IdCard from './IdCard.vue';
 import Show from './Show.vue';
 import Attendance from './Attendance.vue';
-import { computed } from 'vue';
+import Checkmark from './Checkmark.vue';
+import Done from './Done.vue';
 
 const props = defineProps({
     type: String
@@ -89,6 +91,12 @@ const icon = computed(() => {
     }
     if (props.type == 'attendance') {
         return Attendance;
+    }
+    if (props.type == 'checkmark') {
+        return Checkmark;
+    }
+    if (props.type == 'done') {
+        return Done;
     }
 })
 </script>

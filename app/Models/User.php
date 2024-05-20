@@ -85,4 +85,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attendance::class);
     }
+
+    /**
+     * Get all of the offerings for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function offerings(): HasMany
+    {
+        return $this->hasMany(Offering::class);
+    }
 }

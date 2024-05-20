@@ -50,7 +50,7 @@ onMounted(() => {
                     <Icon @click="toggle" class="w-auto h-full py-4 text-gray-400 flex-none"
                         :type="toggleState ? 'times' : 'menu'" />
                     <!-- Menu end-->
-                    <div class="md:flex items-center text-gray-700 font-semibold text-xl">
+                    <div class="md:flex flex-1 items-center text-gray-700 font-semibold text-xl">
                         <slot name="header" />
                     </div>
                 </div>
@@ -63,8 +63,8 @@ onMounted(() => {
                             <template #trigger>
                                 <button v-if="page.jetstream.managesProfilePhotos"
                                     class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                    <img class="h-8 w-8 rounded-full object-cover" :src="page.auth.user.profile_photo_url"
-                                        :alt="page.auth.user.name">
+                                    <img class="h-8 w-8 rounded-full object-cover"
+                                        :src="page.auth.user.profile_photo_url" :alt="page.auth.user.name">
                                 </button>
 
                                 <span v-else class="inline-flex rounded-md">
@@ -108,7 +108,8 @@ onMounted(() => {
                                 d="M4 6h16M4 12h16M4 18h16" />
                             <path
                                 :class="{ 'hidden': !showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }"
-                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
