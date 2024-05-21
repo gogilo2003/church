@@ -17,7 +17,7 @@ class OfferingController extends Controller
     {
         $search = request()->input('search');
 
-        $offerings = Offering::paginate(8)->through(fn(Offering $offering) => [
+        $offerings = Offering::orderBy('offering_date', 'DESC')->paginate(8)->through(fn(Offering $offering) => [
             "id" => $offering->id,
             "offering_date" => $offering->offering_date->isoFormat('ddd D MMM, Y'),
             "amount" => $offering->amount,
