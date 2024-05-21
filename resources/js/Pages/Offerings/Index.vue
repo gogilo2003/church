@@ -12,6 +12,7 @@ import TextInput from '../../Components/FlowBite/TextInput.vue';
 import PrimaryButton from '../../Components/PrimaryButton.vue';
 import { formatCurrency, prepDate } from '../../helpers';
 import SelectInput from '../../Components/FlowBite/SelectInput.vue';
+import Container from '../../Components/Custom/Container.vue';
 
 const props = defineProps<{
     offerings: iOfferings,
@@ -252,29 +253,33 @@ const submitType = () => {
         <template #header>
             <div class="flex items-center justify-between flex-1">
                 <div>Offerings</div>
-                <SecondaryButton class="flex items-center gap-2" @click="addOffering">
-                    <Icon class="h-5 w-5" type="add" />
-                    <span>New Offering</span>
-                </SecondaryButton>
             </div>
         </template>
-        <div class="flex gap-2 flex-col px-4 md:px-8">
-            <div v-for="offering in offerings.data"
-                class="p-3 shadow bg-white rounded-lg flex items-center justify-between">
-                <div>
-                    <div class="text-sm font-medium"
-                        v-text="`${offering.offering_date}${offering?.type?.name ? ' - ' : ''}${offering?.type?.name ?? ''}`">
+        <Container>
+            <div class="p-6">
+                <PrimaryButton class="flex items-center gap-2" @click="addOffering">
+                    <Icon class="h-5 w-5" type="add" />
+                    <span>New Offering</span>
+                </PrimaryButton>
+                <div class="flex gap-2 flex-col mt-6">
+                    <div v-for="offering in offerings.data"
+                        class="p-3 shadow bg-gray-50 border rounded-lg flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-medium"
+                                v-text="`${offering.offering_date}${offering?.type?.name ? ' - ' : ''}${offering?.type?.name ?? ''}`">
+                            </div>
+                            <div class="font-light" v-text="formatCurrency(offering.amount)"></div>
+                        </div>
+                        <div>
+                            <SecondaryButton @click="editOffering(offering)" class="flex items-center gap-2 p-2">
+                                <Icon class="h-4 w-4" type="edit" />
+                                <span class="text-xs">Edit</span>
+                            </SecondaryButton>
+                        </div>
                     </div>
-                    <div class="font-light" v-text="formatCurrency(offering.amount)"></div>
-                </div>
-                <div>
-                    <SecondaryButton @click="editOffering(offering)" class="flex items-center gap-2 p-2">
-                        <Icon class="h-4 w-4" type="edit" />
-                        <span class="text-xs">Edit</span>
-                    </SecondaryButton>
+                    <Paginator :items="offerings" />
                 </div>
             </div>
-            <Paginator :items="offerings" />
-        </div>
+        </Container>
     </AppLayout>
 </template>

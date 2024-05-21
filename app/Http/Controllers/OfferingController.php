@@ -19,7 +19,7 @@ class OfferingController extends Controller
 
         $offerings = Offering::orderBy('offering_date', 'DESC')->paginate(8)->through(fn(Offering $offering) => [
             "id" => $offering->id,
-            "offering_date" => $offering->offering_date->isoFormat('ddd D MMM, Y'),
+            "offering_date" => $offering->offering_date,
             "amount" => $offering->amount,
             "type" => $offering->type ? [
                 "id" => $offering->type->id,

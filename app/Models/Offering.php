@@ -34,7 +34,7 @@ class Offering extends Model
     public function offeringDate(): Attribute
     {
         return new Attribute(
-            get: fn($value) => Carbon::parse($value),
+            get: fn($value) => Carbon::parse($value)->isoFormat('dddd, D MMM, Y'),
             set: fn($value) => Carbon::parse($value),
         );
     }

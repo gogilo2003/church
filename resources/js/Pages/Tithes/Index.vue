@@ -11,6 +11,7 @@ import { formatCurrency, prepDate } from '../../helpers';
 import TextInput from '../../Components/FlowBite/TextInput.vue'
 import PrimaryButton from '../../Components/PrimaryButton.vue';
 import Paginator from '../../Components/Paginator.vue';
+import Container from '../../Components/Custom/Container.vue';
 
 const props = defineProps<{
     tithes: iTithes
@@ -152,21 +153,29 @@ const submit = () => {
                 </div>
             </div>
         </template>
-        <div class="flex flex-col gap-2 mx-8">
-            <div v-for="tithe in tithes.data"
-                class="flex flex-col md:flex-row justify-between items-center gap-2 shadow bg-white rounded-lg p-3">
-                <div>
-                    <div class="text-sm font-medium" v-text="tithe.tithed_on"></div>
-                    <div class="text-lg font-light text-gray-800" v-text="formatCurrency(tithe.amount)"></div>
-                </div>
-                <div>
-                    <SecondaryButton @click="editTithe(tithe)">
-                        <Icon class="h-4 w-4" type="edit" />
-                        <span class="text-xs">Edit</span>
-                    </SecondaryButton>
+        <Container>
+            <div class="p-6">
+                <PrimaryButton class="flex items-center gap-2" @click="addTithe">
+                    <Icon class="h-4 w-4" type="add" />
+                    <span class="text-xs">Add Tithe</span>
+                </PrimaryButton>
+                <div class="flex flex-col gap-2 mt-6">
+                    <div v-for="tithe in tithes.data"
+                        class="flex flex-col md:flex-row justify-between items-center gap-2 shadow border bg-gray-50 rounded-lg p-3">
+                        <div>
+                            <div class="text-sm font-medium" v-text="tithe.tithed_on"></div>
+                            <div class="text-lg font-light text-gray-800" v-text="formatCurrency(tithe.amount)"></div>
+                        </div>
+                        <div>
+                            <SecondaryButton @click="editTithe(tithe)">
+                                <Icon class="h-4 w-4" type="edit" />
+                                <span class="text-xs">Edit</span>
+                            </SecondaryButton>
+                        </div>
+                    </div>
+                    <Paginator :items="tithes" />
                 </div>
             </div>
-            <Paginator :items="tithes" />
-        </div>
+        </Container>
     </AppLayout>
 </template>
