@@ -14,16 +14,22 @@ class TitheController extends Controller
      */
     public function index()
     {
-        $tithes = Tithe::when()->paginate(8)->map(fn(Tithe $tithe) => [
-            "id" => $tithe->id,
-            "tithed_on" => $tithe->tithed_on,
-            "amount" => $tithe->amount,
-            "user" => [
-                "id" => $tithe->user->id,
-                "name" => $tithe->user->name,
-            ],
-        ]);
-        return Inertia::render('Tithes/Index', ['tithes' => $tithes]);
+        $search = request()->input('search');
+
+        $tithes = Tithe::when($search, function ($query) use ($search) {
+            $query->where('tithed_on', $search);
+        })->paginate(8)
+            ->through(fn(Tithe $tithe) => [
+                "id" => $tithe->id,
+                "tithed_on" => $tithe->tithed_on,
+                "amount" => $tithe->amount,
+                "user" => [
+                    "id" => $tithe->user->id,
+                    "name" => $tithe->user->name,
+                ],
+            ]);
+
+        return Inertia::render('Tithes/Index', ['tithes' => $tithes, 'search' => $search]);
     }
 
     /**

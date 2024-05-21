@@ -23,7 +23,7 @@ class UpdateTitheRequest extends FormRequest
     {
         return [
             "id" => ["required", "numeric", "integer", "exists:tithes,id"],
-            "tithed_on" => ["required", "date", "unique:tithes,tithed_on," . $this->id . ",id,"],
+            "tithed_on" => ["required", "date", "unique:tithes,tithed_on," . $this->id . ",id"],
             "amount" => ["required", "numeric", "min:1"]
         ];
     }

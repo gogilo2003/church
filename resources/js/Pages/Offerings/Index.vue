@@ -10,7 +10,7 @@ import { router, useForm } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
 import TextInput from '../../Components/FlowBite/TextInput.vue';
 import PrimaryButton from '../../Components/PrimaryButton.vue';
-import { formatCurrency } from '../../helpers';
+import { formatCurrency, prepDate } from '../../helpers';
 import SelectInput from '../../Components/FlowBite/SelectInput.vue';
 
 const props = defineProps<{
@@ -54,24 +54,6 @@ const addOffering = () => {
     form.amount = null
     form.type = null
     show.value = true
-}
-
-const prepDate = (value: string) => {
-    let dt = new Date(value)
-    let year = dt.getFullYear()
-    let month: string | number = dt.getMonth() + 1
-
-    if (month.toString().length < 2) {
-        month = '0'.concat(month.toString())
-    }
-
-    let date: string | number = dt.getDate()
-
-    if (date.toString().length < 2) {
-        date = '0'.concat(date.toString())
-    }
-
-    return `${year}-${month}-${date}`
 }
 
 const editOffering = (offering: iOffering) => {

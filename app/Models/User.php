@@ -95,4 +95,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Offering::class);
     }
+
+    /**
+     * Get all of the tithes for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tithes(): HasMany
+    {
+        return $this->hasMany(Tithe::class);
+    }
 }
