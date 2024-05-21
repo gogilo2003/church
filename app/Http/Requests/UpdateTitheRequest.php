@@ -11,7 +11,7 @@ class UpdateTitheRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return request()->user()->isAdmin();
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateTitheRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "id" => ["required", "numeric", "integer", "exists:tithes,id"],
+            "tithed_on" => ["required", "date", "unique:tithes,tithed_on," . $this->id . ",id,"],
+            "amount" => ["required", "numeric", "min:1"]
         ];
     }
 }

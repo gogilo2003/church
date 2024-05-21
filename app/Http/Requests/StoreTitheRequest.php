@@ -11,7 +11,7 @@ class StoreTitheRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return request()->user()->isAdmin();
     }
 
     /**
@@ -22,7 +22,8 @@ class StoreTitheRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "tithed_on" => ["required", "date", "unique:tithes,tithed_on"],
+            "amount" => ["required", "numeric", "min:1"]
         ];
     }
 }

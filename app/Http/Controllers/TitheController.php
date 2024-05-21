@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTitheRequest;
 use App\Http\Requests\UpdateTitheRequest;
 use App\Models\Tithe;
+use Inertia\Inertia;
 
 class TitheController extends Controller
 {
@@ -13,15 +14,16 @@ class TitheController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $tithes = Tithe::when()->paginate(8)->map(fn(Tithe $tithe) => [
+            "id" => $tithe->id,
+            "tithed_on" => $tithe->tithed_on,
+            "amount" => $tithe->amount,
+            "user" => [
+                "id" => $tithe->user->id,
+                "name" => $tithe->user->name,
+            ],
+        ]);
+        return Inertia::render('Tithes/Index', ['tithes' => $tithes]);
     }
 
     /**
@@ -29,23 +31,13 @@ class TitheController extends Controller
      */
     public function store(StoreTitheRequest $request)
     {
-        //
-    }
+        $tithe = new Tithe();
+        $tithe->tithed_on = $request->tithed_on;
+        $tithe->amount = $request->amount;
+        $tithe->user_id = $request->user()->id;
+        $tithe->save();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Tithe $tithe)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Tithe $tithe)
-    {
-        //
+        return redirect()->back()->with('success', 'Tithe stored');
     }
 
     /**
@@ -53,7 +45,12 @@ class TitheController extends Controller
      */
     public function update(UpdateTitheRequest $request, Tithe $tithe)
     {
-        //
+        $tithe->tithed_on = $request->tithed_on;
+        $tithe->amount = $request->amount;
+        $tithe->user_id = $request->user()->id;
+        $tithe->save();
+
+        return redirect()->back()->with('success', 'Tithe updated');
     }
 
     /**
@@ -61,6 +58,8 @@ class TitheController extends Controller
      */
     public function destroy(Tithe $tithe)
     {
-        //
+        $tithe->delete();
+
+        return redirect()->back()->with('success', 'Tithe deleted');
     }
 }
