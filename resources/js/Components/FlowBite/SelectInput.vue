@@ -7,9 +7,9 @@ defineOptions({
 })
 
 defineProps<{
-    modelValue: string | number,
-    error: string,
-    label: string,
+    modelValue: string | number | null,
+    error?: string,
+    label?: string,
     options: any[]
 }>();
 

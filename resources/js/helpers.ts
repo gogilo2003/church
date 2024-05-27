@@ -30,3 +30,23 @@ export const prepDate = (value: string) => {
 
     return `${year}-${month}-${date}`
 }
+
+
+export const getWeekOfYear = (param) => {
+
+    let date = new Date(param)
+
+    // Copy date so that the original date is not modified
+    const currentDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+
+    // Set to nearest Thursday: currentDate becomes currentDate + 4 - currentDate.getDay() (from Sun=0 to Sat=6)
+    currentDate.setUTCDate(currentDate.getUTCDate() + 4 - (currentDate.getUTCDay() || 7));
+
+    // Get first day of the year
+    const yearStart = new Date(Date.UTC(currentDate.getUTCFullYear(), 0, 1));
+
+    // Calculate full weeks to nearest Thursday
+    const weekNumber = Math.ceil((((currentDate - yearStart) / 86400000) + 1) / 7);
+
+    return weekNumber;
+}

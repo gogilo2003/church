@@ -8,6 +8,7 @@ use App\Http\Controllers\TitheController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OfferingController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ContributionController;
@@ -40,9 +41,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::prefix('setup')
         ->name('setup')

@@ -56,3 +56,8 @@ export interface iTithes {
     to: number
     total: number
 }
+
+export interface iStat {
+    name: string
+    value: number
+}

@@ -41,18 +41,22 @@ class HandleInertiaRequests extends Middleware
         if (session('success') || session('danger') || session('warning') || session('info')) {
             if (session("success")) {
                 $data["notification"]["success"] = session('success');
-            };
+            }
+            ;
             if (session("danger")) {
                 $data["notification"]["danger"] = session('danger');
-            };
+            }
+            ;
             if (session("warning")) {
                 $data["notification"]["warning"] = session('warning');
-            };
+            }
+            ;
             if (session("info")) {
                 $data["notification"]["info"] = session('info');
-            };
+            }
+            ;
         }
 
-        return array_merge(parent::share($request), $data);
+        return array_merge(parent::share($request), ['appName' => config('app.name')], $data);
     }
 }

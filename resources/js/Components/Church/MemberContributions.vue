@@ -155,7 +155,7 @@ const closeEnrollment = () => {
                 <form @submit.prevent="pay">
                     <div class="px-4 py-3">
                         <div class="mb-6">
-                            <SelectInput label="Mode of Payment" :error="paymentForm.errors.mode"
+                            <SelectInput label="Mode of Payment" :error="paymentForm.errors.mode ?? ''"
                                 v-model="paymentForm.mode" class="w-full"
                                 :options="[{ value: 'cash', text: 'Cash' }, { value: 'mpesa', text: 'MPesa' }, { value: 'cheque', text: 'Cheque' }]" />
                         </div>
