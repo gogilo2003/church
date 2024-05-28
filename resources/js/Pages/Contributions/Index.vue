@@ -11,12 +11,13 @@ import Container from '../../Components/Custom/Container.vue';
 import Swal from 'sweetalert2';
 import InputError from '../../Components/InputError.vue';
 import ContributionType from '../../Components/Church/ContributionType.vue';
+import { iMembers, iNotification } from '../../types';
 
-const props = defineProps({
+const props = defineProps<{
     contribution_types: Object,
-    notification: Object,
-    members: Array,
-})
+    notification?: iNotification,
+    members: iMembers,
+}>()
 
 const form = useForm({
     id: null,
@@ -228,7 +229,7 @@ const selectAll = () => {
                         </div>
                         <div class="max-h-[30rem] overflow-y-auto flex flex-col gap-2 px-4 py-2">
                             <div class="flex gap-2 items-center"
-                                v-for="{ id, name, photo, phone, email, postal_address } in members">
+                                v-for="{ id, name, photo, phone, email, postal_address } in members.data">
                                 <div class="h-16 w-16 flex-none">
                                     <img class="w-full h-full object-cover rounded-full" :src="photo" alt="">
                                 </div>
@@ -275,28 +276,23 @@ const selectAll = () => {
                         class="shadow py-4 px-6 rounded-xl border flex flex-col lg:flex-row items-start gap-2 md:justify-between">
                         <ContributionType :item="contribution" />
                         <div class="flex gap-1 self-start lg:self-end">
-                            <Link
+                            <SecondaryButton size="sm" :type="Link"
                                 class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-full font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
                                 :href="route('accounts-contributions-show', contribution.id)">
-                            <div class="flex gap-1">
-                                <Icon type="show" class="h-4 w-4" /><span class="hidden lg:inline-flex">Details</span>
-                            </div>
-                            </Link>
-                            <SecondaryButton @click="editContribution(contribution)">
-                                <div class="flex gap-1">
-                                    <Icon type="edit" class="h-4 w-4" /><span class="hidden lg:inline-flex">Edit</span>
-                                </div>
+                                <Icon type="show" class="h-full w-auto object-contain" /><span
+                                    class="hidden lg:inline-flex">Details</span>
                             </SecondaryButton>
-                            <SecondaryButton class="text-red-500" @click="deleteContribution(contribution)">
-                                <div class="flex gap-1">
-                                    <Icon type="delete" class="h-4 w-4" /><span
-                                        class="hidden lg:inline-flex">Delete</span>
-                                </div>
+                            <SecondaryButton size="sm" severity="success" @click="editContribution(contribution)">
+                                <Icon type="edit" class="h-full w-auto object-contain" /><span
+                                    class="hidden lg:inline-flex">Edit</span>
+                            </SecondaryButton>
+                            <SecondaryButton size="sm" severity="danger" @click="deleteContribution(contribution)">
+                                <Icon type="delete" class="h-full w-auto object-contain" /><span
+                                    class="hidden lg:inline-flex">Delete</span>
                             </SecondaryButton>
                         </div>
                     </div>
                 </div>
-
             </div>
         </Container>
     </AppLayout>

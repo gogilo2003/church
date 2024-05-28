@@ -9,10 +9,6 @@ export interface iLink {
     label: string,
     active: string,
 }
-export interface iMember {
-    id: Number,
-    name: String,
-}
 export interface iOffering {
     id: number
     offering_date: string
@@ -43,6 +39,50 @@ export interface iTithe {
 }
 export interface iTithes {
     data: iTithe[]
+    current_page: number
+    first_page_url: string | null
+    from: number
+    last_page: number
+    last_page_url: string | null
+    links: Array<iLink>
+    next_page_url: string | null
+    path: string | null
+    per_page: number
+    prev_page_url: string | null
+    to: number
+    total: number
+}
+export interface iAttendance {
+    id: number
+    title: string
+    attendance_date: string
+    user: { id: number, name: string } | null
+}
+export interface iAttendances {
+    data: iAttendance[]
+    current_page: number
+    first_page_url: string | null
+    from: number
+    last_page: number
+    last_page_url: string | null
+    links: Array<iLink>
+    next_page_url: string | null
+    path: string | null
+    per_page: number
+    prev_page_url: string | null
+    to: number
+    total: number
+}
+export interface iMember {
+    id: number
+    name: string
+    photo: string
+    phone: string
+    email: string
+    postal_address: string
+}
+export interface iMembers {
+    data: iMember[]
     current_page: number
     first_page_url: string | null
     from: number

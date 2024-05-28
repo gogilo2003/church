@@ -4,6 +4,7 @@ import Welcome from '../Components/Welcome.vue';
 import Container from '../Components/Custom/Container.vue';
 import { iStat } from '../types';
 import TitheChart from '../Components/Church/Stats/Tithe.vue'
+import AttendanceChart from '../Components/Church/Stats/Attendance.vue'
 
 const props = defineProps<{
     stats: iStat[],

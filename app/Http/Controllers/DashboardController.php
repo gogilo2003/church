@@ -51,6 +51,7 @@ class DashboardController extends Controller
             'tithes' => Util::getTitheSummary(),
             'offerings' => Util::getOfferingSummary(),
             'contributions' => Util::getPaymentSummary(),
+            'attendances' => Util::getAttendanceSummary(),
         ];
 
         return Inertia::render('Dashboard', $data);

@@ -17,7 +17,7 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        $attendances = Attendance::with('members')->get();
+        $attendances = Attendance::with('members')->paginate(8);
         return Inertia::render('Attendances/Index', ['attendances' => $attendances]);
     }
 
@@ -76,7 +76,7 @@ class AttendanceController extends Controller
     public function mark(Attendance $attendance)
     {
         $attendance->load('members');
-        $members = Member::all()->map(fn ($member) => [
+        $members = Member::all()->map(fn($member) => [
             "id" => $member->id,
             "name" => $member->first_name . ' ' . $member->last_name,
             "phone" => $member->phone,
@@ -84,12 +84,15 @@ class AttendanceController extends Controller
             "age" => Carbon::parse($member->date_of_birth)->age,
             "photo" => $member->photo_url,
         ]);
-        return Inertia::render('Attendances/Mark', ['attendance' => [
-            "id" => $attendance->id,
-            "title" => $attendance->title,
-            "attendance_date" => Carbon::parse($attendance->attendance_date)->format('D d-M-Y'),
-            "members" => $attendance->members->pluck('id'),
-        ], 'members' => $members]);
+        return Inertia::render('Attendances/Mark', [
+            'attendance' => [
+                "id" => $attendance->id,
+                "title" => $attendance->title,
+                "attendance_date" => Carbon::parse($attendance->attendance_date)->format('D d-M-Y'),
+                "members" => $attendance->members->pluck('id'),
+            ],
+            'members' => $members
+        ]);
     }
 
     /**

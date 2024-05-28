@@ -2,7 +2,7 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import Icon from './Icons/Icon.vue';
-import { iLink, iOfferings, iTithes } from '../types';
+import { iLink, iOfferings, iTithes, iAttendances, iMembers } from '../types';
 
 
 const props = defineProps<{
@@ -20,7 +20,7 @@ const props = defineProps<{
         prev_page_url: string
         to: number
         total: number
-    } | iOfferings | iTithes
+    } | iOfferings | iTithes | iAttendances | iMembers
 }>()
 
 const lt = ref('&laquo; Previous');

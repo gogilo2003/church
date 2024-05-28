@@ -23,6 +23,7 @@ import Show from './Show.vue';
 import Attendance from './Attendance.vue';
 import Checkmark from './Checkmark.vue';
 import Done from './Done.vue';
+import ArrowLeft from './ArrowLeft.vue';
 
 const props = defineProps({
     type: String
@@ -97,6 +98,9 @@ const icon = computed(() => {
     }
     if (props.type == 'done') {
         return Done;
+    }
+    if (props.type == 'arrow-left') {
+        return ArrowLeft;
     }
 })
 </script>

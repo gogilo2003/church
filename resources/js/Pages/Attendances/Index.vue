@@ -6,18 +6,20 @@ import { ref } from "vue";
 import PrimaryButton from '../../Components/PrimaryButton.vue'
 import Icon from '../../Components/Icons/Icon.vue';
 import Swal from 'sweetalert2'
-import { useForm, router, usePage } from '@inertiajs/vue3';
+import { useForm, router, usePage, Link } from '@inertiajs/vue3';
 import TextInput from '../../Components/FlowBite/TextInput.vue';
 import SelectInput from '../../Components/FlowBite/SelectInput.vue';
 import SecondaryButton from '../../Components/SecondaryButton.vue';
 import InputLabel from '../../Components/InputLabel.vue';
 import InputError from '../../Components/InputError.vue';
 import SecondaryLink from '../../Components/SecondaryLink.vue';
+import { iAttendances, iNotification } from '../../types';
+import Paginator from '../../Components/Paginator.vue';
 
-const props = defineProps({
-    attendances: Array,
-    notification: Object
-})
+const props = defineProps<{
+    attendances: iAttendances,
+    notification: iNotification
+}>()
 
 const form = useForm({
     id: null,
@@ -103,10 +105,13 @@ const submit = () => {
         <Container>
             <div class="p-6">
                 <div class="py-3">
-                    <PrimaryButton @click="showDialog = true">New Attendance</PrimaryButton>
+                    <PrimaryButton @click="showDialog = true" class="flex items-center gap-2">
+                        <Icon class="h-5 w-5" type="add" />
+                        <span>New Attendance</span>
+                    </PrimaryButton>
                 </div>
                 <div class="flex flex-col gap-3">
-                    <div v-for="attendance in attendances"
+                    <div v-for="attendance in attendances.data"
                         class="shadow p-3 rounded-lg border flex flex-col lg:flex-row items-start gap-2 md:justify-between">
                         <div class="flex gap-2 items-center">
                             <div class="flex-1">
@@ -114,16 +119,17 @@ const submit = () => {
                                 </div>
                                 <div class="flex items-center gap-2 text-sm text-gray-600">
                                     <span v-text="attendance.attendance_date"></span>&nbsp;|&nbsp;
-                                    <span v-text="attendance.members.length"></span>
+                                    <span v-text="`${attendance.members.length} members`"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="flex gap-1 self-start lg:self-end">
-                            <SecondaryLink :href="route('attendance-mark', attendance?.id)">
+                            <SecondaryButton :type="Link" :href="route('attendance-mark', attendance?.id)">
                                 <div class="flex gap-1">
-                                    <Icon type="id-card" class="h-4 w-4" /><span class="hidden lg:inline-flex">Mark</span>
+                                    <Icon type="id-card" class="h-4 w-4" /><span
+                                        class="hidden lg:inline-flex">Mark</span>
                                 </div>
-                            </SecondaryLink>
+                            </SecondaryButton>
                             <SecondaryButton @click="editAttendance(attendance)">
                                 <div class="flex gap-1">
                                     <Icon type="edit" class="h-4 w-4" /><span class="hidden lg:inline-flex">Edit</span>
@@ -131,11 +137,13 @@ const submit = () => {
                             </SecondaryButton>
                             <SecondaryButton class="text-red-500" @click="deleteAttendance(attendance)">
                                 <div class="flex gap-1">
-                                    <Icon type="delete" class="h-4 w-4" /><span class="hidden lg:inline-flex">Delete</span>
+                                    <Icon type="delete" class="h-4 w-4" /><span
+                                        class="hidden lg:inline-flex">Delete</span>
                                 </div>
                             </SecondaryButton>
                         </div>
                     </div>
+                    <Paginator :items="attendances" />
                 </div>
             </div>
         </Container>
@@ -150,7 +158,8 @@ const submit = () => {
             </div>
             <div class="mb-4">
                 <InputLabel value="Date" />
-                <TextInput type="date" v-model="form.attendance_date" />
+                <!-- <TextInput type="date" v-model="form.attendance_date" /> -->
+                <VueDatePicker />
                 <InputError :message="form.errors.attendance_date" />
             </div>
             <div class="flex justify-between">
