@@ -2,8 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -41,22 +42,23 @@ class HandleInertiaRequests extends Middleware
         if (session('success') || session('danger') || session('warning') || session('info')) {
             if (session("success")) {
                 $data["notification"]["success"] = session('success');
-            }
-            ;
+            };
             if (session("danger")) {
                 $data["notification"]["danger"] = session('danger');
-            }
-            ;
+            };
             if (session("warning")) {
                 $data["notification"]["warning"] = session('warning');
-            }
-            ;
+            };
             if (session("info")) {
                 $data["notification"]["info"] = session('info');
-            }
-            ;
+            };
         }
 
-        return array_merge(parent::share($request), ['appName' => config('app.name')], $data);
+        return array_merge(
+            parent::share($request),
+            ['appName' => config('app.name')],
+            $data,
+            ['logo' => Storage::disk('public')->exists('logo.png') ? Storage::disk('public')->url('logo.png') : null]
+        );
     }
 }
