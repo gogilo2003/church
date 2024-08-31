@@ -13,7 +13,6 @@ import Photo from './Photo.vue';
 import Show from './Show.vue';
 import Swal from 'sweetalert2';
 
-
 const props = defineProps({
     members: Array,
     notification: Object
@@ -174,6 +173,10 @@ const deleteMember = member => {
         }
     })
 }
+
+const downloadMembers = () => {
+
+}
 </script>
 
 <template>
@@ -187,8 +190,15 @@ const deleteMember = member => {
 
         <Container>
             <div class="p-6">
-                <div class="py-3">
-                    <PrimaryButton @click="showDialog = true">New Member</PrimaryButton>
+                <div class="py-3 flex items-center gap-2">
+                    <PrimaryButton class="flex items-center gap-1" @click="showDialog = true">
+                        <Icon class="h-5 w-5" type="add" />
+                        New Member
+                    </PrimaryButton>
+                    <SecondaryButton @click="downloadMembers">
+                        <Icon class="h-5 w-5" type="download" />
+                        Download
+                    </SecondaryButton>
                 </div>
                 <div class="flex flex-col gap-3">
                     <div v-for="member in members"
@@ -208,12 +218,14 @@ const deleteMember = member => {
                         <div class="flex gap-1 self-start lg:self-end">
                             <SecondaryButton @click="updatePhoto(member.id)">
                                 <div class="flex gap-1">
-                                    <Icon type="image" class="h-4 w-4" /><span class="hidden lg:inline-flex">Photo</span>
+                                    <Icon type="image" class="h-4 w-4" /><span
+                                        class="hidden lg:inline-flex">Photo</span>
                                 </div>
                             </SecondaryButton>
                             <SecondaryButton>
                                 <div class="flex gap-1" @click="openViewDialog(member)">
-                                    <Icon type="id-card" class="h-4 w-4" /><span class="hidden lg:inline-flex">View</span>
+                                    <Icon type="id-card" class="h-4 w-4" /><span
+                                        class="hidden lg:inline-flex">View</span>
                                 </div>
                             </SecondaryButton>
                             <SecondaryButton @click="editMember(member)">
@@ -223,7 +235,8 @@ const deleteMember = member => {
                             </SecondaryButton>
                             <SecondaryButton class="text-red-500" @click="deleteMember(member)">
                                 <div class="flex gap-1">
-                                    <Icon type="delete" class="h-4 w-4" /><span class="hidden lg:inline-flex">Delete</span>
+                                    <Icon type="delete" class="h-4 w-4" /><span
+                                        class="hidden lg:inline-flex">Delete</span>
                                 </div>
                             </SecondaryButton>
                         </div>
@@ -264,7 +277,8 @@ const deleteMember = member => {
                 <TextInput class="mb-6" id="inputAddress" label="Address" :error="form.errors.address"
                     v-model="form.address" />
                 <div class="flex justify-between">
-                    <PrimaryButton :class="{ 'opacity-30': form.processing }" :disabled="form.processing" type="submit">Save
+                    <PrimaryButton :class="{ 'opacity-30': form.processing }" :disabled="form.processing" type="submit">
+                        Save
                     </PrimaryButton>
                     <SecondaryButton @click="closeDialog">Cancel</SecondaryButton>
                 </div>

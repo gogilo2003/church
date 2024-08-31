@@ -12,6 +12,7 @@ import TextInput from '../../Components/FlowBite/TextInput.vue'
 import PrimaryButton from '../../Components/PrimaryButton.vue';
 import Paginator from '../../Components/Paginator.vue';
 import Container from '../../Components/Custom/Container.vue';
+import { format } from 'date-fns';
 
 const props = defineProps<{
     tithes: iTithes
@@ -116,6 +117,10 @@ const submit = () => {
     }
 }
 
+const formatDate = date => {
+    return format(date, 'eee, do MMM, yyyy')
+}
+
 </script>
 <template>
     <Model :show="show">
@@ -128,15 +133,16 @@ const submit = () => {
         <div class="p-4">
             <form @submit.prevent="submit">
                 <div class="mb-4">
-                    <TextInput :error="form.errors.tithed_on" type="date" v-model="form.tithed_on"
-                        label="Date of Tithe" />
+                    <InputLabel value="Offering Date" />
+                    <VueDatePicker v-model="form.tithed_on" :format="formatDate" />
+                    <InputError :message="form.errors.tithed_on" />
                 </div>
                 <div class="mb-4">
                     <TextInput :error="form.errors.amount" v-model="form.amount" label="Amount" />
                 </div>
                 <div class="flex items-center justify-between">
                     <PrimaryButton type="submit">Save</PrimaryButton>
-                    <SecondaryButton @click="close">Cancel</SecondaryButton>
+                    <SecondaryButton @click.prevent="close">Cancel</SecondaryButton>
                 </div>
             </form>
         </div>

@@ -269,7 +269,10 @@ const selectAll = () => {
         <Container>
             <div class="p-6">
                 <div class="py-3">
-                    <PrimaryButton @click="newContribution">New Contribution</PrimaryButton>
+                    <PrimaryButton @click="newContribution">
+                        <Icon class="h-5 w-5" type="add" />
+                        New Contribution
+                    </PrimaryButton>
                 </div>
                 <div class="flex flex-col gap-3">
                     <div v-for="contribution in contribution_types?.data"

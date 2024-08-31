@@ -101,3 +101,8 @@ export interface iStat {
     name: string
     value: number
 }
+
+export interface iOfferingType {
+    id: number
+    name: string
+}

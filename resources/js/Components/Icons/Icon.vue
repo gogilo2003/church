@@ -24,6 +24,7 @@ import Attendance from './Attendance.vue';
 import Checkmark from './Checkmark.vue';
 import Done from './Done.vue';
 import ArrowLeft from './ArrowLeft.vue';
+import Download from './Download.vue';
 
 const props = defineProps({
     type: String
@@ -101,6 +102,9 @@ const icon = computed(() => {
     }
     if (props.type == 'arrow-left') {
         return ArrowLeft;
+    }
+    if (props.type == 'download') {
+        return Download;
     }
 })
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import AppLayout from '../../Layouts/AppLayout.vue';
-import { iOfferings, iOffering, iNotification } from '../../types';
+import { iOfferings, iOffering, iNotification, iOfferingType } from '../../types';
 import Paginator from '../../Components/Paginator.vue'
 import SecondaryButton from '../../Components/SecondaryButton.vue';
 import Icon from '../../Components/Icons/Icon.vue';
@@ -13,12 +13,15 @@ import PrimaryButton from '../../Components/PrimaryButton.vue';
 import { formatCurrency, prepDate } from '../../helpers';
 import SelectInput from '../../Components/FlowBite/SelectInput.vue';
 import Container from '../../Components/Custom/Container.vue';
+import { format } from 'date-fns';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
 
 const props = defineProps<{
     offerings: iOfferings,
     search?: string | null
     notification?: iNotification,
-    types: { id: number, name: string }[]
+    types: iOfferingType[]
 }>()
 
 const searchVal = ref<string | null | undefined>(props.search)
@@ -146,48 +149,37 @@ const closeType = () => {
 }
 
 const submitType = () => {
-    if (typeForm.id) {
-        typeForm.patch(route('accounts-offering-types-update', typeForm.id), {
-            only: ['types', 'errors', 'notification'],
-            preserveScroll: true,
-            preserveState: true,
-            onSuccess: () => {
-                Swal.fire({
-                    icon: 'success',
-                    text: props?.notification?.success
-                })
-                closeType()
-            },
-            onError: () => {
-                Swal.fire({
-                    icon: 'error',
-                    text: props?.notification?.danger ?? 'An error occurred! please check your fields and try again'
-                })
-
+    let oldTypes: Array<iOfferingType> = props.types.map(item => item.value)
+    typeForm.post(route('accounts-offering-types-store'), {
+        only: ['types', 'errors', 'notification'],
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            let addition = props.types.map(item => item.value).filter(item => !oldTypes.includes(item))
+            if (addition.length) {
+                form.type = addition[0]
             }
-        })
-    } else {
-        typeForm.post(route('accounts-offering-types-store'), {
-            only: ['types', 'errors', 'notification'],
-            preserveScroll: true,
-            preserveState: true,
-            onSuccess: () => {
-                Swal.fire({
-                    icon: 'success',
-                    text: props?.notification?.success
-                })
-                closeType()
-            },
-            onError: () => {
-                Swal.fire({
-                    icon: 'error',
-                    text: props?.notification?.danger ?? 'An error occurred! please check your fields and try again'
-                })
 
-            }
-        })
-    }
+            Swal.fire({
+                icon: 'success',
+                text: props?.notification?.success
+            })
+            closeType()
+        },
+        onError: () => {
+            Swal.fire({
+                icon: 'error',
+                text: props?.notification?.danger ?? 'An error occurred! please check your fields and try again'
+            })
+
+        }
+    })
 }
+
+const formatDate = date => {
+    return format(date, 'eee, do MMM, yyyy')
+}
+
 </script>
 <template>
     <Model :show="show">
@@ -206,7 +198,7 @@ const submitType = () => {
                                 :error="form.errors.type" v-model="form.type" />
                         </div>
                         <div class="flex-nonept-2">
-                            <SecondaryButton @click="addType" class="flex gap-2">
+                            <SecondaryButton @click.prevent="addType" class="flex gap-2">
                                 <Icon class="h-4 w-4" type="add" />
                                 <span class="text-xs">Add Type</span>
                             </SecondaryButton>
@@ -214,8 +206,9 @@ const submitType = () => {
                     </div>
                 </div>
                 <div class="mb-4">
-                    <TextInput type="date" id="inputOfferingDate" label="Offering Date"
-                        :error="form.errors.offering_date" v-model="form.offering_date" />
+                    <InputLabel value="Offering Date" />
+                    <VueDatePicker v-model="form.offering_date" :format="formatDate" />
+                    <InputError :message="form.errors.offering_date" />
                 </div>
                 <div class="mb-4">
                     <TextInput id="inputAmount" label="Amount" :error="form.errors.amount" v-model="form.amount" />
@@ -240,7 +233,7 @@ const submitType = () => {
                             <Icon class="h-4 w-5" type="done" />
                             <span class="text-xs">Save</span>
                         </PrimaryButton>
-                        <SecondaryButton @click="closeType">
+                        <SecondaryButton @click.prevent="closeType">
                             <Icon class="h-4 w-5" type="times" />
                             <span class="text-xs">Cancel</span>
                         </SecondaryButton>

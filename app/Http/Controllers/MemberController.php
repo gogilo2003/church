@@ -110,4 +110,6 @@ class MemberController extends Controller
 
         return redirect()->back()->with('success', 'Photo Updated');
     }
+
+    function download() {}
 }

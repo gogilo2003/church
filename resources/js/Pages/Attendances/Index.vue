@@ -15,10 +15,11 @@ import InputError from '../../Components/InputError.vue';
 import SecondaryLink from '../../Components/SecondaryLink.vue';
 import { iAttendances, iNotification } from '../../types';
 import Paginator from '../../Components/Paginator.vue';
+import { format } from 'date-fns';
 
 const props = defineProps<{
     attendances: iAttendances,
-    notification: iNotification
+    notification?: iNotification
 }>()
 
 const form = useForm({
@@ -94,6 +95,9 @@ const submit = () => {
     }
 }
 
+const formatDate = date => {
+    return format(date, 'eee, do MMM, yyyy')
+}
 </script>
 
 <template>
@@ -159,7 +163,7 @@ const submit = () => {
             <div class="mb-4">
                 <InputLabel value="Date" />
                 <!-- <TextInput type="date" v-model="form.attendance_date" /> -->
-                <VueDatePicker />
+                <VueDatePicker v-model="form.attendance_date" :format="formatDate" />
                 <InputError :message="form.errors.attendance_date" />
             </div>
             <div class="flex justify-between">
