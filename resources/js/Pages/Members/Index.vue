@@ -175,7 +175,8 @@ const deleteMember = member => {
 }
 
 const downloadMembers = () => {
-
+    let url: string = route('members-download');
+    window.open(url, '_blank');
 }
 </script>
 

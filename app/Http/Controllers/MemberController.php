@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Member;
+use Illuminate\Support\Carbon;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreMemberRequest;
 use App\Http\Requests\UploadPhotoRequest;
@@ -111,5 +113,61 @@ class MemberController extends Controller
         return redirect()->back()->with('success', 'Photo Updated');
     }
 
-    function download() {}
+    function download()
+    {
+        // Fetch all members
+        $members = Member::all()->map(function (Member $member) {
+            // Check if the member has a photo, otherwise use a placeholder based on gender
+            if (Storage::disk('public')->exists($member->photo)) {
+                $photoPath = Storage::disk('public')->path($member->photo);
+            } else {
+                $photoPath = public_path('images/' . ($member->gender ? 'male-placeholder.png' : 'female-placeholder.png'));
+            }
+
+            // Get the file size
+            $photoSize = filesize($photoPath);
+
+            // Convert the photo to base64
+            $photoBase64 = base64_encode(file_get_contents($photoPath));
+            $photoMimeType = mime_content_type($photoPath);
+
+            $date = Carbon::parse($member->date_of_birth);
+
+            return (object)[
+                'id' => sprintf("#%s", str_pad($member->id, 4, "0", STR_PAD_LEFT)),
+                'name' => "$member->first_name $member->last_name",
+                'email' => $member->email,
+                'phone' => $member->phone,
+                'date_of_birth' => sprintf("%s(%s)", $date->isoFormat('ddd, Do MMM, Y'), $date->age),
+                'gender' => $member->gender ? 'Male' : 'Female',
+                'photo' => "data:$photoMimeType;base64,$photoBase64",
+                'photo_size' => $this->formatSizeUnits($photoSize),  // Include human-readable photo size
+            ];
+        });
+
+        // Load the Blade template and pass the data
+        $pdf = SnappyPdf::loadView('reports.member_report', compact('members'));
+
+        // Download the PDF
+        return $pdf->inline('member_report.pdf');
+    }
+
+    private function formatSizeUnits($bytes)
+    {
+        if ($bytes >= 1073741824) {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        } elseif ($bytes > 1) {
+            $bytes = $bytes . ' bytes';
+        } elseif ($bytes == 1) {
+            $bytes = $bytes . ' byte';
+        } else {
+            $bytes = '0 bytes';
+        }
+
+        return $bytes;
+    }
 }

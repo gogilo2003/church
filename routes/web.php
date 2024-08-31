@@ -138,6 +138,7 @@ Route::middleware([
             Route::patch('{member}', 'update')->name('-update');
             Route::delete('{member}', 'destroy')->name('-delete');
             Route::post('photo', 'photo')->name('-photo');
+            Route::get('/download', 'download')->name('-download');
         });
     Route::prefix('attendance')
         ->controller(AttendanceController::class)
