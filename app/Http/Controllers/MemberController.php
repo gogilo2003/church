@@ -118,8 +118,12 @@ class MemberController extends Controller
         // Fetch all members
         $members = Member::all()->map(function (Member $member) {
             // Check if the member has a photo, otherwise use a placeholder based on gender
-            if (!empty($member->photo) && Storage::disk('public')->exists($member->photo)) {
-                $photoPath = Storage::disk('public')->path($member->photo);
+            if (empty($member->photo)) {
+                if (Storage::disk('public')->exists($member->photo)) {
+                    $photoPath = Storage::disk('public')->path($member->photo);
+                } else {
+                    $photoPath = public_path('images/' . ($member->gender ? 'male-placeholder.png' : 'female-placeholder.png'));
+                }
             } else {
                 $photoPath = public_path('images/' . ($member->gender ? 'male-placeholder.png' : 'female-placeholder.png'));
             }
