@@ -174,7 +174,7 @@
         }
 
         .container {
-            background-color: whitesmoke;
+            /* background-color: whitesmoke; */
         }
 
         .logo {

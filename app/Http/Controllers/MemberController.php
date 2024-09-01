@@ -153,7 +153,7 @@ class MemberController extends Controller
         $pdf = SnappyPdf::loadView('reports.member_report', compact('members'));
 
         // Download the PDF
-        return $pdf->inline('member_report.pdf');
+        return $pdf->setOrientation('landscape')->inline('member_report.pdf');
     }
 
     private function formatSizeUnits($bytes)
