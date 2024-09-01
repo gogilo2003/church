@@ -219,7 +219,7 @@
     @stack('styles')
 </head>
 
-<body>
+<body class="poppins-regular">
     <div class="container">
         <img class="logo" src="{!! $logo !!}">
         <h1 class="poppins-black uppercase text-center">{{ env('APP_NAME') }}</h1>
