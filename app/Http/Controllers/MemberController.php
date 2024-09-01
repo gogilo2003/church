@@ -122,10 +122,10 @@ class MemberController extends Controller
                 if (Storage::disk('public')->exists($member->photo)) {
                     $photoPath = Storage::disk('public')->path($member->photo);
                 } else {
-                    $photoPath = public_path('images/' . ($member->gender ? 'male-placeholder.png' : 'female-placeholder.png'));
+                    $photoPath = Storage::disk('public')->path('members/' . ($member->gender ? 'male-placeholder.png' : 'female-placeholder.png'));
                 }
             } else {
-                $photoPath = public_path('images/' . ($member->gender ? 'male-placeholder.png' : 'female-placeholder.png'));
+                $photoPath = Storage::disk('public')->path('members/' . ($member->gender ? 'male-placeholder.png' : 'female-placeholder.png'));
             }
 
             // Get the file size
