@@ -17,7 +17,7 @@
 @endsection
 
 @section('body')
-    <table>
+    <table class="poppins-regular">
         <thead>
             <tr>
                 <th>#</th>
