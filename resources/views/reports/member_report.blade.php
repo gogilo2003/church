@@ -1,71 +1,22 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Member Report</title>
+@extends('layouts.pdf')
+@push('styles')
     <style>
-        * {
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        body {
-            font-family: 'Open Sans', sans-serif;
-            line-height: 1.5;
-        }
-
-        table {
-            --color: #d0d0f5;
-            text-align: left;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid;
-        }
-
-        thead {
-            border-block-end: 2px solid;
-            background: whitesmoke;
-        }
-
-        tfoot {
-            border-block: 2px solid;
-            background: whitesmoke;
-        }
-
-        thead,
-        tfoot {
-            background: #f2f2f2;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tbody tr:nth-child(odd) {
-            background-color: #ffffff;
-        }
-
-        th,
-        td {
-            border: 1px solid lightgrey;
-            padding: 0.25rem 0.75rem;
-        }
-
         .photo {
             width: 64px;
             height: 64px;
             background-size: cover;
             border: 1px solid gray;
             background-repeat: no-repeat;
-            border-radius: 1rem;
+            border-radius: 50%;
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <h1>Member Report</h1>
+@section('heading')
+    Members List
+@endsection
+
+@section('body')
     <table>
         <thead>
             <tr>
@@ -95,6 +46,4 @@
             @endforeach
         </tbody>
     </table>
-</body>
-
-</html>
+@endsection
