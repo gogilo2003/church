@@ -7,7 +7,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
 import { Chart, registerables } from 'chart.js';
-import { formatCurrency, getWeekOfYear } from '../../../helpers';
 
 const props = defineProps<{
     attendances: { label: string, total: number }[]
@@ -34,7 +33,7 @@ const chartData: ChartData = {
     datasets: [
         {
             label: 'Attendances',
-            backgroundColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 2,
             data: props.attendances.map(tithe => tithe.total)
@@ -47,17 +46,20 @@ const titheChart = ref<HTMLCanvasElement | null>(null);
 watchEffect(() => {
     if (titheChart.value) {
         new Chart(titheChart.value.getContext('2d')!, {
-            type: 'line',
+            type: 'bar',
             data: chartData,
             options: {
                 responsive: true,
                 scales: {
                     y: {
+                        display: true,
+                        title: {
+                            display: true
+                        },
                         beginAtZero: true,
                         ticks: {
-                            callback: function (value, index, ticks) {
-                                return formatCurrency(value);
-                            }
+                            major: { enabled: true },
+                            stepSize: 1
                         }
                     }
                 }

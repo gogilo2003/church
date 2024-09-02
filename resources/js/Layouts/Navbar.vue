@@ -45,7 +45,7 @@ onMounted(() => {
         <!-- Primary Navigation Menu -->
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 gap-4">
-                <div class="flex items-center gap-2 flex-1">
+                <div class="flex items-center gap-2 flex-1 max-w-[calc(100%_-_48px)]">
                     <!-- Menu start -->
                     <Icon @click="toggle" class="w-auto h-full py-4 text-gray-400 flex-none"
                         :type="toggleState ? 'times' : 'menu'" />

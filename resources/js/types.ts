@@ -106,3 +106,31 @@ export interface iOfferingType {
     id: number
     name: string
 }
+
+export interface iRecipient {
+    id: number
+    name: string
+    phone: string
+}
+export interface iSms {
+    id: number | null
+    message: string
+    sent_at: string
+    recipients: iRecipient[]
+}
+
+export interface iSmsMessages {
+    data: iSms[]
+    current_page: number
+    first_page_url: string | null
+    from: number
+    last_page: number
+    last_page_url: string | null
+    links: Array<iLink>
+    next_page_url: string | null
+    path: string | null
+    per_page: number
+    prev_page_url: string | null
+    to: number
+    total: number
+}

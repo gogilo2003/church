@@ -31,7 +31,7 @@ const classes = computed(() => {
             :class="{ 'w-[calc(100%_-_4rem)]': toggle, 'w-0': !toggle }" v-text="link.caption">
         </div>
         <div v-if="link.items"
-            class="absolute top-full left-16 right-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] overflow-hidden bg-gray-200 min-w-fit transition-all duration-500 rounded-b-3xl">
+            class="absolute z-10 top-full left-16 right-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] overflow-hidden bg-gray-200 min-w-fit transition-all duration-500 rounded-b-3xl">
             <div class="flex flex-col overflow-hidden group-hover:py-4 transition-all duration-500 gap-2">
                 <Link class="mx-2 px-3 py-2 hover:bg-gray-50 rounded-lg" v-for="{ name, caption } in link.items"
                     :href="route(name)">{{

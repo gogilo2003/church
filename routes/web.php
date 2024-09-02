@@ -14,6 +14,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\OfferingTypeController;
 use App\Http\Controllers\ContributionTypeController;
+use App\Http\Controllers\SmsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -152,5 +153,17 @@ Route::middleware([
             Route::patch('{attendance}', 'update')->name('-update');
             Route::delete('{attendance}', 'destroy')->name('-delete');
             Route::post('photo', 'photo')->name('-photo');
+        });
+    Route::prefix('messaging')
+        ->name('messaging')
+        ->group(function () {
+            Route::prefix('sms')
+                ->controller(SmsController::class)
+                ->name('-sms')
+                ->group(function () {
+                    Route::get('', 'index');
+                    Route::post('', 'store')->name('-store');
+                    Route::patch('', 'update')->name('-update');
+                });
         });
 });

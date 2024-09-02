@@ -42,6 +42,19 @@ export const links = ref([
     //     permission: 0,
     // },
     {
+        name: "messaging",
+        caption: "Messaging Centre",
+        icon: "message",
+        items: [
+            {
+                name: "messaging-sms",
+                caption: "SMS Messages",
+            },
+        ],
+        show: true,
+        permission: 0,
+    },
+    {
         name: "accounts",
         caption: "Accounts",
         icon: "money",

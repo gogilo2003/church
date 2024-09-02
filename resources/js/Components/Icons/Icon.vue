@@ -25,6 +25,8 @@ import Checkmark from './Checkmark.vue';
 import Done from './Done.vue';
 import ArrowLeft from './ArrowLeft.vue';
 import Download from './Download.vue';
+import Message from './Message.vue';
+import Close from './Close.vue';
 
 const props = defineProps({
     type: String
@@ -105,6 +107,12 @@ const icon = computed(() => {
     }
     if (props.type == 'download') {
         return Download;
+    }
+    if (props.type == 'message') {
+        return Message;
+    }
+    if (props.type == 'close') {
+        return Close;
     }
 })
 </script>

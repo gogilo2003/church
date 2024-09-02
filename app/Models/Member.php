@@ -72,4 +72,14 @@ class Member extends Model
     {
         return $this->hasMany(Contribution::class);
     }
+
+    /**
+     * The sms that belong to the Member
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function sms(): BelongsToMany
+    {
+        return $this->belongsToMany(Sms::class, 'member_sms', 'member_id', 'sms_id');
+    }
 }
