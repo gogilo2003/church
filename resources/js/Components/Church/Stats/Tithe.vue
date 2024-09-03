@@ -27,6 +27,7 @@ interface ChartData {
         borderColor: string;
         borderWidth: number;
         data: number[];
+        tension?: number
     }[];
 }
 
@@ -38,22 +39,25 @@ const chartData: ChartData = {
             label: 'Total Tithes',
             backgroundColor: 'rgba(75, 192, 192, 1)',
             borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 2,
-            data: props.tithes.map(tithe => tithe.total)
+            borderWidth: 1,
+            data: props.tithes.map(tithe => tithe.total),
+            tension: 0.5
         },
         {
             label: 'Total Offerings',
             backgroundColor: 'rgba(210, 230, 34, 1)',
             borderColor: 'rgba(210, 230, 34, 1)',
             borderWidth: 2,
-            data: props.offerings.map(offering => offering.total)
+            data: props.offerings.map(offering => offering.total),
+            tension: 0.5
         },
         {
             label: 'Total Contributions',
             backgroundColor: 'rgba(230, 34, 116, 1)',
             borderColor: 'rgba(230, 34, 116, 1)',
             borderWidth: 2,
-            data: props.contributions.map(contribution => contribution.total)
+            data: props.contributions.map(contribution => contribution.total),
+            tension: 0.5
         },
     ]
 };
@@ -66,15 +70,29 @@ watchEffect(() => {
             type: 'line',
             data: chartData,
             options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Tithes, Offerings and Other Contributions'
+                    }
+                },
                 responsive: true,
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            callback: function (value, index, ticks) {
-                                return formatCurrency(value);
-                            }
-                        }
+                        title: {
+                            display: true,
+                            text: 'Amount (Ksh)'
+                        },
+                        // ticks: {
+                        //     callback: function (value, index, ticks) {
+                        //         return formatCurrency(value);
+                        //     }
+                        // }
                     }
                 }
             }

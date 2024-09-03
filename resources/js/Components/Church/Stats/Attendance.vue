@@ -24,6 +24,7 @@ interface ChartData {
         borderColor: string;
         borderWidth: number;
         data: number[];
+        tension: number
     }[];
 }
 
@@ -36,7 +37,8 @@ const chartData: ChartData = {
             backgroundColor: 'rgba(75, 192, 192, 0.5)',
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 2,
-            data: props.attendances.map(tithe => tithe.total)
+            data: props.attendances.map(tithe => tithe.total),
+            tension: 0.4
         }
     ]
 };
@@ -49,12 +51,22 @@ watchEffect(() => {
             type: 'bar',
             data: chartData,
             options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    title: {
+                        display: true,
+                        text: 'Attendances'
+                    }
+                },
                 responsive: true,
                 scales: {
                     y: {
                         display: true,
                         title: {
-                            display: true
+                            display: true,
+                            text: 'People'
                         },
                         beginAtZero: true,
                         ticks: {

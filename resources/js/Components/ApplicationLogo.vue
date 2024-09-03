@@ -5,7 +5,7 @@ import { computed } from 'vue';
 
 // Define props with type safety
 const props = defineProps<{
-    toggle: boolean
+    toggle?: boolean
 }>();
 
 const appName = usePage().props.appName

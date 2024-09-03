@@ -25,7 +25,7 @@ class Attendance extends Model
     public function attendanceDate(): Attribute
     {
         return new Attribute(
-            get: fn($value) => Carbon::parse($value)->isoFormat('ddd, D MMM, Y'),
+            get: fn($value) => Carbon::parse($value)->isoFormat('ddd, Do MMM, Y'),
             set: fn($value) => Carbon::parse($value),
         );
     }

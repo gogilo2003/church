@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use App\Models\Attendance;
-use App\Models\Member;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -141,7 +140,7 @@ class Util
         // Optionally, process the data if needed
         $attendanceData = $attendances->map(function ($attendance) {
             return [
-                'label' => sprintf("%s:%s", $attendance->attendance_date, $attendance->title),
+                'label' => $attendance->attendance_date,
                 'total' => $attendance->members->count()
             ];
         });

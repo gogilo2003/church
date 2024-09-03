@@ -58,7 +58,7 @@ class HandleInertiaRequests extends Middleware
             parent::share($request),
             ['appName' => config('app.name')],
             $data,
-            ['logo' => Storage::disk('public')->exists('logo.png') ? Storage::disk('public')->url('logo.png') : null]
+            ['logo' => Storage::disk('public')->exists('logo.png') ? Storage::disk('public')->url('logo.png') : (file_exists(public_path('logo.png')) ? asset('logo.png') : null)]
         );
     }
 }
