@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('sms', function (Blueprint $table) {
             $table->id();
             $table->mediumText('message');
+            $table->datetime('send_at')->nullable();
             $table->datetime('sent_at')->nullable();
             $table->timestamps();
         });

@@ -11,6 +11,8 @@ class Sms extends Model
 {
     use HasFactory;
 
+    protected $dates = ['send_at', 'sent_at'];
+
     /**
      * The recipients that belong to the Sms
      *
@@ -18,6 +20,8 @@ class Sms extends Model
      */
     public function recipients(): BelongsToMany
     {
-        return $this->belongsToMany(Member::class, 'member_sms', 'sms_id', 'member_id');
+        return $this->belongsToMany(Member::class, 'member_sms', 'sms_id', 'member_id')
+            ->withPivot('status', 'messageId')
+            ->withTimestamps();
     }
 }

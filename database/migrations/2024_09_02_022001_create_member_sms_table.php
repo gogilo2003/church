@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('member_id');
             $table->foreignId('sms_id');
+            $table->string('messageId')->nullable();
             $table->string('status')->default('pending');
             $table->foreign('member_id')->references('id')->on('members')->onDelete('cascade');
             $table->foreign('sms_id')->references('id')->on('sms')->onDelete('cascade');

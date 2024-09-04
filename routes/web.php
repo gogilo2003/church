@@ -36,6 +36,8 @@ Route::get('/', function () {
     ]);
 });
 
+Route::post('/messaging/sms-callback', [SmsController::class, 'callback']);
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

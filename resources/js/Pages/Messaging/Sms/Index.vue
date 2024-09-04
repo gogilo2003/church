@@ -180,7 +180,20 @@ const toggleSelectAll = () => {
             </div>
         </template>
         <Container>
-            <pre v-text="messages"></pre>
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between" v-for="message in messages.data">
+                    <div class="flex items-center gap-2">
+                        <div v-text="message.message" class="line-clamp-2"></div>
+                        <div v-text="`Recipients: ${message.recipients.length}`"></div>
+                        <div v-text="`Sent At: ${message.sent_at}`"></div>
+                    </div>
+                    <div>
+                        <SecondaryButton>
+                            <Icon class="h-5 w-5 object-contain" type="show" /><span class="hidden">View</span>
+                        </SecondaryButton>
+                    </div>
+                </div>
+            </div>
         </Container>
     </AppLayout>
 </template>

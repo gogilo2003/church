@@ -80,6 +80,8 @@ class Member extends Model
      */
     public function sms(): BelongsToMany
     {
-        return $this->belongsToMany(Sms::class, 'member_sms', 'member_id', 'sms_id');
+        return $this->belongsToMany(Sms::class, 'member_sms', 'member_id', 'sms_id')
+            ->withPivot('status', 'messageId')
+            ->withTimestamps();
     }
 }

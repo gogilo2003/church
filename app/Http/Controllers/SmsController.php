@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Sms;
 use Inertia\Inertia;
 use App\Models\Member;
+use App\Models\MemberSms;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreSmsRequest;
 use App\Http\Requests\UpdateSmsRequest;
 
@@ -76,5 +79,19 @@ class SmsController extends Controller
     {
         $sms->delete();
         return redirect()->back()->with('success', 'SMS deleted');
+    }
+
+    function callback(Request $request): void
+    {
+        $data = $request->all();
+
+        Log::info(json_encode($data));
+
+        // foreach ($data as $recipient) {
+        //     MemberSms::where('messageId', $recipient['messageId'])
+        //         ->update(['status' => $recipient['status']]);
+        // }
+
+        // return response()->json(['status' => 'success']);
     }
 }
