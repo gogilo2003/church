@@ -67,6 +67,26 @@ const submit = () => {
                 })
             }
         })
+    } else {
+        form.post(route('messaging-sms-store'), {
+            preserveState: true,
+            preserveScroll: true,
+            only: ['messages', 'errors', 'notification'],
+            onSuccess: () => {
+                Swal.fire({
+                    title: title.value,
+                    text: props.notification.success ?? 'Message submitted successfully',
+                    icon: 'success',
+                })
+            },
+            onError: () => {
+                Swal.fire({
+                    title: title.value,
+                    text: props.notification.danger ?? 'An error occurred while sending the sms! Please try again',
+                    icon: 'error',
+                })
+            }
+        })
     }
 }
 
@@ -108,14 +128,13 @@ const toggleSelectAll = () => {
             <form @submit.prevent="submit">
                 <div class="mb-4">
                     <InputLabel value="Message" />
-                    <textarea id="message" rows="4"
+                    <textarea id="message" rows="4" v-model="form.message"
                         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder="Write your sms here..."></textarea>
                     <InputError :message="form.errors.message" />
                 </div>
                 <div class="mb-4">
                     <InputLabel value="Recipients" />
-                    <pre v-text="recipientsSearchQuery"></pre>
                     <div class="mb-4 flex items-center justify-between gap-6">
                         <div class="relative flex-1">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -127,7 +146,7 @@ const toggleSelectAll = () => {
                             </div>
                             <input v-model="recipientsSearchQuery" type="search" id="default-search"
                                 class="block w-full p-2.5 ps-10 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-                                placeholder="Search recipients..." required />
+                                placeholder="Search recipients..." />
                         </div>
                         <div class="flex-none">
                             <div class="flex items-center">
@@ -184,7 +203,7 @@ const toggleSelectAll = () => {
                 <div class="flex items-center justify-between" v-for="message in messages.data">
                     <div class="flex items-center gap-2">
                         <div v-text="message.message" class="line-clamp-2"></div>
-                        <div v-text="`Recipients: ${message.recipients.length}`"></div>
+                        <div v-text="`Recipients: ${message?.recipients?.length}`"></div>
                         <div v-text="`Sent At: ${message.sent_at}`"></div>
                     </div>
                     <div>

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Sms;
 use Inertia\Inertia;
 use App\Models\Member;
-use App\Models\MemberSms;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -26,16 +25,27 @@ class SmsController extends Controller
             return $query->where('message', 'like', "%{$search}%");
         })->paginate()
             ->withQueryString()
-            ->through(fn(Sms $sms) => [
-                'id' => $sms->id,
-                'message' => $sms->message,
-                'sent_at' => Carbon::parse($sms->sent_at),
-                'recepients' => $sms->recepients->map(fn(Member $member) => [
-                    'id' => $member->id,
-                    'name' => $member->name,
-                    'phone' => $member->phone,
-                ])
-            ]);
+            ->through(function (Sms $sms) {
+
+                $contacts = [];
+
+                if ($sms->recipients) {
+                    $contacts = $sms->recipients->map(function (Member $member) {
+                        return [
+                            'id' => $member->id,
+                            'name' => $member->name,
+                            'phone' => $member->phone,
+                        ];
+                    });
+                }
+
+                return [
+                    'id' => $sms->id,
+                    'message' => $sms->message,
+                    'sent_at' => Carbon::parse($sms->sent_at),
+                    'recepients' => $contacts
+                ];
+            });
 
         $recipients = Member::when($recipient_type, function ($query) use ($recipient_type) {
             return $query->where('type', $recipient_type);
@@ -58,7 +68,7 @@ class SmsController extends Controller
         $sms = new Sms();
         $sms->message = $request->message;
         $sms->save();
-        $sms->recepients()->sync($request->recepients);
+        $sms->recipients()->sync($request->recipients);
         return redirect()->back()->with('success', 'SMS Received for processing');
     }
 
