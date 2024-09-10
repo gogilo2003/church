@@ -129,21 +129,13 @@ const formatDate = date => {
                         </div>
                         <div class="flex gap-1 self-start lg:self-end">
                             <SecondaryButton :type="Link" :href="route('attendance-mark', attendance?.id)">
-                                <div class="flex gap-1">
-                                    <Icon type="id-card" class="h-4 w-4" /><span
-                                        class="hidden lg:inline-flex">Mark</span>
-                                </div>
+                                <Icon type="id-card" class="h-4 w-4" /><span class="hidden lg:inline-flex">Mark</span>
                             </SecondaryButton>
                             <SecondaryButton @click="editAttendance(attendance)">
-                                <div class="flex gap-1">
-                                    <Icon type="edit" class="h-4 w-4" /><span class="hidden lg:inline-flex">Edit</span>
-                                </div>
+                                <Icon type="edit" class="h-4 w-4" /><span class="hidden lg:inline-flex">Edit</span>
                             </SecondaryButton>
                             <SecondaryButton class="text-red-500" @click="deleteAttendance(attendance)">
-                                <div class="flex gap-1">
-                                    <Icon type="delete" class="h-4 w-4" /><span
-                                        class="hidden lg:inline-flex">Delete</span>
-                                </div>
+                                <Icon type="delete" class="h-4 w-4" /><span class="hidden lg:inline-flex">Delete</span>
                             </SecondaryButton>
                         </div>
                     </div>

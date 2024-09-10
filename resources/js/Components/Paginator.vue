@@ -2,7 +2,7 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import Icon from './Icons/Icon.vue';
-import { iLink, iOfferings, iTithes, iAttendances, iMembers } from '../types';
+import { iLink, iOfferings, iTithes, iAttendances, iMembers, iSmsMessages } from '../types';
 
 
 const props = defineProps<{
@@ -20,7 +20,7 @@ const props = defineProps<{
         prev_page_url: string
         to: number
         total: number
-    } | iOfferings | iTithes | iAttendances | iMembers
+    } | iOfferings | iTithes | iAttendances | iMembers | iSmsMessages
 }>()
 
 const lt = ref('&laquo; Previous');
@@ -51,7 +51,7 @@ const links = computed(() => {
         <nav aria-label="Pagination" class="">
             <ul class="flex items-center flex-wrap md:flex-nowrap -space-x-px md:h-8 text-sm gap-1 justify-center">
                 <li v-for="link in links">
-                    <component :is="link.url ? Link :'span'" v-if="link.label == lt" :href="link.url"
+                    <component :is="link.url ? Link : 'span'" v-if="link.label == lt" :href="link.url"
                         class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg rounded-l-3xl hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
                         <span class="sr-only">Previous</span>
                         <Icon class="h-5 w-5" type="chevron-circle-back" />

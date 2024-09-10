@@ -9,9 +9,12 @@ import { useForm, router } from '@inertiajs/vue3';
 import TextInput from '../../Components/FlowBite/TextInput.vue';
 import SelectInput from '../../Components/FlowBite/SelectInput.vue';
 import SecondaryButton from '../../Components/SecondaryButton.vue';
+import InputLabel from '../../Components/InputLabel.vue';
+import InputError from '../../Components/InputError.vue';
 import Photo from './Photo.vue';
 import Show from './Show.vue';
 import Swal from 'sweetalert2';
+import { format } from 'date-fns';
 
 const props = defineProps({
     members: Array,
@@ -178,6 +181,9 @@ const downloadMembers = () => {
     let url: string = route('members-download');
     window.open(url, '_blank');
 }
+const formatDate = date => {
+    return format(date, 'eee, do MMM, yyyy')
+}
 </script>
 
 <template>
@@ -218,27 +224,16 @@ const downloadMembers = () => {
                         </div>
                         <div class="flex gap-1 self-start lg:self-end">
                             <SecondaryButton @click="updatePhoto(member.id)">
-                                <div class="flex gap-1">
-                                    <Icon type="image" class="h-4 w-4" /><span
-                                        class="hidden lg:inline-flex">Photo</span>
-                                </div>
+                                <Icon type="image" class="h-4 w-4" /><span class="hidden lg:inline-flex">Photo</span>
                             </SecondaryButton>
-                            <SecondaryButton>
-                                <div class="flex gap-1" @click="openViewDialog(member)">
-                                    <Icon type="id-card" class="h-4 w-4" /><span
-                                        class="hidden lg:inline-flex">View</span>
-                                </div>
+                            <SecondaryButton @click="openViewDialog(member)">
+                                <Icon type="id-card" class="h-4 w-4" /><span class="hidden lg:inline-flex">View</span>
                             </SecondaryButton>
                             <SecondaryButton @click="editMember(member)">
-                                <div class="flex gap-1">
-                                    <Icon type="edit" class="h-4 w-4" /><span class="hidden lg:inline-flex">Edit</span>
-                                </div>
+                                <Icon type="edit" class="h-4 w-4" /><span class="hidden lg:inline-flex">Edit</span>
                             </SecondaryButton>
                             <SecondaryButton class="text-red-500" @click="deleteMember(member)">
-                                <div class="flex gap-1">
-                                    <Icon type="delete" class="h-4 w-4" /><span
-                                        class="hidden lg:inline-flex">Delete</span>
-                                </div>
+                                <Icon type="delete" class="h-4 w-4" /><span class="hidden lg:inline-flex">Delete</span>
                             </SecondaryButton>
                         </div>
                     </div>
@@ -264,8 +259,17 @@ const downloadMembers = () => {
                     <TextInput id="inputEmail" label="Email" :error="form.errors.email" v-model="form.email" />
                 </div>
                 <div class="grid gap-2 grid-cols-1 md:grid-cols-2 mb-6">
-                    <TextInput id="inputDateOfBirth" label="Date Of Birth" :error="form.errors.date_of_birth"
-                        v-model="form.date_of_birth" />
+                    <!-- <div>
+                        <TextInput id="inputDateOfBirth" label="Date Of Birth" :error="form.errors.date_of_birth"
+                            v-model="form.date_of_birth" />
+                    </div> -->
+                    <div class="relative z-10 group">
+                        <label for="inputDateOfBirth"
+                            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Date
+                            of Birth</label>
+                        <VueDatePicker id="inputDateOfBirth" v-model="form.date_of_birth" :format="formatDate" />
+                        <InputError :message="form.errors.date_of_birth" />
+                    </div>
                     <SelectInput id="inputGender" label="Gender" :error="form.errors.gender" v-model="form.gender"
                         :options="['Male', 'Female']" />
                 </div>

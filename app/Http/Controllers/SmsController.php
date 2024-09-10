@@ -23,7 +23,8 @@ class SmsController extends Controller
 
         $messages = Sms::when($search, function ($query) use ($search) {
             return $query->where('message', 'like', "%{$search}%");
-        })->paginate()
+        })->orderBy('id', 'DESC')
+            ->paginate()
             ->withQueryString()
             ->through(function (Sms $sms) {
 
@@ -33,8 +34,9 @@ class SmsController extends Controller
                     $contacts = $sms->recipients->map(function (Member $member) {
                         return [
                             'id' => $member->id,
-                            'name' => $member->name,
+                            'name' => sprintf('%s %s', $member->first_name, $member->last_name),
                             'phone' => $member->phone,
+                            'status' => $member->pivot->status,
                         ];
                     });
                 }
@@ -42,8 +44,8 @@ class SmsController extends Controller
                 return [
                     'id' => $sms->id,
                     'message' => $sms->message,
-                    'sent_at' => Carbon::parse($sms->sent_at),
-                    'recepients' => $contacts
+                    'sent_at' => Carbon::parse($sms->sent_at)->isoFormat('ddd Do MMM, Y h:mm:ss A'),
+                    'recipients' => $contacts
                 ];
             });
 

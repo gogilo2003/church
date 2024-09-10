@@ -20,19 +20,19 @@ const classes = computed(() => {
         sizeClasses = "h-8 px-2 py-1 text-sm gap-1"
     }
     if (size == 'md') {
-        sizeClasses = "h-10 px-3 py-2 text-base gap-3"
+        sizeClasses = "h-10 px-3 py-2 text-base gap-1"
     }
     if (size == 'lg') {
-        sizeClasses = "h-12 px-3 py-2 text-lg gap-3"
+        sizeClasses = "h-12 px-3 py-2 text-lg gap-2"
     }
     if (size == 'xl') {
-        sizeClasses = "h-14 px-4 py-3 text-xl gap-4"
+        sizeClasses = "h-14 px-4 py-3 text-xl gap-3"
     }
     if (size == '2xl') {
-        sizeClasses = "h-16 px-4 py-3 text-2xl gap-4"
+        sizeClasses = "h-16 px-4 py-3 text-2xl gap-3"
     }
     if (size == '3xl') {
-        sizeClasses = "h-20 px-5 py-4 text-3xl gap-5"
+        sizeClasses = "h-20 px-5 py-4 text-3xl gap-4"
     }
 
     let severityClasses = '';

@@ -3,7 +3,7 @@ import AppLayout from "../../../Layouts/AppLayout.vue";
 import Container from '../../../Components/Custom/Container.vue';
 import Modal from "../../../Components/Modal.vue";
 import Icon from '../../../Components/Icons/Icon.vue';
-import { iSmsMessages, iRecipient, iNotification } from '../../../types';
+import { iSmsMessages, iRecipient, iNotification, iSms } from '../../../types';
 import { ref, computed, watch } from 'vue';
 import InputLabel from '../../../Components/InputLabel.vue';
 import { useForm } from '@inertiajs/vue3';
@@ -11,6 +11,7 @@ import SecondaryButton from '../../../Components/SecondaryButton.vue';
 import Swal from 'sweetalert2';
 import InputError from '../../../Components/InputError.vue';
 import PrimaryButton from '../../../Components/PrimaryButton.vue';
+import Paginator from "../../../Components/Paginator.vue";
 
 const props = defineProps<{
     messages: iSmsMessages,
@@ -78,6 +79,7 @@ const submit = () => {
                     text: props.notification.success ?? 'Message submitted successfully',
                     icon: 'success',
                 })
+                closeDialog()
             },
             onError: () => {
                 Swal.fire({
@@ -115,8 +117,48 @@ const toggleSelectAll = () => {
     }
 };
 
+const showView = ref(false)
+const selectedMessage = ref<iSms | null>(null)
+
+const viewMessage = (message: iSms) => {
+    showView.value = true
+    selectedMessage.value = message
+}
+
+const closeView = () => {
+    showView.value = false
+    selectedMessage.value = null
+}
+
+const messageLength = computed(() => form.message?.length ?? 0)
+const pages = computed(() => Math.ceil(messageLength.value / 160))
+const numberOfMessages = computed(() => pages.value * form.recipients.length)
+
 </script>
 <template>
+    <Modal :show="showView">
+        <div class="flex items-center justify-between mx-3 py-2 mb-2 border-b">
+            <div>View Message</div>
+            <button @click="closeView">
+                <Icon type="times" class="h-6 w-6 object-contain" />
+            </button>
+        </div>
+        <div class="mx-3 my-3 pb-3">
+            <div class="uppercase text-xs font-medium mb-2">Message</div>
+            <div v-text="selectedMessage.message" class="text-sm text-gray-800 font-light bg-gray-100 p-2 rounded-lg">
+            </div>
+            <div class="text-sm flex flex-col gap-1 mt-3">
+                <div class="uppercase text-xs font-medium">Sent to </div>
+                <div class="flex gap-1 items-center text-gray-600 "
+                    v-for="{ name, phone, status } in selectedMessage.recipients">
+                    <Icon :type="status === 'Success' ? 'done' : 'close'" class="h-5 w-5 object-contain"
+                        :class="{ 'text-lime-600': status === 'Success', 'text-orange-400': status === 'pending', 'text-red-600': status === 'failed' }" />
+                    <span v-text="name"></span>
+                    <span v-text="`(${phone})`"></span>
+                </div>
+            </div>
+        </div>
+    </Modal>
     <Modal :show="showDialog" max-width="3xl">
         <div class="flex items-center justify-between mx-3 py-2 mb-2 border-b">
             <div v-text="title"></div>
@@ -131,6 +173,9 @@ const toggleSelectAll = () => {
                     <textarea id="message" rows="4" v-model="form.message"
                         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder="Write your sms here..."></textarea>
+                    <div v-show="messageLength" class="text-xs uppercase font-light text-gray-800"
+                        v-text="`${messageLength} Characters, ${pages} Pages, ${numberOfMessages} Messages`">
+                    </div>
                     <InputError :message="form.errors.message" />
                 </div>
                 <div class="mb-4">
@@ -199,20 +244,25 @@ const toggleSelectAll = () => {
             </div>
         </template>
         <Container>
-            <div class="flex flex-col gap-2">
-                <div class="flex items-center justify-between" v-for="message in messages.data">
-                    <div class="flex items-center gap-2">
-                        <div v-text="message.message" class="line-clamp-2"></div>
-                        <div v-text="`Recipients: ${message?.recipients?.length}`"></div>
-                        <div v-text="`Sent At: ${message.sent_at}`"></div>
+            <div class="flex flex-col gap-2 mb-4">
+                <div class="flex gap-5 px-3 py-1 items-center border-b mx-3" v-for="message in messages.data">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <div v-text="message.message" class="line-clamp-2 text-sm text-gray-700"></div>
+                        <div class="flex items-center gap-1 text-xs font-medium">
+                            <div v-text="`Recipients: ${message?.recipients?.length}`"></div>
+                            <div v-text="`Sent At: ${message.sent_at}`"></div>
+                        </div>
                     </div>
-                    <div>
-                        <SecondaryButton>
-                            <Icon class="h-5 w-5 object-contain" type="show" /><span class="hidden">View</span>
+                    <div class="flex items-center gap-2 flex-none">
+                        <SecondaryButton @click="viewMessage(message)">
+                            <Icon class="h-5 w-5 object-contain" type="show" /><span
+                                class="hidden md:inline-flex">View</span>
                         </SecondaryButton>
                     </div>
                 </div>
             </div>
+
+            <Paginator class="mx-3" :items="messages" />
         </Container>
     </AppLayout>
 </template>

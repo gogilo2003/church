@@ -111,6 +111,7 @@ export interface iRecipient {
     id: number
     name: string
     phone: string
+    status: string
 }
 export interface iSms {
     id: number | null
