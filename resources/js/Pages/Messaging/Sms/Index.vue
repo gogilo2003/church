@@ -4,7 +4,7 @@ import Container from '../../../Components/Custom/Container.vue';
 import Modal from "../../../Components/Modal.vue";
 import Icon from '../../../Components/Icons/Icon.vue';
 import { iSmsMessages, iRecipient, iNotification, iSms } from '../../../types';
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import InputLabel from '../../../Components/InputLabel.vue';
 import { router, useForm } from '@inertiajs/vue3';
 import SecondaryButton from '../../../Components/SecondaryButton.vue';
@@ -133,19 +133,28 @@ const closeView = () => {
 const messageLength = computed(() => form.message?.length ?? 0)
 const pages = computed(() => Math.ceil(messageLength.value / 160))
 const numberOfMessages = computed(() => pages.value * form.recipients.length)
-
-onMounted(() => {
-    fetchMessages()
-})
+let fetchTimeout: NodeJS.Timeout | number | null = null;
 
 const fetchMessages = () => {
     router.get(route('messaging-sms'), {}, {
         only: ['messages'],
         preserveScroll: true,
         preserveState: true,
-        onSuccess: () => setTimeout(() => fetchMessages(), 10000)
-    })
-}
+        onSuccess: () => {
+            fetchTimeout = setTimeout(fetchMessages, 10000);
+        }
+    });
+};
+
+// onMounted(() => {
+fetchMessages()
+// })
+
+onUnmounted(() => {
+    if (fetchTimeout !== null) {
+        clearTimeout(fetchTimeout);
+    }
+});
 
 </script>
 <template>
