@@ -117,6 +117,7 @@ export interface iSms {
     id: number | null
     message: string
     sent_at: string
+    status: string
     recipients: iRecipient[]
 }
 

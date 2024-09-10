@@ -44,8 +44,9 @@ class SmsController extends Controller
                 return [
                     'id' => $sms->id,
                     'message' => $sms->message,
+                    'status' => $sms->sent_at ? 'sent' : 'pending',
                     'sent_at' => Carbon::parse($sms->sent_at)->isoFormat('ddd Do MMM, Y h:mm:ss A'),
-                    'recipients' => $contacts
+                    'recipients' => $contacts,
                 ];
             });
 

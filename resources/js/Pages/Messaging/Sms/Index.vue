@@ -4,9 +4,9 @@ import Container from '../../../Components/Custom/Container.vue';
 import Modal from "../../../Components/Modal.vue";
 import Icon from '../../../Components/Icons/Icon.vue';
 import { iSmsMessages, iRecipient, iNotification, iSms } from '../../../types';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import InputLabel from '../../../Components/InputLabel.vue';
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import SecondaryButton from '../../../Components/SecondaryButton.vue';
 import Swal from 'sweetalert2';
 import InputError from '../../../Components/InputError.vue';
@@ -134,6 +134,21 @@ const messageLength = computed(() => form.message?.length ?? 0)
 const pages = computed(() => Math.ceil(messageLength.value / 160))
 const numberOfMessages = computed(() => pages.value * form.recipients.length)
 
+onMounted(() => {
+    // keep refreshing messages to get updated status
+    // const interval = setInterval(fetchMessages(), 10000)
+    fetchMessages()
+})
+
+const fetchMessages = () => {
+    router.get(route('messaging-sms'), {}, {
+        only: ['messages'],
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => setTimeout(() => fetchMessages(), 10000)
+    })
+}
+
 </script>
 <template>
     <Modal :show="showView">
@@ -251,6 +266,9 @@ const numberOfMessages = computed(() => pages.value * form.recipients.length)
                         <div class="flex items-center gap-1 text-xs font-medium">
                             <div v-text="`Recipients: ${message?.recipients?.length}`"></div>
                             <div v-text="`Sent At: ${message.sent_at}`"></div>
+                            <div class="px-3 py-1 rounded-full text-gray-800 font-medium uppercase"
+                                :class="message.status == 'sent' ? 'bg-lime-600/50' : (message.status == 'pending' ? 'bg-orange-500/50' : 'bg-red-500/50')"
+                                v-text="message.status"></div>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 flex-none">
