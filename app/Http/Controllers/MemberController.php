@@ -143,7 +143,7 @@ class MemberController extends Controller
                 'email' => $member->email,
                 'phone' => $member->phone,
                 'date_of_birth' => sprintf("%s(%s)", $date->isoFormat('ddd, Do MMM, Y'), $date->age),
-                'gender' => $member->gender ? 'Male' : 'Female',
+                'gender' => $member->gender ? 'Female' : 'Male',
                 'photo' => "data:$photoMimeType;base64,$photoBase64",
                 'photo_size' => $this->formatSizeUnits($photoSize),  // Include human-readable photo size
             ];
