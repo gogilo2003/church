@@ -30,7 +30,7 @@ class StoreMemberRequest extends FormRequest
             "post_code" => "nullable|string",
             "town" => "nullable|string",
             "address" => "nullable|string",
-            "date_of_birth" => "required|date",
+            "date_of_birth" => "nullable|date",
             "gender" => "required|boolean",
         ];
     }

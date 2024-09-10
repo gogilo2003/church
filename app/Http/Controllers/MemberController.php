@@ -18,8 +18,10 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $members = Member::with('groups')->get();
-        return Inertia::render('Members/Index', ['members' => $members]);
+        $search = request()->input('search');
+
+        $members = Member::with('groups')->when($search, function () use ($search) {})->paginate(8);
+        return Inertia::render('Members/Index', ['members' => $members, 'search' => $search]);
     }
 
     /**
@@ -44,7 +46,7 @@ class MemberController extends Controller
         $member->post_code = $request->post_code;
         $member->town = $request->town;
         $member->address = $request->address;
-        $member->date_of_birth = $request->date_of_birth;
+        $member->date_of_birth = Carbon::parse($request->date_of_birth);
         $member->gender = $request->gender;
         $member->save();
 
@@ -80,7 +82,7 @@ class MemberController extends Controller
         $member->post_code = $request->post_code;
         $member->town = $request->town;
         $member->address = $request->address;
-        $member->date_of_birth = $request->date_of_birth;
+        $member->date_of_birth = Carbon::parse($request->date_of_birth);
         $member->gender = $request->gender;
         $member->save();
 
@@ -122,10 +124,10 @@ class MemberController extends Controller
                 if (Storage::disk('public')->exists($member->photo)) {
                     $photoPath = Storage::disk('public')->path($member->photo);
                 } else {
-                    $photoPath = Storage::disk('public')->path('members/' . ($member->gender ? 'male-placeholder.png' : 'female-placeholder.png'));
+                    $photoPath = Storage::disk('public')->path('members/' . ($member->gender ? 'female-placeholder.png' : 'male-placeholder.png'));
                 }
             } else {
-                $photoPath = Storage::disk('public')->path('members/' . ($member->gender ? 'male-placeholder.png' : 'female-placeholder.png'));
+                $photoPath = Storage::disk('public')->path('members/' . ($member->gender ? 'female-placeholder.png' : 'male-placeholder.png'));
             }
 
             // Get the file size

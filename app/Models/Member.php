@@ -46,6 +46,25 @@ class Member extends Model
      */
     protected function defaultProfilePhotoUrl()
     {
+        if ($this->gender) {
+            if (Storage::disk('public')->exists('members/female-placeholder.png')) {
+                $photoPath = Storage::disk('public')->path('members/female-placeholder.png');
+                // Convert the photo to base64
+                $photoBase64 = base64_encode(file_get_contents($photoPath));
+                $photoMimeType = mime_content_type($photoPath);
+                return "data:$photoMimeType;base64,$photoBase64";
+            }
+        } else {
+            if (Storage::disk('public')->exists('members/female-placeholder.png')) {
+                $photoPath = Storage::disk('public')->path('members/male-placeholder.png');
+                // Convert the photo to base64
+                $photoBase64 = base64_encode(file_get_contents($photoPath));
+                $photoMimeType = mime_content_type($photoPath);
+                return "data:$photoMimeType;base64,$photoBase64";
+            }
+        }
+
+
         $name = trim(collect(explode(' ', sprintf("%s %s", $this->first_name, $this->last_name)))->map(function ($segment) {
             return mb_substr($segment, 0, 1);
         })->join(' '));

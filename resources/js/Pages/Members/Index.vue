@@ -15,11 +15,13 @@ import Photo from './Photo.vue';
 import Show from './Show.vue';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
+import Paginator from '../../Components/Paginator.vue';
+import { iMembers, iNotification } from '../../types';
 
-const props = defineProps({
-    members: Array,
-    notification: Object
-})
+const props = defineProps<{
+    members: iMembers,
+    notification: iNotification
+}>()
 
 const form = useForm({
     id: null,
@@ -208,7 +210,7 @@ const formatDate = date => {
                     </SecondaryButton>
                 </div>
                 <div class="flex flex-col gap-3">
-                    <div v-for="member in members"
+                    <div v-for="member in members.data"
                         class="shadow p-3 rounded-lg border flex flex-col lg:flex-row items-start gap-2 md:justify-between">
                         <div class="flex gap-2 items-center">
                             <img :src="member.photo_url" class="flex-none w-16 h-16 object-cover" />
@@ -238,6 +240,9 @@ const formatDate = date => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="px-4">
+                <Paginator :items="members" />
             </div>
         </Container>
     </AppLayout>
