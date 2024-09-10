@@ -135,8 +135,6 @@ const pages = computed(() => Math.ceil(messageLength.value / 160))
 const numberOfMessages = computed(() => pages.value * form.recipients.length)
 
 onMounted(() => {
-    // keep refreshing messages to get updated status
-    // const interval = setInterval(fetchMessages(), 10000)
     fetchMessages()
 })
 
