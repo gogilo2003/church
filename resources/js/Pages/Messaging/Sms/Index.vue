@@ -56,14 +56,14 @@ const submit = () => {
             onSuccess: () => {
                 Swal.fire({
                     title: title.value,
-                    text: props.notification.success ?? 'Message submitted successfully',
+                    text: props.notification?.success ?? 'Message submitted successfully',
                     icon: 'success',
                 })
             },
             onError: () => {
                 Swal.fire({
                     title: title.value,
-                    text: props.notification.danger ?? 'An error occurred while sending the sms! Please try again',
+                    text: props.notification?.danger ?? 'An error occurred while sending the sms! Please try again',
                     icon: 'error',
                 })
             }
@@ -76,7 +76,7 @@ const submit = () => {
             onSuccess: () => {
                 Swal.fire({
                     title: title.value,
-                    text: props.notification.success ?? 'Message submitted successfully',
+                    text: props.notification?.success ?? 'Message submitted successfully',
                     icon: 'success',
                 })
                 closeDialog()
@@ -84,7 +84,7 @@ const submit = () => {
             onError: () => {
                 Swal.fire({
                     title: title.value,
-                    text: props.notification.danger ?? 'An error occurred while sending the sms! Please try again',
+                    text: props.notification?.danger ?? 'An error occurred while sending the sms! Please try again',
                     icon: 'error',
                 })
             }
@@ -133,7 +133,7 @@ const closeView = () => {
 const messageLength = computed(() => form.message?.length ?? 0)
 const pages = computed(() => Math.ceil(messageLength.value / 160))
 const numberOfMessages = computed(() => pages.value * form.recipients.length)
-let fetchTimeout: NodeJS.Timeout | number | null = null;
+let fetchTimeout: any = null;
 
 const fetchMessages = () => {
     router.get(route('messaging-sms'), {}, {
@@ -159,29 +159,31 @@ onUnmounted(() => {
 </script>
 <template>
     <Modal :show="showView">
-        <div class="flex items-center justify-between mx-3 py-2 mb-2 border-b">
-            <div>View Message</div>
-            <button @click="closeView">
-                <Icon type="times" class="h-6 w-6 object-contain" />
-            </button>
-        </div>
-        <div class="mx-3 my-3 pb-3">
-            <div class="uppercase text-xs font-medium mb-2">Message</div>
-            <div v-text="selectedMessage.message" class="text-sm text-gray-800 font-light bg-gray-100 p-2 rounded-lg">
+        <div v-if="selectedMessage">
+            <div class="flex items-center justify-between mx-3 py-2 mb-2 border-b">
+                <div>View Message</div>
+                <button @click="closeView">
+                    <Icon type="times" class="h-6 w-6 object-contain" />
+                </button>
             </div>
-            <div class="text-sm flex flex-col gap-1 mt-3">
-                <div class="uppercase text-xs font-medium">Sent to </div>
-                <div class="flex gap-1 items-center text-gray-600 "
-                    v-for="{ name, phone, status } in selectedMessage.recipients">
-                    <Icon :type="status === 'Success' ? 'done' : 'close'" class="h-5 w-5 object-contain"
-                        :class="{ 'text-lime-600': status === 'Success', 'text-orange-400': status === 'pending', 'text-red-600': status === 'failed' }" />
-                    <span v-text="name"></span>
-                    <span v-text="`(${phone})`"></span>
+            <div class="mx-3 my-3 pb-3">
+                <div class="uppercase text-xs font-medium mb-2">Message</div>
+                <div v-text="selectedMessage.message" class="text-sm text-gray-800 font-light bg-gray-100 p-2 rounded-lg">
+                </div>
+                <div class="text-sm flex flex-col gap-1 mt-3">
+                    <div class="uppercase text-xs font-medium">Sent to </div>
+                    <div class="flex gap-1 items-center text-gray-600 "
+                        v-for="{ name, phone, status } in selectedMessage.recipients">
+                        <Icon :type="status === 'Success' ? 'done' : 'close'" class="h-5 w-5 object-contain"
+                            :class="{ 'text-lime-600': status === 'Success', 'text-orange-400': status === 'pending', 'text-red-600': status === 'failed' }" />
+                        <span v-text="name"></span>
+                        <span v-text="`(${phone})`"></span>
+                    </div>
                 </div>
             </div>
         </div>
     </Modal>
-    <Modal :show="showDialog" max-width="3xl">
+    <Modal :show="showDialog" max-width="2xl">
         <div class="flex items-center justify-between mx-3 py-2 mb-2 border-b">
             <div v-text="title"></div>
             <button @click="closeDialog">

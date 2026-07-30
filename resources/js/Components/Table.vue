@@ -1,6 +1,13 @@
-<script lang="ts" setup>
-defineProps({ items: Array, columns: Object })
+<script setup lang="ts">
+interface Column {
+    field: string;
+    caption?: string;
+}
 
+defineProps<{
+    items: Record<string, any>[];
+    columns: Column[];
+}>()
 </script>
 <template>
     <table class="w-full">

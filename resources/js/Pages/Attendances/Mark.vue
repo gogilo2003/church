@@ -16,7 +16,9 @@ const props = defineProps<{
     members: iMember[]
 }>()
 
-const form = useForm({
+const form = useForm<{
+    members: iMember[];
+}>({
     members: [],
 })
 
@@ -38,7 +40,7 @@ const submit = () => {
 }
 
 onMounted(() => {
-    form.members = props?.attendance?.members
+    form.members = props?.attendance?.members ?? []
     initFlowbite()
 })
 </script>
@@ -60,10 +62,10 @@ onMounted(() => {
                             v-for="member in members">
                             <div class="flex gap-2 items-center">
                                 <div class="h-16 w-16 rounded-full overflow-hidden flex-none">
-                                    <img class="h-full w-full object-cover" :src="member?.photo" alt="">
+                                    <img class="h-full w-full object-cover" :src="member?.photo_url" alt="">
                                 </div>
                                 <div class="flex-1">
-                                    <div v-text="member?.name" class="font-semibold uppercase text-gray-700"></div>
+                                    <div v-text="`${member?.first_name} ${member?.last_name}`" class="font-semibold uppercase text-gray-700"></div>
                                     <div class="text-sm text-gray-500" v-text="`${member?.phone} | ${member?.email}`">
                                     </div>
                                 </div>

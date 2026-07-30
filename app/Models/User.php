@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Laravel\Sanctum\HasApiTokens;
-use Laravel\Jetstream\HasProfilePhoto;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\HasProfilePhoto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -18,7 +16,6 @@ class User extends Authenticatable
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
-    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -39,8 +36,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'two_factor_recovery_codes',
-        'two_factor_secret',
     ];
 
     /**
@@ -50,6 +45,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 
     /**
@@ -63,8 +59,6 @@ class User extends Authenticatable
 
     /**
      * The roles that belong to the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles(): BelongsToMany
     {
@@ -73,13 +67,11 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return true;
+        return (bool) $this->is_admin;
     }
 
     /**
      * Get all of the attendances for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function attendances(): HasMany
     {
@@ -88,8 +80,6 @@ class User extends Authenticatable
 
     /**
      * Get all of the offerings for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function offerings(): HasMany
     {
@@ -98,8 +88,6 @@ class User extends Authenticatable
 
     /**
      * Get all of the tithes for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tithes(): HasMany
     {

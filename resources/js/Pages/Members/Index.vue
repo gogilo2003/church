@@ -16,14 +16,26 @@ import Show from './Show.vue';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import Paginator from '../../Components/Paginator.vue';
-import { iMembers, iNotification } from '../../types';
+import { iMembers, iNotification, iMember } from '../../types';
 
 const props = defineProps<{
     members: iMembers,
-    notification: iNotification
+    notification?: iNotification
 }>()
 
-const form = useForm({
+const form = useForm<{
+    id: number | null;
+    first_name: string | null;
+    last_name: string | null;
+    phone: string | null;
+    email: string | null;
+    box_no: string | null;
+    post_code: string | null;
+    town: string | null;
+    address: string | null;
+    date_of_birth: string | null;
+    gender: string | null;
+}>({
     id: null,
     first_name: null,
     last_name: null,
@@ -43,7 +55,7 @@ const edit = ref(false)
 
 const submit = () => {
     if (edit.value) {
-        form.patch(route('members-update', form.id), {
+        form.patch(route('members-update', form.id!), {
             onSuccess: () => {
                 Swal.fire({
                     icon: 'success',
@@ -111,18 +123,18 @@ const submit = () => {
     }
 }
 
-const editMember = (member) => {
+const editMember = (member: iMember) => {
 
     form.id = member.id
     form.first_name = member.first_name
     form.last_name = member.last_name
     form.phone = member.phone
     form.email = member.email
-    form.box_no = member.box_no
-    form.post_code = member.post_code
-    form.town = member.town
-    form.address = member.address
-    form.date_of_birth = member.date_of_birth
+    form.box_no = member.box_no ?? null
+    form.post_code = member.post_code ?? null
+    form.town = member.town ?? null
+    form.address = member.address ?? null
+    form.date_of_birth = member.date_of_birth ?? null
     form.gender = member.gender
 
     edit.value = true
@@ -137,31 +149,31 @@ const closeDialog = () => {
     showDialog.value = false
 }
 
-const photoId = ref(null)
+const photoId = ref<number | undefined>(undefined)
 const showPhoto = ref(false)
-const updatePhoto = (id) => {
+const updatePhoto = (id: number) => {
     photoId.value = id
     showPhoto.value = true
 }
 
 const uploadingPhoto = () => { }
 const uploadedPhoto = () => {
-    photoId.value = null
+    photoId.value = undefined
     showPhoto.value = false
 }
 
 const showViewDialog = ref(false)
-const selectedMember = ref()
+const selectedMember = ref<iMember | null>(null)
 const closeViewDialog = () => {
     selectedMember.value = null;
     showViewDialog.value = false
 }
-const openViewDialog = (member) => {
+const openViewDialog = (member: iMember) => {
     selectedMember.value = member
     showViewDialog.value = true
 }
 
-const deleteMember = member => {
+const deleteMember = (member: iMember) => {
     router.delete(route('members-delete', member.id), {
         onSuccess: () => {
             if (props?.notification?.success) {
@@ -183,8 +195,9 @@ const downloadMembers = () => {
     let url: string = route('members-download');
     window.open(url, '_blank');
 }
-const formatDate = date => {
-    return format(date, 'eee, do MMM, yyyy')
+const formatDate = (date: string | Date) => {
+    const dt = typeof date === 'string' ? new Date(date) : date;
+    return format(dt, 'eee, do MMM, yyyy')
 }
 </script>
 

@@ -11,21 +11,32 @@ import Container from '../../Components/Custom/Container.vue';
 import Swal from 'sweetalert2';
 import InputError from '../../Components/InputError.vue';
 import ContributionType from '../../Components/Church/ContributionType.vue';
-import { iMembers, iNotification } from '../../types';
+import { iNotification, iContributionType, iContributionTypes, iContributionMembers } from '../../types';
 
 const props = defineProps<{
-    contribution_types: Object,
+    contribution_types: iContributionTypes,
     notification?: iNotification,
-    members: iMembers,
+    members: iContributionMembers,
 }>()
 
-const form = useForm({
+const form = useForm<{
+    id: number | null;
+    description: string;
+    recurrent: boolean;
+    recurrence_value: number | string | null;
+    recurrence_unit: string;
+    deadline: string | null;
+    amount: number;
+    back_date: boolean;
+    autoenroll: boolean;
+    members: number[];
+}>({
     id: null,
     description: "",
     recurrent: false,
     recurrence_value: 0,
     recurrence_unit: "",
-    deadline: "",
+    deadline: null,
     amount: 0,
     back_date: false,
     autoenroll: false,
@@ -47,7 +58,7 @@ const newContribution = () => {
     edit.value = false
 }
 
-const editContribution = (contributionType) => {
+const editContribution = (contributionType: iContributionType) => {
 
     dialogTitle.value = "Add Contribution"
     showDialog.value = true
@@ -58,12 +69,12 @@ const editContribution = (contributionType) => {
     form.recurrent = contributionType.recurrent ? true : false
     form.recurrence_unit = contributionType.recurrence_unit
     form.recurrence_value = contributionType.recurrence_value ? contributionType.recurrence_value.toString() : null
-    form.deadline = contributionType.deadline
+    form.deadline = contributionType.deadline ?? null
     form.amount = contributionType.amount
-    form.back_date = contributionType.back_date
-    form.autoenroll = contributionType.autoenroll
+    form.back_date = !!contributionType.back_date
+    form.autoenroll = !!contributionType.autoenroll
 }
-const deleteContribution = (contributionType) => {
+const deleteContribution = (contributionType: iContributionType) => {
     dialogTitle.value = "Add Contribution"
     showDialog.value = true
     edit.value = true
@@ -87,7 +98,7 @@ const cancel = () => {
 
 const submit = () => {
     if (edit.value) {
-        form.patch(route('accounts-contributions-update', form.id), {
+        form.patch(route('accounts-contributions-update', form.id!), {
             onSuccess: () => {
                 Swal.fire({
                     icon: 'success',
@@ -124,7 +135,7 @@ const submit = () => {
 const checkedAll = ref(false)
 
 const selectAll = () => {
-    form.members = checkedAll.value ? props.members.map(item => item?.id) : []
+    form.members = checkedAll.value ? props.members.data.map(item => item.id) : []
 }
 
 </script>
@@ -230,9 +241,9 @@ const selectAll = () => {
                         <div class="max-h-[30rem] overflow-y-auto flex flex-col gap-2 px-4 py-2">
                             <div class="flex gap-2 items-center"
                                 v-for="{ id, name, photo, phone, email, postal_address } in members.data">
-                                <div class="h-16 w-16 flex-none">
-                                    <img class="w-full h-full object-cover rounded-full" :src="photo" alt="">
-                                </div>
+                                    <div class="h-10 w-10 overflow-hidden flex-none">
+                                        <img class="w-full h-full object-cover rounded-full" :src="photo ?? undefined" alt="">
+                                    </div>
                                 <div class="flex flex-col flex-1">
                                     <div class="uppercase text-lg font-semibold" v-text="name"></div>
                                     <div class="flex gap-2 text-xs text-gray-600">
@@ -279,12 +290,12 @@ const selectAll = () => {
                         class="shadow py-4 px-6 rounded-xl border flex flex-col lg:flex-row items-start gap-2 md:justify-between">
                         <ContributionType :item="contribution" />
                         <div class="flex gap-1 self-start lg:self-end">
-                            <SecondaryButton size="sm" :type="Link"
+                            <Link
                                 class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-full font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
                                 :href="route('accounts-contributions-show', contribution.id)">
-                                <Icon type="show" class="h-full w-auto object-contain" /><span
+                                <Icon type="show" class="h-4 w-4 object-contain" /><span
                                     class="hidden lg:inline-flex">Details</span>
-                            </SecondaryButton>
+                            </Link>
                             <SecondaryButton size="sm" severity="success" @click="editContribution(contribution)">
                                 <Icon type="edit" class="h-full w-auto object-contain" /><span
                                     class="hidden lg:inline-flex">Edit</span>

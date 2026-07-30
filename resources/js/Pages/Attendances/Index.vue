@@ -17,12 +17,18 @@ import { iAttendances, iNotification } from '../../types';
 import Paginator from '../../Components/Paginator.vue';
 import { format } from 'date-fns';
 
+import { iAttendance } from '../../types';
+
 const props = defineProps<{
     attendances: iAttendances,
     notification?: iNotification
 }>()
 
-const form = useForm({
+const form = useForm<{
+    id: number | null;
+    title: string | null;
+    attendance_date: string | null;
+}>({
     id: null,
     title: null,
     attendance_date: null,
@@ -32,14 +38,13 @@ const showDialog = ref(false)
 const titleDialog = ref('New Attendance')
 const edit = ref(false)
 
-const editAttendance = (attendance: any) => {
-
+const editAttendance = (attendance: iAttendance) => {
     form.id = attendance.id
     form.title = attendance.title
     form.attendance_date = attendance.attendance_date
 
     edit.value = true
-    titleDialog.value = `Edit Attendance (${attendance.first_name} ${attendance.last_name})`
+    titleDialog.value = `Edit Attendance (${attendance.title})`
     showDialog.value = true
 }
 
@@ -50,12 +55,10 @@ const closeDialog = () => {
     showDialog.value = false
 }
 
-
-
 const showViewDialog = ref(false)
-const selectedAttendance = ref()
+const selectedAttendance = ref<iAttendance | null>(null)
 
-const deleteAttendance = attendance => {
+const deleteAttendance = (attendance: iAttendance) => {
     router.delete(route('attendance-delete', attendance.id), {
         onSuccess: () => {
             if (props?.notification?.success) {
@@ -75,7 +78,7 @@ const deleteAttendance = attendance => {
 
 const submit = () => {
     if (edit.value) {
-        form.patch(route('attendance-update', form.id), {
+        form.patch(route('attendance-update', form.id!), {
             onSuccess: () => {
                 Swal.fire({
                     icon: 'success',
@@ -95,8 +98,9 @@ const submit = () => {
     }
 }
 
-const formatDate = date => {
-    return format(date, 'eee, do MMM, yyyy')
+const formatDate = (date: string | Date) => {
+    const dt = typeof date === 'string' ? new Date(date) : date;
+    return format(dt, 'eee, do MMM, yyyy')
 }
 </script>
 
@@ -123,14 +127,15 @@ const formatDate = date => {
                                 </div>
                                 <div class="flex items-center gap-2 text-sm text-gray-600">
                                     <span v-text="attendance.attendance_date"></span>&nbsp;|&nbsp;
-                                    <span v-text="`${attendance.members.length} members`"></span>
+                                    <span v-text="`${attendance.members?.length ?? 0} members`"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="flex gap-1 self-start lg:self-end">
-                            <SecondaryButton :type="Link" :href="route('attendance-mark', attendance?.id)">
+                            <Link :href="route('attendance-mark', attendance.id)"
+                                class="inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25">
                                 <Icon type="id-card" class="h-4 w-4" /><span class="hidden lg:inline-flex">Mark</span>
-                            </SecondaryButton>
+                            </Link>
                             <SecondaryButton @click="editAttendance(attendance)">
                                 <Icon type="edit" class="h-4 w-4" /><span class="hidden lg:inline-flex">Edit</span>
                             </SecondaryButton>

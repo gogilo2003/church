@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
-import Dashboard from './Dashboard.vue'
+import Dashboard from './Dashboard.vue';
 import Product from './Product.vue';
 import Logout from './Logout.vue';
 import Add from './Add.vue';
@@ -28,93 +28,43 @@ import Download from './Download.vue';
 import Message from './Message.vue';
 import Close from './Close.vue';
 
-const props = defineProps({
-    type: String
-})
+const props = defineProps<{
+    type?: string;
+}>();
+
+const iconMap: Record<string, any> = {
+    dashboard: Dashboard,
+    product: Product,
+    logout: Logout,
+    add: Add,
+    edit: Edit,
+    times: Times,
+    chart: Chart,
+    location: Location,
+    money: Money,
+    home: Home,
+    menu: Menu,
+    people: People,
+    settings: Settings,
+    certificate: Certificate,
+    'chevron-circle-back': ChevronCircleBack,
+    'chevron-circle-forward': ChevronCircleForward,
+    delete: Delete,
+    image: Image,
+    'id-card': IdCard,
+    show: Show,
+    attendance: Attendance,
+    checkmark: Checkmark,
+    done: Done,
+    'arrow-left': ArrowLeft,
+    download: Download,
+    message: Message,
+    close: Close,
+};
 
 const icon = computed(() => {
-    if (props.type == 'dashboard') {
-        return Dashboard;
-    }
-    if (props.type == 'product') {
-        return Product;
-    }
-    if (props.type == 'logout') {
-        return Logout;
-    }
-    if (props.type == 'add') {
-        return Add;
-    }
-    if (props.type == 'edit') {
-        return Edit;
-    }
-    if (props.type == 'times') {
-        return Times;
-    }
-    if (props.type == 'chart') {
-        return Chart;
-    }
-    if (props.type == 'location') {
-        return Location;
-    }
-    if (props.type == 'money') {
-        return Money;
-    }
-    if (props.type == 'home') {
-        return Home;
-    }
-    if (props.type == 'menu') {
-        return Menu;
-    }
-    if (props.type == 'people') {
-        return People;
-    }
-    if (props.type == 'settings') {
-        return Settings;
-    }
-    if (props.type == 'certificate') {
-        return Certificate;
-    }
-    if (props.type == 'chevron-circle-back') {
-        return ChevronCircleBack;
-    }
-    if (props.type == 'chevron-circle-forward') {
-        return ChevronCircleForward;
-    }
-    if (props.type == 'delete') {
-        return Delete;
-    }
-    if (props.type == 'image') {
-        return Image;
-    }
-    if (props.type == 'id-card') {
-        return IdCard;
-    }
-    if (props.type == 'show') {
-        return Show;
-    }
-    if (props.type == 'attendance') {
-        return Attendance;
-    }
-    if (props.type == 'checkmark') {
-        return Checkmark;
-    }
-    if (props.type == 'done') {
-        return Done;
-    }
-    if (props.type == 'arrow-left') {
-        return ArrowLeft;
-    }
-    if (props.type == 'download') {
-        return Download;
-    }
-    if (props.type == 'message') {
-        return Message;
-    }
-    if (props.type == 'close') {
-        return Close;
-    }
-})
+    return props.type ? iconMap[props.type] : undefined;
+});
 </script>
 <template>
     <component :is="icon" />

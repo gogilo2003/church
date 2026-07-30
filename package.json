@@ -1,28 +1,36 @@
 {
-    "name": "church",
+    "$schema": "https://www.schemastore.org/package.json",
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build"
+        "build": "vue-tsc && vite build",
+        "dev": "vite"
     },
     "devDependencies": {
-        "@inertiajs/vue3": "^1.0.0",
-        "@tailwindcss/forms": "^0.5.2",
-        "@tailwindcss/typography": "^0.5.2",
-        "@vitejs/plugin-vue": "^4.5.0",
-        "@vuepic/vue-datepicker": "^7.4.0",
-        "autoprefixer": "^10.4.16",
-        "axios": "^1.6.1",
-        "chart.js": "^4.4.3",
-        "date-fns": "^3.6.0",
-        "flowbite": "^2.2.1",
-        "laravel-vite-plugin": "^1.0.0",
-        "lodash": "^4.17.21",
-        "postcss": "^8.4.32",
-        "sweetalert2": "^11.10.1",
-        "tailwindcss": "^3.3.7",
-        "vite": "^5.0.0",
-        "vue": "^3.2.31"
+        "@inertiajs/vue3": "^2.0.0",
+        "@tailwindcss/forms": "^0.5.3",
+        "@tailwindcss/vite": "^4.3.3",
+        "@vitejs/plugin-vue": "^6.0.0",
+        "autoprefixer": "^10.4.12",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^3.1",
+        "postcss": "^8.4.31",
+        "tailwindcss": "^4.3.3",
+        "typescript": "^5.6.3",
+        "vite": "^8.0.0",
+        "vue": "^3.4.0",
+        "vue-tsc": "^2.0.24"
+    },
+    "dependencies": {
+        "@inertiajs/vite": "^3.2.0",
+        "@inertiajs/vue3": "^3.2.0",
+        "@vitejs/plugin-vue": "^6.0.7",
+        "@vuepic/vue-datepicker": "^14.0.0",
+        "axios": "^1.18.1",
+        "chart.js": "^4.5.1",
+        "date-fns": "^4.4.0",
+        "flowbite": "^4.0.2",
+        "sweetalert2": "^11.26.25",
+        "vue": "^3.5.34"
     }
 }

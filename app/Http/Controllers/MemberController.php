@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Member;
 use Illuminate\Support\Carbon;
-use Barryvdh\Snappy\Facades\SnappyPdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreMemberRequest;
 use App\Http\Requests\UploadPhotoRequest;
@@ -152,7 +152,7 @@ class MemberController extends Controller
         });
 
         // Load the Blade template and pass the data
-        $pdf = SnappyPdf::loadView('reports.member_report', compact('members'));
+        $pdf = Pdf::loadView('reports.member_report', compact('members'));
 
         // Download the PDF
         return $pdf->download('member_report.pdf');

@@ -9,8 +9,9 @@ export const formatDate = (date: string) => {
     })
 }
 
-export const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(value)
+export const formatCurrency = (value: number | string) => {
+    const num = typeof value === 'string' ? parseFloat(value) : value;
+    return new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(isNaN(num) ? 0 : num)
 }
 
 export const prepDate = (value: string) => {
@@ -32,7 +33,7 @@ export const prepDate = (value: string) => {
 }
 
 
-export const getWeekOfYear = (param) => {
+export const getWeekOfYear = (param: string | Date) => {
 
     let date = new Date(param)
 
@@ -46,7 +47,7 @@ export const getWeekOfYear = (param) => {
     const yearStart = new Date(Date.UTC(currentDate.getUTCFullYear(), 0, 1));
 
     // Calculate full weeks to nearest Thursday
-    const weekNumber = Math.ceil((((currentDate - yearStart) / 86400000) + 1) / 7);
+    const weekNumber = Math.ceil((((currentDate.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
 
     return weekNumber;
 }

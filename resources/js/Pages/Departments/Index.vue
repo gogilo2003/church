@@ -1,38 +1,64 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import Container from '../../Components/Custom/Container.vue';
-import AppLayout from '../../Layouts/AppLayout.vue';
-import PrimaryButton from '../../Components/PrimaryButton.vue';
-import SecondaryButton from '../../Components/SecondaryButton.vue';
-import Modal from '../../Components/Modal.vue';
 import Icon from '../../Components/Icons/Icon.vue';
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import AppLayout from '../../Layouts/AppLayout.vue';
+import SecondaryButton from '../../Components/SecondaryButton.vue';
+import PrimaryButton from '../../Components/PrimaryButton.vue';
+import Modal from '../../Components/Modal.vue';
 import TextInput from '../../Components/FlowBite/TextInput.vue';
+import { useForm, router } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
+import { iNotification, iDepartment } from '../../types';
+import { ref } from 'vue';
 
+const props = defineProps<{
+    departments: iDepartment[];
+    notification?: iNotification;
+}>()
 
-interface Department {
-    id: Number,
-    title: String
-}
-
-const props = defineProps({ departments: Array<Department>, notification: Object })
-
-const form = useForm({
+const form = useForm<{
+    id: number | null;
+    title: string;
+}>({
     id: null,
     title: ""
 })
 const showDialog = ref(false)
 const dialogTitle = ref('New Department')
+const edit = ref(false)
 
-const editDepartment = (id) => {
+const editDepartment = (department: iDepartment) => {
+    form.id = department.id
+    form.title = department.title
+    edit.value = true
     showDialog.value = true
     dialogTitle.value = "Edit Department"
 }
-const deleteDepartment = (id) => {
-
+const deleteDepartment = (department: iDepartment) => {
+    Swal.fire({
+        title: 'Delete Department',
+        text: `Are you sure you want to delete "${department.title}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            router.delete(route('setup-departments-destroy', { id: department.id }), {
+                onSuccess: () => {
+                    Swal.fire({
+                        icon: 'success',
+                        text: props?.notification?.success ?? 'Department deleted successfully'
+                    })
+                }
+            })
+        }
+    })
 }
-const newDepartment = (id) => {
+const newDepartment = () => {
+    form.reset()
+    edit.value = false
     showDialog.value = true
     dialogTitle.value = "New Department"
 }
@@ -46,24 +72,22 @@ const cancel = () => {
 }
 
 const submit = () => {
-    if (editDepartment.value) {
-        form.patch(route('setup-departments-update'), {
+    if (edit.value) {
+        form.patch(route('setup-departments-update', { id: form.id }), {
             preserveScroll: true,
             preserveState: true,
             only: ['departments', 'notification', 'errors'],
             onSuccess: (res) => {
-                console.log(res)
                 Swal.fire({
                     icon: "success",
                     text: props?.notification?.success
                 })
+                closeDialog()
             },
             onError: (er) => {
-                console.log(er);
-
                 Swal.fire({
                     icon: "error",
-                    text: props?.notification?.danger || "An error occured"
+                    text: props?.notification?.danger || "An error occurred"
                 })
             }
         })
@@ -73,25 +97,21 @@ const submit = () => {
             preserveState: true,
             only: ['departments', 'notification', 'errors'],
             onSuccess: (res) => {
-                console.log(res);
-
                 Swal.fire({
                     icon: "success",
                     text: props?.notification?.success
                 })
+                closeDialog()
             },
             onError: (er) => {
-                console.log(er);
-
                 Swal.fire({
                     icon: "error",
-                    text: props?.notification?.danger || "An error occured"
+                    text: props?.notification?.danger || "An error occurred"
                 })
             }
         })
     }
 }
-
 </script>
 <template>
     <Modal :show="showDialog">

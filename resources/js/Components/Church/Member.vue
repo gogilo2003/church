@@ -2,12 +2,13 @@
 import { ref } from 'vue';
 import MemberContributions from './MemberContributions.vue';
 import SecondaryButton from '../../Components/SecondaryButton.vue';
+import { iContribution, iMemberWithContributions, iContributionType } from '@/types';
 import { formatCurrency } from '../../helpers';
 
-defineProps({
-    member: Object,
-    contribution_type: Object
-})
+defineProps<{
+    member?: iMemberWithContributions | null;
+    contribution_type?: iContributionType | null;
+}>()
 
 const show = ref(false)
 
@@ -29,15 +30,15 @@ const enrolled = () => {
             <div class="flex flex-col md:flex-row md:divide-x">
                 <div class="flex gap-2 text-xs text-gray-600 md:pr-3">
                     <span class="font-medium uppercase">Amount:</span>
-                    <span v-text="formatCurrency(member?.amount)"></span>
+                    <span v-text="formatCurrency(member?.amount ?? 0)"></span>
                 </div>
                 <div class="flex gap-2 text-xs text-gray-600 md:px-3">
                     <span class="font-medium uppercase">Paid:</span>
-                    <span v-text="formatCurrency(member?.paid)"></span>
+                    <span v-text="formatCurrency(member?.paid ?? 0)"></span>
                 </div>
                 <div class="flex gap-2 text-xs text-gray-600 md:px-3">
                     <span class="font-medium uppercase">Balance:</span>
-                    <span v-text="formatCurrency(member?.balance)"></span>
+                    <span v-text="formatCurrency(member?.balance ?? 0)"></span>
                 </div>
             </div>
         </div>

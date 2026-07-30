@@ -117,8 +117,9 @@ const submit = () => {
     }
 }
 
-const formatDate = date => {
-    return format(date, 'eee, do MMM, yyyy')
+const formatDate = (date: string | Date) => {
+    const dt = typeof date === 'string' ? new Date(date) : date;
+    return format(dt, 'eee, do MMM, yyyy')
 }
 
 </script>

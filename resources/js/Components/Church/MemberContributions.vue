@@ -10,38 +10,35 @@ import SelectInput from '../FlowBite/SelectInput.vue';
 import PrimaryButton from '../PrimaryButton.vue';
 import SecondaryButton from '../SecondaryButton.vue';
 import InputError from '../InputError.vue';
+import { PageProps, iContribution, iContributionType, iMemberWithContributions } from '@/types';
 
-
-interface iContribution {
-    id: Number,
-    contribution_date: string,
-    end_at: string,
-    description: string,
-    amount: Number,
-    paid: Number,
-    balance: Number,
-    status: String,
-}
-
-const props = defineProps({
-    contribution_type: Object,
-    member: Object,
-    show: {
-        type: Boolean,
-        default: false
-    }
-})
+const props = defineProps<{
+    contribution_type?: iContributionType | null;
+    member?: iMemberWithContributions | null;
+    show: boolean;
+}>()
 
 const emit = defineEmits(['closed', 'enrolled', 'paid'])
 
-const registerForm = useForm({
+const registerForm = useForm<{
+    contribution_type: number | null;
+    member: number | null;
+    amount: number | string;
+    end_at: string;
+}>({
     contribution_type: null,
     member: null,
     amount: "",
     end_at: "",
 })
 
-const paymentForm = useForm({
+const paymentForm = useForm<{
+    contribution: number | null;
+    amount: number | null;
+    receipt_number: string | null;
+    details: string | null;
+    mode: string;
+}>({
     contribution: null,
     amount: null,
     receipt_number: null,
@@ -49,15 +46,15 @@ const paymentForm = useForm({
     mode: "",
 })
 
-const page = usePage()
+const page = usePage<PageProps>()
 
 const showPaymentDialog = ref(false)
 const showEnrollmentDialog = ref(false)
 const hasDescription = computed(() => props?.member?.contributions.filter((item) => item.description).length)
 
 const showEnrollDialog = (contribution: iContribution) => {
-    registerForm.contribution_type = props?.contribution_type?.id
-    registerForm.member = props.member?.id
+    registerForm.contribution_type = props?.contribution_type?.id ?? null
+    registerForm.member = props.member?.id ?? null
     registerForm.amount = props?.contribution_type?.amount || contribution?.amount || ""
     registerForm.end_at = contribution?.end_at
 
@@ -86,10 +83,10 @@ const enrollContribution = () => {
     })
 }
 
-const makePayment = (contribution) => {
+const makePayment = (contribution: iContribution) => {
     paymentForm.contribution = contribution.id
     paymentForm.amount = contribution.balance
-    paymentForm.details = props?.contribution_type?.description
+    paymentForm.details = props?.contribution_type?.description ?? null
     paymentForm.mode = 'cash'
 
     showPaymentDialog.value = true
@@ -140,7 +137,7 @@ const closeEnrollment = () => {
 </script>
 
 <template>
-    <Modal :show="show" max-width="4xl">
+    <Modal :show="show" max-width="2xl">
         <!-- Pay for contribution -->
         <Modal :show="showPaymentDialog" max-width="md">
             <div class="px-4 py-3 flex">
@@ -219,80 +216,82 @@ const closeEnrollment = () => {
             </div>
         </Modal>
 
-        <div class="px-6 py-3 flex">
-            <div class="flex-1">
-                <div class="text-lg uppercase font-semibold" v-text="contribution_type?.description"></div>
-                <div class="text-sm capitalize font-medium text-gray-700"
-                    v-text="`${member?.name} (${Math.round(member?.paid / member?.amount * 100) || 0}% | ${formatCurrency(member?.amount)})`">
+        <div v-if="member">
+            <div class="px-6 py-3 flex">
+                <div class="flex-1">
+                    <div class="text-lg uppercase font-semibold" v-text="contribution_type?.description"></div>
+                    <div class="text-sm capitalize font-medium text-gray-700"
+                        v-text="`${member.name} (${Math.round(member.paid / member.amount * 100) || 0}% | ${formatCurrency(member.amount)})`">
+                    </div>
+                </div>
+                <div class="flex-none text-gray-500">
+                    <Icon @click="close" type="times" class=" cursor-pointer" />
                 </div>
             </div>
-            <div class="flex-none text-gray-500">
-                <Icon @click="close" type="times" class=" cursor-pointer" />
-            </div>
-        </div>
-        <div class="px-6 pb-6 pt-3">
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
-                <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 w-full">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th v-if="hasDescription" scope="col" class="px-6 py-3">
-                                Description
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Last Date
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Status
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Amount
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Paid
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Balance
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                <span class="sr-only">Edit</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="contribution in member?.contributions"
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th v-if="hasDescription" scope="row"
-                                class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                v-text="contribution?.description">
-                            </th>
-                            <td class="px-2 py-1" v-text="formatDate(contribution?.end_at)">
-                            </td>
-                            <td class="px-2 py-1 uppercase font-medium text-white text-center" :class="{
-        'bg-slate-400': contribution?.status == 'pending',
-        'bg-orange-400': contribution?.status == 'partial',
-        'bg-lime-400': contribution?.status == 'paid',
-        'bg-red-500': contribution?.status == 'late',
-        'bg-red-200': !contribution?.status,
-    }" v-text="contribution?.status || 'none'">
-                            </td>
-                            <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.amount)">
-                            </td>
-                            <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.paid)">
-                            </td>
-                            <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.balance)">
-                            </td>
-                            <td class="px-2 py-1 text-right">
-                                <SecondaryButton v-if="!contribution?.id" @click="showEnrollDialog(contribution)"
-                                    size="xs">
-                                    Enroll
-                                </SecondaryButton>
-                                <SecondaryButton v-if="contribution?.id && contribution?.balance"
-                                    @click="makePayment(contribution)" size="xs">Pay
-                                </SecondaryButton>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="px-6 pb-6 pt-3">
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
+                    <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 w-full">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th v-if="hasDescription" scope="col" class="px-6 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Last Date
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Status
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Amount
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Paid
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Balance
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    <span class="sr-only">Edit</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="contribution in member.contributions"
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th v-if="hasDescription" scope="row"
+                                    class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    v-text="contribution?.description">
+                                </th>
+                                <td class="px-2 py-1" v-text="formatDate(contribution?.end_at)">
+                                </td>
+                                <td class="px-2 py-1 uppercase font-medium text-white text-center" :class="{
+            'bg-slate-400': contribution?.status == 'pending',
+            'bg-orange-400': contribution?.status == 'partial',
+            'bg-lime-400': contribution?.status == 'paid',
+            'bg-red-500': contribution?.status == 'late',
+            'bg-red-200': !contribution?.status,
+        }" v-text="contribution?.status || 'none'">
+                                </td>
+                                <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.amount)">
+                                </td>
+                                <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.paid)">
+                                </td>
+                                <td class="px-2 py-1 text-right" v-text="formatCurrency(contribution?.balance)">
+                                </td>
+                                <td class="px-2 py-1 text-right">
+                                    <SecondaryButton v-if="!contribution?.id" @click="showEnrollDialog(contribution)"
+                                        size="xs">
+                                        Enroll
+                                    </SecondaryButton>
+                                    <SecondaryButton v-if="contribution?.id && contribution?.balance"
+                                        @click="makePayment(contribution)" size="xs">Pay
+                                    </SecondaryButton>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </Modal>

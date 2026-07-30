@@ -68,8 +68,12 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department)
+    public function destroy(\Illuminate\Http\Request $request)
     {
-        //
+        $department = Department::find($request->id);
+        if ($department) {
+            $department->delete();
+        }
+        return redirect()->back()->with('success', 'Department deleted');
     }
 }

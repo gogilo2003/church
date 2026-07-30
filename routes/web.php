@@ -1,8 +1,6 @@
 <?php
 
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TitheController;
 use App\Http\Controllers\MemberController;
@@ -15,17 +13,9 @@ use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\OfferingTypeController;
 use App\Http\Controllers\ContributionTypeController;
 use App\Http\Controllers\SmsController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -39,12 +29,15 @@ Route::get('/', function () {
 Route::post('/messaging/sms-callback', [SmsController::class, 'callback']);
 
 Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
+    'auth',
     'verified',
 ])->group(function () {
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('setup')
         ->name('setup')
@@ -71,7 +64,6 @@ Route::middleware([
                     Route::post('', 'store')->name('-store');
                     Route::patch('{contribution_type}', 'update')->name('-update');
                     Route::delete('', 'destroy')->name('-destroy');
-                    Route::post('register', [ContributionController::class, 'store'])->name('-register');
                 });
 
             Route::prefix('contributions')
@@ -122,7 +114,6 @@ Route::middleware([
                 });
         });
 
-
     Route::prefix('users')
         ->name('users')
         ->controller(UserController::class)
@@ -132,6 +123,7 @@ Route::middleware([
             Route::patch('', 'update')->name('-update');
             Route::delete('', 'destroy')->name('-destroy');
         });
+
     Route::prefix('members')
         ->name('members')
         ->controller(MemberController::class)
@@ -143,6 +135,7 @@ Route::middleware([
             Route::post('photo', 'photo')->name('-photo');
             Route::get('/download', 'download')->name('-download');
         });
+
     Route::prefix('attendance')
         ->controller(AttendanceController::class)
         ->name('attendance')
@@ -156,6 +149,7 @@ Route::middleware([
             Route::delete('{attendance}', 'destroy')->name('-delete');
             Route::post('photo', 'photo')->name('-photo');
         });
+
     Route::prefix('messaging')
         ->name('messaging')
         ->group(function () {
@@ -169,3 +163,5 @@ Route::middleware([
                 });
         });
 });
+
+require __DIR__.'/auth.php';

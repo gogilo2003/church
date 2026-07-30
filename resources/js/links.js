@@ -79,7 +79,7 @@ export const links = ref([
 
 export const linksBottom = ref([
     {
-        name: "profile.show",
+        name: "profile.edit",
         caption: "Profile",
         icon: "people",
         items: null,

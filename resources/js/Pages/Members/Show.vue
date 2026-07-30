@@ -2,11 +2,12 @@
 import Modal from '../../Components/Modal.vue';
 import SecondaryButton from '../../Components/SecondaryButton.vue';
 import Icon from '../../Components/Icons/Icon.vue';
+import { iMember } from '@/types';
 
-const props = defineProps({
-    member: Object,
-    show: { type: Boolean, default: false }
-})
+defineProps<{
+    member?: iMember | null;
+    show: boolean;
+}>()
 
 const emit = defineEmits(['close'])
 
@@ -24,7 +25,7 @@ const close = () => {
                     <Icon type="times" class="h-5 w-5" />
                 </button>
             </div>
-            <div class="flex flex-col md:flex-row items-center gap-2">
+            <div v-if="member" class="flex flex-col md:flex-row items-center gap-2">
                 <div class="w-full md:w-56 h-56 border p-1 rounded-lg flex-none">
                     <img class="h-full w-full object-contain rounded" :src="member.photo_url">
                 </div>

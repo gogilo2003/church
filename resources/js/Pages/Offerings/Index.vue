@@ -27,7 +27,7 @@ const props = defineProps<{
 const searchVal = ref<string | null | undefined>(props.search)
 
 watch(() => searchVal.value, (value) => {
-    let options: { search?: string }
+    let options: { search?: string } = {}
     if (value) {
         options = { search: value }
     }
@@ -41,12 +41,12 @@ watch(() => searchVal.value, (value) => {
 
 const form = useForm<{
     id: number | null
-    offering_date: string
+    offering_date: string | null
     amount: number | null
     type: number | null
 }>({
     id: null,
-    offering_date: '',
+    offering_date: null,
     amount: null,
     type: null
 })
@@ -64,7 +64,7 @@ const editOffering = (offering: iOffering) => {
     form.id = offering.id
     form.offering_date = prepDate(offering.offering_date)
     form.amount = offering.amount
-    form.type = offering.type?.id
+    form.type = offering.type?.id ?? null
     show.value = true
 }
 
@@ -149,7 +149,7 @@ const closeType = () => {
 }
 
 const submitType = () => {
-    let oldTypes: Array<iOfferingType> = props.types.map(item => item.value)
+    let oldTypes: Array<number> = props.types.map(item => item.value)
     typeForm.post(route('accounts-offering-types-store'), {
         only: ['types', 'errors', 'notification'],
         preserveScroll: true,
@@ -176,8 +176,9 @@ const submitType = () => {
     })
 }
 
-const formatDate = date => {
-    return format(date, 'eee, do MMM, yyyy')
+const formatDate = (date: string | Date) => {
+    const dt = typeof date === 'string' ? new Date(date) : date;
+    return format(dt, 'eee, do MMM, yyyy')
 }
 
 </script>

@@ -4,7 +4,11 @@ import Icon from '../../Components/Icons/Icon.vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
 import SecondaryButton from '../../Components/SecondaryButton.vue';
 
-defineProps({ users: Array })
+import { User } from '@/types';
+
+defineProps<{
+    users: User[];
+}>();
 
 </script>
 <template>
@@ -23,7 +27,7 @@ defineProps({ users: Array })
                             </div>
                             <div class="flex-1 flex flex-col gap-1">
                                 <div v-text="user?.name" class="text-gray-700 font-semibold uppercase"></div>
-                                <div v-text="`${user?.email} | Role: ${user?.is_admin == 1 ? 'Admin' : 'User'}`"
+                                <div v-text="`${user?.email} | Role: ${user?.is_admin ? 'Admin' : 'User'}`"
                                     class="text-gray-500 text-sm"></div>
                             </div>
                         </div>

@@ -5,11 +5,12 @@ import { ref } from "vue";
 import Swal from 'sweetalert2'
 import { useForm, router } from '@inertiajs/vue3';
 
+import { iNotification } from '../../types';
 
-const props = defineProps({
-    attendance: Array,
-    notification: Object
-})
+defineProps<{
+    attendance?: any[];
+    notification?: iNotification;
+}>();
 
 const form = useForm({
     id: null,

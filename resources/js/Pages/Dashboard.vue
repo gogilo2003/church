@@ -1,24 +1,24 @@
 <script lang="ts" setup>
-import AppLayout from '../Layouts/AppLayout.vue';
-import Welcome from '../Components/Welcome.vue';
-import Container from '../Components/Custom/Container.vue';
-import { iStat } from '../types';
-import TitheChart from '../Components/Church/Stats/Tithe.vue'
-import AttendanceChart from '../Components/Church/Stats/Attendance.vue'
+import AppLayout from '@/Layouts/AppLayout.vue';
+import Welcome from '@/Components/Welcome.vue';
+import Container from '@/Components/Custom/Container.vue';
+import { iStat } from '@/types';
+import TitheChart from '@/Components/Church/Stats/Tithe.vue';
+import AttendanceChart from '@/Components/Church/Stats/Attendance.vue';
 
-const props = defineProps<{
-    stats: iStat[],
-    tithes: { week: string, total: number }[]
-    offerings: { week: string, total: number }[]
-    contributions: { week: string, total: number }[]
-    attendances: { week: string, total: number }[]
-}>()
+defineProps<{
+    stats: iStat[];
+    tithes: { week: string; total: number }[];
+    offerings: { week: string; total: number }[];
+    contributions: { week: string; total: number }[];
+    attendances: { label: string; total: number }[];
+}>();
 </script>
 
 <template>
     <AppLayout title="Dashboard">
         <template #header>
-            Dashboards
+            Dashboard
         </template>
 
         <Container>

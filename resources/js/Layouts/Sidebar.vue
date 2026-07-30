@@ -4,18 +4,21 @@ import { onMounted } from 'vue';
 import ApplicationLogo from '../Components/ApplicationLogo.vue';
 import { links, linksBottom } from '../links.js'
 import SBLink from '../Components/Custom/SBLink.vue';
+import { PageProps } from '@/types';
 
-defineProps({
-    toggleState: {
-        type: Boolean,
-        default: localStorage.getItem('toggleMenu') == '1'
-    }
-})
+withDefaults(defineProps<{
+    toggleState?: boolean;
+}>(), {
+    toggleState: () => localStorage.getItem('toggleMenu') == '1'
+});
+
+const page = usePage<PageProps>();
 
 onMounted(() => {
     links.value = links.value.map(item => {
-        item.show = usePage()?.props?.auth?.user?.is_admin || item.permission === usePage().props.auth.user.is_admin
-        return item
+        const isAdmin = !!page.props.auth.user.is_admin;
+        item.show = isAdmin || item.permission === 0;
+        return item;
     }).filter(link => link.show)
 })
 </script>
@@ -31,7 +34,7 @@ onMounted(() => {
         <div class="flex-1 flex justify-between flex-col">
             <ul class="relative">
                 <li class="relative block w-76" v-for="link in links">
-                    <SBLink :link="link" :active="route().current(link.name) || route().current().startsWith(link.name)"
+                    <SBLink :link="link" :active="route().current(link.name) || (route().current()?.startsWith(link.name) ?? false)"
                         :toggle="toggleState" />
                 </li>
             </ul>

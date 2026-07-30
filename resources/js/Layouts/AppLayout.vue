@@ -11,7 +11,7 @@ defineProps({
 
 const toggleState = ref(localStorage.getItem('toggleMenu') == '1' ? true : false)
 
-const toggle = (val) => {
+const toggle = (val: boolean) => {
     toggleState.value = val
 
 }
@@ -36,7 +36,7 @@ watch(() => toggleState.value, value => {
             </div>
             <div :class="{ 'w-[calc(100%_-_20rem)] left-80': toggleState, 'left-0 md:left-20': !toggleState }"
                 class="absolute min-h-screen top-0 right-0 transition-all duration-500">
-                <Navbar @toggle="toggle" :page="$page.props">
+                <Navbar :toggle-state="toggleState" @toggle="toggle" :page="$page.props">
                     <template #header>
                         <slot name="header" />
                     </template>

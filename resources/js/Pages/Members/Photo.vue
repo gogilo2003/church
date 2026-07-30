@@ -6,15 +6,21 @@ import PrimaryButton from '../../Components/PrimaryButton.vue';
 import { ref } from 'vue'
 import InputError from '../../Components/InputError.vue';
 import SecondaryButton from '../../Components/SecondaryButton.vue';
+import { PageProps } from '@/types';
 
-const props = defineProps({
-    memberId: Number,
-    show: { type: Boolean, default: false }
-})
+const props = defineProps<{
+    memberId?: number;
+    show: boolean;
+}>()
 
 const emit = defineEmits(['uploading', 'uploaded', 'close'])
 
-const form = useForm({
+const page = usePage<PageProps>();
+
+const form = useForm<{
+    id: number | null | undefined;
+    photo: File | null;
+}>({
     id: null,
     photo: null
 })
@@ -25,15 +31,15 @@ const submit = () => {
     form.post(route('members-photo'), {
         onSuccess: () => {
             Swal.fire({
-                text: usePage().props?.notification?.success
+                text: page.props.notification?.success ?? ''
             })
             emit('uploaded')
         },
         onError: () => {
-            if (usePage().props?.notification?.danger) {
+            if (page.props.notification?.danger) {
                 Swal.fire({
                     icon: 'error',
-                    text: usePage().props?.notification?.success
+                    text: page.props.notification?.danger ?? ''
                 })
             } else {
                 if (form.errors) {
@@ -56,7 +62,7 @@ const submit = () => {
 
 const previewSrc = ref()
 
-const selectPicture = (event) => {
+const selectPicture = (event: any) => {
     form.photo = event?.target?.files[0]
     if (form.photo) {
         const reader = new FileReader();

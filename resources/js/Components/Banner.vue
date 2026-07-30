@@ -1,14 +1,30 @@
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { PageProps } from '@/types';
 
+const page = usePage<PageProps>();
 const show = ref(true);
-const style = computed(() => usePage().props.jetstream.flash?.bannerStyle || 'success');
-const message = computed(() => usePage().props.jetstream.flash?.banner || '');
 
-watch(message, async () => {
-  show.value = true;
+const notification = computed(() => page.props.notification);
+
+const message = computed(() => {
+    if (!notification.value) return '';
+    return notification.value.success || notification.value.info || notification.value.warning || notification.value.danger || '';
 });
+
+const style = computed(() => {
+    if (!notification.value) return 'success';
+    if (notification.value.danger) return 'danger';
+    if (notification.value.warning) return 'warning';
+    return 'success';
+});
+
+watch(message, () => {
+    if (message.value) {
+        show.value = true;
+    }
+}, { immediate: true });
 </script>
 
 <template>

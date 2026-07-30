@@ -2,18 +2,16 @@
 import { Link } from '@inertiajs/vue3'
 import Icon from '../../Components/Icons/Icon.vue'
 import { computed } from 'vue';
+import { LinkSubItem, SidebarLink } from '@/types';
 
-const props = defineProps({
-    link: Object,
-    active: Boolean,
-    toggle: {
-        type: Boolean,
-        default: false
-    }
-})
+const props = defineProps<{
+    link: SidebarLink;
+    active: boolean;
+    toggle?: boolean;
+}>()
 
 const classes = computed(() => {
-    return route().current(props.link.name) || route().current().startsWith(props.link.name)
+    return route().current(props.link.name) || (route().current()?.startsWith(props.link.name) ?? false)
         ? 'bg-gray-100 text-gray-700 after:shadow-gray-100 before:shadow-gray-100'
         : 'before:shadow-transparent after:shadow-transparent'
 })
@@ -21,7 +19,7 @@ const classes = computed(() => {
 </script>
 
 <template>
-    <Component :is="link.items? 'span' :Link" :as="link.as"
+    <Component :is="link.items ? 'span' : Link" :as="link.as"
         class="cursor-pointer relative text-left before:pointer-events-none after:pointer-events-none w-full flex whitespace-nowrap items-center h-16 gap-4 py-0 pr-4 pl-0 rounded-l-full hover:bg-gray-100 hover:text-gray-700  before:w-[40px] before:h-[40px] before:absolute before:bg-transparent before:-top-[40px] before:right-0 before:shadow-[30px_30px_0_10px] hover:before:shadow-gray-100 before:rounded-full after:w-[40px] after:h-[40px] after:absolute after:bg-transparent after:-bottom-[40px] after:right-0 after:shadow-[30px_-30px_0_10px] hover:after:shadow-gray-100 after:rounded-full hover:before:pointer-events-none hover:after:pointer-events-none group"
         :href="link.items ? null : route(link.name)" :class="classes">
         <div class="h-full w-16 flex-none">
