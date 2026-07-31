@@ -2,23 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Contribution extends Model
 {
     use HasFactory;
 
     protected $casts = [
-        "end_at" => "date"
+        'end_at' => 'date',
     ];
 
     /**
      * Get the contribution_type that owns the Contribution
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function contribution_type(): BelongsTo
     {
@@ -27,8 +25,6 @@ class Contribution extends Model
 
     /**
      * Get all of the payments for the Contribution
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function payments(): HasMany
     {
@@ -37,8 +33,6 @@ class Contribution extends Model
 
     /**
      * Get the member that owns the Contribution
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function member(): BelongsTo
     {

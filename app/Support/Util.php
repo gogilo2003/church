@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class Util
 {
-    static function getTitheSummary()
+    public static function getTitheSummary()
     {
         $now = Carbon::now();
         $startDate = $now->subWeeks(9)->startOfWeek(); // Get the start date 10 weeks ago
@@ -40,7 +40,7 @@ class Util
             $weekStartDate = Carbon::now()->startOfWeek()->subWeeks(Carbon::now()->format('oW') - $week)->format('Y-m-d');
             $result[] = [
                 'week' => $weekStartDate,
-                'total' => $total
+                'total' => $total,
             ];
         }
 
@@ -49,9 +49,10 @@ class Util
 
     /**
      * Summary of getOfferingSummary
+     *
      * @return array<int|mixed|string>[]
      */
-    static function getOfferingSummary()
+    public static function getOfferingSummary()
     {
         $now = Carbon::now();
         $startDate = $now->subWeeks(9)->startOfWeek(); // Get the start date 10 weeks ago
@@ -83,14 +84,14 @@ class Util
             $weekStartDate = Carbon::now()->startOfWeek()->subWeeks(Carbon::now()->format('oW') - $week)->format('Y-m-d');
             $result[] = [
                 'week' => $weekStartDate,
-                'total' => $total
+                'total' => $total,
             ];
         }
 
         return $result;
     }
 
-    static function getPaymentSummary()
+    public static function getPaymentSummary()
     {
         $now = Carbon::now();
         $startDate = $now->subWeeks(9)->startOfWeek(); // Get the start date 10 weeks ago
@@ -117,20 +118,19 @@ class Util
             $weeks[$payment->week] = $payment->total;
         }
 
-
         $result = [];
         foreach ($weeks as $week => $total) {
             $weekStartDate = Carbon::now()->startOfWeek()->subWeeks(Carbon::now()->format('oW') - $week)->format('Y-m-d');
             $result[] = [
                 'week' => $weekStartDate,
-                'total' => $total
+                'total' => $total,
             ];
         }
 
         return $result;
     }
 
-    static function getAttendanceSummary()
+    public static function getAttendanceSummary()
     {
         $attendances = Attendance::with('members')
             ->orderBy('attendance_date', 'desc')
@@ -141,7 +141,7 @@ class Util
         $attendanceData = $attendances->map(function ($attendance) {
             return [
                 'label' => $attendance->attendance_date,
-                'total' => $attendance->members->count()
+                'total' => $attendance->members->count(),
             ];
         });
 

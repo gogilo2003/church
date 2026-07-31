@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePaymentRequest extends FormRequest
@@ -17,16 +18,16 @@ class StorePaymentRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            "contribution" => "required|integer|exists:contributions,id",
-            "amount" => "required|numeric|min:1",
-            "receipt_number" => "nullable|string",
-            "details" => "nullable|string",
-            "mode" => "nullable|string",
+            'contribution' => 'required|integer|exists:contributions,id',
+            'amount' => 'required|numeric|min:1',
+            'receipt_number' => 'nullable|string',
+            'details' => 'nullable|string',
+            'mode' => 'nullable|string',
         ];
     }
 }

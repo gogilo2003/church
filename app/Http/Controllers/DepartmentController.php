@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
 use App\Models\Department;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DepartmentController extends Controller
@@ -15,22 +16,21 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::all();
+
         return Inertia::render('Departments/Index', compact('departments'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreDepartmentRequest $request)
     {
-        $department = new Department();
+        $department = new Department;
         $department->title = $request->title;
         $department->save();
 
@@ -68,12 +68,13 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(\Illuminate\Http\Request $request)
+    public function destroy(Request $request)
     {
         $department = Department::find($request->id);
         if ($department) {
             $department->delete();
         }
+
         return redirect()->back()->with('success', 'Department deleted');
     }
 }

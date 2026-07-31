@@ -2,24 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Member extends Model
 {
     use HasFactory;
 
     protected $appends = ['photo_url'];
+
     protected $dates = ['date_of_birth'];
 
     /**
      * The groups that belong to the Member
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function groups(): BelongsToMany
     {
@@ -28,8 +27,6 @@ class Member extends Model
 
     /**
      * Get the URL to the members's photo.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     public function photoUrl(): Attribute
     {
@@ -39,6 +36,7 @@ class Member extends Model
                 : $this->defaultProfilePhotoUrl();
         });
     }
+
     /**
      * Get the default profile photo URL if no profile photo has been uploaded.
      *
@@ -52,6 +50,7 @@ class Member extends Model
                 // Convert the photo to base64
                 $photoBase64 = base64_encode(file_get_contents($photoPath));
                 $photoMimeType = mime_content_type($photoPath);
+
                 return "data:$photoMimeType;base64,$photoBase64";
             }
         } else {
@@ -60,22 +59,20 @@ class Member extends Model
                 // Convert the photo to base64
                 $photoBase64 = base64_encode(file_get_contents($photoPath));
                 $photoMimeType = mime_content_type($photoPath);
+
                 return "data:$photoMimeType;base64,$photoBase64";
             }
         }
 
-
-        $name = trim(collect(explode(' ', sprintf("%s %s", $this->first_name, $this->last_name)))->map(function ($segment) {
+        $name = trim(collect(explode(' ', sprintf('%s %s', $this->first_name, $this->last_name)))->map(function ($segment) {
             return mb_substr($segment, 0, 1);
         })->join(' '));
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=7F9CF5&background=EBF4FF';
+        return 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
     }
 
     /**
      * The attendances that belong to the Member
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function attendances(): BelongsToMany
     {
@@ -84,8 +81,6 @@ class Member extends Model
 
     /**
      * Get all of the contributions for the Member
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function contributions(): HasMany
     {
@@ -94,8 +89,6 @@ class Member extends Model
 
     /**
      * The sms that belong to the Member
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function sms(): BelongsToMany
     {

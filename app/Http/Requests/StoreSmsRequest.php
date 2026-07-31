@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSmsRequest extends FormRequest
@@ -17,14 +18,14 @@ class StoreSmsRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            "message" => ['required', 'string'],
-            "recipients" => ['required', 'array', 'min:1'],
-            "recipients.*" => ['required', 'integer', 'exists:members,id'],
+            'message' => ['required', 'string'],
+            'recipients' => ['required', 'array', 'min:1'],
+            'recipients.*' => ['required', 'integer', 'exists:members,id'],
         ];
     }
 }

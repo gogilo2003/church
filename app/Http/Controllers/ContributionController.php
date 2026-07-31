@@ -32,7 +32,7 @@ class ContributionController extends Controller
     public function store(StoreContributionRequest $request, ContributionType $contribution_type)
     {
         // dd($request->end_at, Carbon::parse($request->end_at));
-        $contribution = new Contribution();
+        $contribution = new Contribution;
         $contribution->contribution_type_id = $request->contribution_type;
         $contribution->member_id = $request->member;
         $contribution->amount = $request->amount ? $request->amount : null;
@@ -41,7 +41,7 @@ class ContributionController extends Controller
 
         $contribution->load('contribution_type');
 
-        return redirect()->back()->with('success', 'Member registered for ' . $contribution->contribution_type->description);
+        return redirect()->back()->with('success', 'Member registered for '.$contribution->contribution_type->description);
     }
 
     /**

@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class ContributionTypeResource extends JsonResource
 {
     public static $wrap = null;
+
     /**
      * Transform the resource into an array.
      *
@@ -18,15 +19,15 @@ class ContributionTypeResource extends JsonResource
     {
         // return parent::toArray($request);
         $data = [
-            "id" => $this->id,
-            "description" => $this->description,
-            "recurrent" => $this->recurrent ? true : false,
-            "recurrence_value" => $this->recurrence_value,
-            "recurrence_unit" => $this->recurrence_unit,
-            "deadline" => $this->deadline,
-            "amount" => $this->amount,
-            "back_date" => $this->back_date ? true : false,
-            "autoenroll" => $this->autoenroll ? true : false,
+            'id' => $this->id,
+            'description' => $this->description,
+            'recurrent' => $this->recurrent ? true : false,
+            'recurrence_value' => $this->recurrence_value,
+            'recurrence_unit' => $this->recurrence_unit,
+            'deadline' => $this->deadline,
+            'amount' => $this->amount,
+            'back_date' => $this->back_date ? true : false,
+            'autoenroll' => $this->autoenroll ? true : false,
         ];
 
         if ($this->RelationLoaded('contributions')) {
@@ -43,18 +44,19 @@ class ContributionTypeResource extends JsonResource
                 $paid = $contribution ? $contribution->payments->sum('amount') : 0;
                 $balance = $contribution ? $contribution->amount - $contribution->payments->sum('amount') : 0;
 
-                return (object)[
-                    "id" => $id,
-                    "member" => ["id" => $member->id, "name" => sprintf("%s %s", $member->first_name, $member->last_name)],
-                    "date" => $date,
-                    "status" => $status,
-                    "amount" => $amount,
-                    "paid" => $paid,
-                    "balance" => $balance,
+                return (object) [
+                    'id' => $id,
+                    'member' => ['id' => $member->id, 'name' => sprintf('%s %s', $member->first_name, $member->last_name)],
+                    'date' => $date,
+                    'status' => $status,
+                    'amount' => $amount,
+                    'paid' => $paid,
+                    'balance' => $balance,
                 ];
             });
             $data['contributions'] = $contributions;
         }
+
         return $data;
     }
 }

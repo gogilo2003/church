@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use App\Models\Member;
-use App\Models\Attendance;
 use App\Http\Requests\MarkAttendanceRequest;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
+use App\Models\Attendance;
+use App\Models\Member;
 use Illuminate\Support\Carbon;
+use Inertia\Inertia;
 
 class AttendanceController extends Controller
 {
@@ -18,6 +18,7 @@ class AttendanceController extends Controller
     public function index()
     {
         $attendances = Attendance::with('members')->paginate(8);
+
         return Inertia::render('Attendances/Index', ['attendances' => $attendances]);
     }
 
@@ -34,7 +35,7 @@ class AttendanceController extends Controller
      */
     public function store(StoreAttendanceRequest $request)
     {
-        $attendance = new Attendance();
+        $attendance = new Attendance;
         $attendance->title = $request->title;
         $attendance->attendance_date = $request->attendance_date;
         $request->user()->attendances()->save($attendance);
@@ -76,22 +77,23 @@ class AttendanceController extends Controller
     public function mark(Attendance $attendance)
     {
         $attendance->load('members');
-        $members = Member::all()->map(fn($member) => [
-            "id" => $member->id,
-            "name" => $member->first_name . ' ' . $member->last_name,
-            "phone" => $member->phone,
-            "email" => $member->email,
-            "age" => Carbon::parse($member->date_of_birth)->age,
-            "photo" => $member->photo_url,
+        $members = Member::all()->map(fn ($member) => [
+            'id' => $member->id,
+            'name' => $member->first_name.' '.$member->last_name,
+            'phone' => $member->phone,
+            'email' => $member->email,
+            'age' => Carbon::parse($member->date_of_birth)->age,
+            'photo' => $member->photo_url,
         ]);
+
         return Inertia::render('Attendances/Mark', [
             'attendance' => [
-                "id" => $attendance->id,
-                "title" => $attendance->title,
-                "attendance_date" => Carbon::parse($attendance->attendance_date)->format('D d-M-Y'),
-                "members" => $attendance->members->pluck('id'),
+                'id' => $attendance->id,
+                'title' => $attendance->title,
+                'attendance_date' => Carbon::parse($attendance->attendance_date)->format('D d-M-Y'),
+                'members' => $attendance->members->pluck('id'),
             ],
-            'members' => $members
+            'members' => $members,
         ]);
     }
 
@@ -101,6 +103,7 @@ class AttendanceController extends Controller
     public function markPost(MarkAttendanceRequest $request, Attendance $attendance)
     {
         $attendance->members()->sync($request->members);
+
         return redirect()->back()->with('success', 'Attendance Marked');
     }
 

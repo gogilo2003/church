@@ -16,10 +16,13 @@
         "laravel/framework": "^13.8",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
+        "stancl/tenancy": "^3.10",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.7",
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.10",
         "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
@@ -57,6 +60,12 @@
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
             "@php artisan test"
+        ],
+        "phpstan": "@php -d xdebug.mode=off vendor/bin/phpstan analyse --no-progress",
+        "pint": "@php vendor/bin/pint",
+        "check": [
+            "@php vendor/bin/pint --test",
+            "npm run type-check"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

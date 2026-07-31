@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateOfferingTypeRequest extends FormRequest
@@ -17,13 +18,13 @@ class UpdateOfferingTypeRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            "id" => ["required", "numeric", "integer", "exists:offering_types,id"],
-            "name" => ["required", "string", "unique:offering_types,name," . $this->id . ",id"]
+            'id' => ['required', 'numeric', 'integer', 'exists:offering_types,id'],
+            'name' => ['required', 'string', 'unique:offering_types,name,'.$this->id.',id'],
         ];
     }
 }

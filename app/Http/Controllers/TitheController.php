@@ -19,13 +19,13 @@ class TitheController extends Controller
         $tithes = Tithe::when($search, function ($query) use ($search) {
             $query->where('tithed_on', $search);
         })->paginate(8)
-            ->through(fn(Tithe $tithe) => [
-                "id" => $tithe->id,
-                "tithed_on" => $tithe->tithed_on,
-                "amount" => $tithe->amount,
-                "user" => [
-                    "id" => $tithe->user->id,
-                    "name" => $tithe->user->name,
+            ->through(fn (Tithe $tithe) => [
+                'id' => $tithe->id,
+                'tithed_on' => $tithe->tithed_on,
+                'amount' => $tithe->amount,
+                'user' => [
+                    'id' => $tithe->user->id,
+                    'name' => $tithe->user->name,
                 ],
             ]);
 
@@ -37,7 +37,7 @@ class TitheController extends Controller
      */
     public function store(StoreTitheRequest $request)
     {
-        $tithe = new Tithe();
+        $tithe = new Tithe;
         $tithe->tithed_on = $request->tithed_on;
         $tithe->amount = $request->amount;
         $tithe->user_id = $request->user()->id;

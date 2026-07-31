@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOfferingRequest extends FormRequest
@@ -17,14 +18,14 @@ class StoreOfferingRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            "type" => ["required", "numeric", "integer", "exists:offering_types,id"],
-            "offering_date" => ["required", "date", "unique:offerings,offering_date,null,id,offering_type_id," . $this->type],
-            "amount" => ["required", "numeric"],
+            'type' => ['required', 'numeric', 'integer', 'exists:offering_types,id'],
+            'offering_date' => ['required', 'date', 'unique:offerings,offering_date,null,id,offering_type_id,'.$this->type],
+            'amount' => ['required', 'numeric'],
         ];
     }
 }

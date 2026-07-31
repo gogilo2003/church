@@ -2,16 +2,14 @@
 
 namespace App\Jobs;
 
-use App\Models\Sms;
-use App\Models\Member;
-use Illuminate\Bus\Queueable;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use AfricasTalking\SDK\AfricasTalking;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Models\Sms;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 
 class SendPendingMessagesJob implements ShouldQueue
 {
@@ -45,8 +43,9 @@ class SendPendingMessagesJob implements ShouldQueue
             $message = $sms->message;
 
             // Filter members who haven't exceeded retries and need to be sent
-            $recipients = $sms->recipients->filter(function ($member) use ($sms, $maxRetries) {
+            $recipients = $sms->recipients->filter(function ($member) use ($maxRetries) {
                 $pivot = $member->pivot;
+
                 return $pivot->status !== 'Success' && $pivot->retries < $maxRetries;
             })->pluck('phone')->implode(',');
 
@@ -56,15 +55,15 @@ class SendPendingMessagesJob implements ShouldQueue
 
             // Send the message via Africa's Talking API
             $username = env('SMS_USERNAME');
-            $apiKey   = env('SMS_API_KEY');
-            $AT       = new AfricasTalking($username, $apiKey);
+            $apiKey = env('SMS_API_KEY');
+            $AT = new AfricasTalking($username, $apiKey);
             $smsService = $AT->sms();
             $from = env('SMS_SENDER_ID', null);
 
             $result = $smsService->send([
-                'to'      => $recipients,
+                'to' => $recipients,
                 'message' => $message,
-                'from'    => $from,
+                'from' => $from,
             ]);
 
             // Update the sent_at field if it hasn't been set
@@ -73,24 +72,24 @@ class SendPendingMessagesJob implements ShouldQueue
                 $sms->save();
             }
 
-            $recipientsResponse = $result["data"]->SMSMessageData->Recipients;
+            $recipientsResponse = $result['data']->SMSMessageData->Recipients;
             foreach ($recipientsResponse as $recipient) {
-                $phone = str_replace("+254", "", $recipient->number);
+                $phone = str_replace('+254', '', $recipient->number);
                 $member = $sms->recipients()->where('phone', 'like', "%$phone%")->first();
                 if ($recipient->status === 'Success') {
                     // Update status and reset retries on success
                     $sms->recipients()->updateExistingPivot($member->id, [
-                        'status'    => $recipient->status,
+                        'status' => $recipient->status,
                         'messageId' => $recipient->messageId,
-                        'retries'   => 0,
+                        'retries' => 0,
                     ]);
                 } else {
                     // Increment retries and flag as failed if exceeded max retries
                     $retries = $member->pivot->retries + 1;
                     $sms->recipients()->updateExistingPivot($member->id, [
-                        'status'    => $retries >= $maxRetries ? 'Failed' : $recipient->status,
+                        'status' => $retries >= $maxRetries ? 'Failed' : $recipient->status,
                         'messageId' => $recipient->messageId,
-                        'retries'   => $retries,
+                        'retries' => $retries,
                     ]);
                 }
             }

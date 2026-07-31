@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, Component } from 'vue';
 import Dashboard from './Dashboard.vue';
 import Product from './Product.vue';
 import Logout from './Logout.vue';
@@ -32,7 +32,7 @@ const props = defineProps<{
     type?: string;
 }>();
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, Component> = {
     dashboard: Dashboard,
     product: Product,
     logout: Logout,

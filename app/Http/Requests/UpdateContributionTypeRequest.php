@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateContributionTypeRequest extends FormRequest
@@ -17,18 +18,18 @@ class UpdateContributionTypeRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            "id" => "required|integer|exists:contribution_types",
-            "description" => "required|string",
-            "recurrent" => "nullable|boolean",
-            "recurrence_unit" => "required_if:recurrent,true|string|in:day,week,month,year",
-            "recurrence_value" => "required_if:recurrent,true|integer",
-            "deadline" => "nullable|date",
-            "amount" => "nullable|numeric",
+            'id' => 'required|integer|exists:contribution_types',
+            'description' => 'required|string',
+            'recurrent' => 'nullable|boolean',
+            'recurrence_unit' => 'required_if:recurrent,true|string|in:day,week,month,year',
+            'recurrence_value' => 'required_if:recurrent,true|integer',
+            'deadline' => 'nullable|date',
+            'amount' => 'nullable|numeric',
         ];
     }
 }

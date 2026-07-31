@@ -17,28 +17,29 @@ class OfferingController extends Controller
     {
         $search = request()->input('search');
 
-        $offerings = Offering::orderBy('offering_date', 'DESC')->paginate(8)->through(fn(Offering $offering) => [
-            "id" => $offering->id,
-            "offering_date" => $offering->offering_date,
-            "amount" => $offering->amount,
-            "type" => $offering->type ? [
-                "id" => $offering->type->id,
-                "name" => $offering->type->name,
+        $offerings = Offering::orderBy('offering_date', 'DESC')->paginate(8)->through(fn (Offering $offering) => [
+            'id' => $offering->id,
+            'offering_date' => $offering->offering_date,
+            'amount' => $offering->amount,
+            'type' => $offering->type ? [
+                'id' => $offering->type->id,
+                'name' => $offering->type->name,
             ] : null,
-            "user" => [
-                "id" => $offering->user->id,
-                "name" => $offering->user->name,
+            'user' => [
+                'id' => $offering->user->id,
+                'name' => $offering->user->name,
             ],
         ]);
 
-        $types = OfferingType::all()->map(fn(OfferingType $offeringType) => [
-            "value" => $offeringType->id,
-            "text" => $offeringType->name,
+        $types = OfferingType::all()->map(fn (OfferingType $offeringType) => [
+            'value' => $offeringType->id,
+            'text' => $offeringType->name,
         ]);
+
         return Inertia::render('Offerings/Index', [
             'offerings' => $offerings,
             'types' => $types,
-            'search' => $search
+            'search' => $search,
         ]);
     }
 
@@ -47,7 +48,7 @@ class OfferingController extends Controller
      */
     public function store(StoreOfferingRequest $request)
     {
-        $offering = new Offering();
+        $offering = new Offering;
         $offering->offering_date = $request->offering_date;
         $offering->amount = $request->amount;
         $offering->offering_type_id = $request->type;

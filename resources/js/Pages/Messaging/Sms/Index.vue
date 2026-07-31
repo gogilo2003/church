@@ -22,7 +22,7 @@ const props = defineProps<{
 const form = useForm<{
     id: number | null
     message: string | null
-    recipients: number[] | any[]
+    recipients: number[]
 }>({
     id: null,
     message: null,
@@ -92,7 +92,7 @@ const submit = () => {
     }
 }
 
-const previousSelection = ref<iRecipient[]>([]);
+const previousSelection = ref<number[]>([]);
 const recipientsSearchQuery = ref('');
 
 const filteredRecipients = computed(() => {
@@ -133,7 +133,7 @@ const closeView = () => {
 const messageLength = computed(() => form.message?.length ?? 0)
 const pages = computed(() => Math.ceil(messageLength.value / 160))
 const numberOfMessages = computed(() => pages.value * form.recipients.length)
-let fetchTimeout: any = null;
+let fetchTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const fetchMessages = () => {
     router.get(route('messaging-sms'), {}, {

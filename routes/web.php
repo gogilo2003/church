@@ -1,20 +1,21 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\TitheController;
-use App\Http\Controllers\MemberController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\OfferingController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\Central\Admin\CentralDashboardController;
+use App\Http\Controllers\Central\Admin\TenantManagementController;
+use App\Http\Controllers\Central\RegisterTenantController;
 use App\Http\Controllers\ContributionController;
-use App\Http\Controllers\OfferingTypeController;
 use App\Http\Controllers\ContributionTypeController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\OfferingController;
+use App\Http\Controllers\OfferingTypeController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SmsController;
+use App\Http\Controllers\TitheController;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -26,6 +27,13 @@ Route::get('/', function () {
     ]);
 });
 
+// Central Tenant Self-Onboarding Routes
+Route::prefix('register-tenant')->name('central.register-tenant.')->group(function () {
+    Route::get('', [RegisterTenantController::class, 'create'])->name('create');
+    Route::post('', [RegisterTenantController::class, 'store'])->name('store');
+});
+Route::get('/api/central/check-subdomain', [RegisterTenantController::class, 'checkSubdomain'])->name('central.check-subdomain');
+
 Route::post('/messaging/sms-callback', [SmsController::class, 'callback']);
 
 Route::middleware([
@@ -34,6 +42,16 @@ Route::middleware([
 ])->group(function () {
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    // Central Admin Dashboard & Tenant Management Routes
+    Route::get('/admin/dashboard', CentralDashboardController::class)->name('central.admin.dashboard');
+
+    Route::prefix('admin/tenants')->name('central.admin.tenants.')->group(function () {
+        Route::get('', [TenantManagementController::class, 'index'])->name('index');
+        Route::post('', [TenantManagementController::class, 'store'])->name('store');
+        Route::post('/add-custom-domain', [TenantManagementController::class, 'addCustomDomain'])->name('add-custom-domain');
+        Route::post('/migrate', [TenantManagementController::class, 'migrate'])->name('migrate');
+    });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

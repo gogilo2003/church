@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use NumberFormatter;
-use App\Models\Tithe;
 use App\Models\Member;
 use App\Models\Offering;
-use App\Models\Contribution;
 use App\Models\Payment;
-use Illuminate\Http\Request;
+use App\Models\Tithe;
 use App\Support\Util;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use NumberFormatter;
 
 class DashboardController extends Controller
 {
@@ -29,20 +28,20 @@ class DashboardController extends Controller
 
         $stats = [
             [
-                "name" => "tithes",
-                "value" => $tithe
+                'name' => 'tithes',
+                'value' => $tithe,
             ],
             [
-                "name" => "offerings",
-                "value" => $offering
+                'name' => 'offerings',
+                'value' => $offering,
             ],
             [
-                "name" => "contributions",
-                "value" => $contribution
+                'name' => 'contributions',
+                'value' => $contribution,
             ],
             [
-                "name" => "members",
-                "value" => Member::all()->count()
+                'name' => 'members',
+                'value' => Member::all()->count(),
             ],
         ];
 
@@ -53,6 +52,7 @@ class DashboardController extends Controller
             'contributions' => Util::getPaymentSummary(),
             'attendances' => Util::getAttendanceSummary(),
         ];
+
         return Inertia::render('Dashboard', $data);
     }
 }

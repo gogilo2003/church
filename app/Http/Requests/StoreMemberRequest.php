@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreMemberRequest extends FormRequest
@@ -17,21 +18,21 @@ class StoreMemberRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
-            "first_name" => "required|string",
-            "last_name" => "required|string",
-            "email" => "nullable|string|email",
-            "phone" => "nullable|string",
-            "box_no" => "nullable|string",
-            "post_code" => "nullable|string",
-            "town" => "nullable|string",
-            "address" => "nullable|string",
-            "date_of_birth" => "nullable|date",
-            "gender" => "required|boolean",
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'nullable|string|email',
+            'phone' => 'nullable|string',
+            'box_no' => 'nullable|string',
+            'post_code' => 'nullable|string',
+            'town' => 'nullable|string',
+            'address' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'required|boolean',
         ];
     }
 }

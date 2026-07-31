@@ -2,11 +2,11 @@
 import { computed } from 'vue';
 
 const emit = defineEmits<{
-    (e: 'update:checked', value: any[] | boolean): void;
+    (e: 'update:checked', value: (string | number)[] | boolean): void;
 }>();
 
 const props = withDefaults(defineProps<{
-    checked?: any[] | boolean;
+    checked?: (string | number)[] | boolean;
     value?: string | null;
     label?: string | null;
 }>(), {

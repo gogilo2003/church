@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -32,17 +33,17 @@ class HandleInertiaRequests extends Middleware
         $data = [];
 
         if (session('success') || session('danger') || session('warning') || session('info')) {
-            if (session("success")) {
-                $data["notification"]["success"] = session('success');
+            if (session('success')) {
+                $data['notification']['success'] = session('success');
             }
-            if (session("danger")) {
-                $data["notification"]["danger"] = session('danger');
+            if (session('danger')) {
+                $data['notification']['danger'] = session('danger');
             }
-            if (session("warning")) {
-                $data["notification"]["warning"] = session('warning');
+            if (session('warning')) {
+                $data['notification']['warning'] = session('warning');
             }
-            if (session("info")) {
-                $data["notification"]["info"] = session('info');
+            if (session('info')) {
+                $data['notification']['info'] = session('info');
             }
         }
 
@@ -52,8 +53,8 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'appName' => config('app.name'),
-            'logo' => \Illuminate\Support\Facades\Storage::disk('public')->exists('logo.png')
-                ? \Illuminate\Support\Facades\Storage::disk('public')->url('logo.png')
+            'logo' => Storage::disk('public')->exists('logo.png')
+                ? Storage::disk('public')->url('logo.png')
                 : (file_exists(public_path('logo.png')) ? asset('logo.png') : null),
             ...$data,
         ];

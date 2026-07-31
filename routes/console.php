@@ -10,4 +10,4 @@ Artisan::command('inspire', function () {
 use App\Jobs\SendPendingMessagesJob;
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::job(new SendPendingMessagesJob())->everyMinute();
+Schedule::job(new SendPendingMessagesJob)->everyMinute();

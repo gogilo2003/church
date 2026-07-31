@@ -5,9 +5,9 @@ import Banner from '../Components/Banner.vue';
 import Navbar from './Navbar.vue';
 import Sidebar from './Sidebar.vue';
 
-defineProps({
-    title: String,
-});
+defineProps<{
+    title?: string;
+}>();
 
 const toggleState = ref(localStorage.getItem('toggleMenu') == '1' ? true : false)
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreContributionTypeRequest extends FormRequest
@@ -17,19 +18,19 @@ class StoreContributionTypeRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            "description" => "required|string",
-            "recurrent" => "nullable|boolean",
-            "recurrence_unit" => "nullable|required_if:recurrent,true|string|in:day,week,month,year",
-            "recurrence_value" => "nullable|required_if:recurrent,true|integer",
-            "deadline" => "nullable|date",
-            "amount" => "nullable|numeric",
-            "back_date" => "nullable|boolean",
-            "autoenroll" => "nullable|boolean",
+            'description' => 'required|string',
+            'recurrent' => 'nullable|boolean',
+            'recurrence_unit' => 'nullable|required_if:recurrent,true|string|in:day,week,month,year',
+            'recurrence_value' => 'nullable|required_if:recurrent,true|integer',
+            'deadline' => 'nullable|date',
+            'amount' => 'nullable|numeric',
+            'back_date' => 'nullable|boolean',
+            'autoenroll' => 'nullable|boolean',
         ];
     }
 }

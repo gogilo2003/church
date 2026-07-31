@@ -273,7 +273,7 @@ export interface iShowMembers {
     from: number;
     last_page: number;
     last_page_url: string | null;
-    links: Array<any>;
+    links: Array<iLink>;
     next_page_url: string | null;
     path: string | null;
     per_page: number;
@@ -289,9 +289,13 @@ export interface LinkSubItem {
 
 export interface SidebarLink {
     name: string;
+    caption: string;
     icon?: string;
     items?: LinkSubItem[] | null;
+    show?: boolean;
+    permission?: number;
     as?: string;
-    caption: string;
+    method?: string;
 }
+
 

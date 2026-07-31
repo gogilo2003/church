@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Sms extends Model
@@ -15,8 +14,6 @@ class Sms extends Model
 
     /**
      * The recipients that belong to the Sms
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function recipients(): BelongsToMany
     {

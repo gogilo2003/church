@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreContributionRequest extends FormRequest
@@ -17,15 +18,15 @@ class StoreContributionRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            "contribution_type" => "required|integer|exists:contribution_types,id",
-            "member" => "required|integer|exists:members,id",
-            "amount" => "required|numeric|min:1",
-            "end_at" => "nullable|date",
+            'contribution_type' => 'required|integer|exists:contribution_types,id',
+            'member' => 'required|integer|exists:members,id',
+            'amount' => 'required|numeric|min:1',
+            'end_at' => 'nullable|date',
         ];
     }
 }

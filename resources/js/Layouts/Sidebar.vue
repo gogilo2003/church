@@ -2,7 +2,7 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 import ApplicationLogo from '../Components/ApplicationLogo.vue';
-import { links, linksBottom } from '../links.js'
+import { links, linksBottom } from '../links';
 import SBLink from '../Components/Custom/SBLink.vue';
 import { PageProps } from '@/types';
 

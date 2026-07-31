@@ -5,10 +5,10 @@ import { ref } from "vue";
 import Swal from 'sweetalert2'
 import { useForm, router } from '@inertiajs/vue3';
 
-import { iNotification } from '../../types';
+import { iNotification, iAttendance } from '../../types';
 
 defineProps<{
-    attendance?: any[];
+    attendance?: iAttendance;
     notification?: iNotification;
 }>();
 

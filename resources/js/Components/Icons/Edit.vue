@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template>
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <mask id="path-1-outside-1_1654_8329" maskUnits="userSpaceOnUse" x="3" y="4" width="17" height="17" fill="black">

@@ -2,16 +2,17 @@
 
 namespace App\Rules;
 
-use Closure;
 use App\Models\Member;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 class UniqueParticipantCombination implements ValidationRule
 {
     /**
      * Run the validation rule.
      *
-     * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param  Closure(string): PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $values, Closure $fail): void
     {

@@ -1,0 +1,28 @@
+# AI Assistant Coding Guidelines for Church SaaS
+
+## System & Tech Stack Context
+- **Framework**: Laravel 13 / PHP 8.4
+- **Multi-Tenancy**: `stancl/tenancy v4` (Separate database per tenant: `church_tenant_{id}`)
+- **Frontend**: Vue 3 (Composition API with `<script setup lang="ts">`), Inertia.js, TypeScript, Tailwind CSS, PrimeVue
+- **Architecture**: Domain Driven, Repository Pattern (`app/Repositories/`), Service Layer (`app/Services/`), FormRequest Validation, Policy Authorization
+
+## Strict Rules
+1. **Tenancy Isolation**: NEVER execute cross-database queries or JOINs between the Central DB (`church_central`) and Tenant DBs (`church_tenant_*`).
+2. **Layered Architecture**:
+   - Controllers MUST be thin (max 15 lines per method).
+   - All mutations MUST go through `FormRequest` classes.
+   - Business logic & transactions MUST reside in `app/Services/`.
+   - Data access MUST use `app/Repositories/` interfaces.
+3. **Type Safety**:
+   - PHP files MUST include `declare(strict_types=1);`.
+   - TypeScript Vue components MUST use `<script setup lang="ts">`. NEVER use explicit `any`.
+4. **Verification**:
+   - Always verify frontend changes with `npm run type-check`.
+   - Always verify PHP backend changes with `php artisan test` or `vendor/bin/pint --test`.
+
+## Primary Knowledge Base
+- System Architecture: `.ai/knowledge/architecture.md`
+- Multi-Tenancy Specs: `.ai/knowledge/tenancy.md`
+- Coding Standards: `.ai/knowledge/coding-standards.md`
+- Implementation Playbooks: `.ai/skills/`
+- Full AI Context: `.ai/context.md`

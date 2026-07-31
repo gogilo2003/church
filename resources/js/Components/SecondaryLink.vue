@@ -1,11 +1,10 @@
 
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-defineProps({
-    type: {
-        type: String,
-        default: 'button',
-    },
+withDefaults(defineProps<{
+    type?: string;
+}>(), {
+    type: 'button',
 });
 </script>
 

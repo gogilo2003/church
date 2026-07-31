@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use NumberFormatter;
-use App\Models\Member;
-use App\Models\Payment;
-use App\Models\Contribution;
-use Illuminate\Support\Carbon;
-use App\Models\ContributionType;
-use App\Http\Resources\ContributionTypeResource;
 use App\Http\Requests\StoreContributionTypeRequest;
 use App\Http\Requests\UpdateContributionTypeRequest;
+use App\Http\Resources\ContributionTypeResource;
+use App\Models\ContributionType;
+use App\Models\Member;
+use App\Models\Payment;
+use Illuminate\Support\Carbon;
+use Inertia\Inertia;
+use NumberFormatter;
 
 class ContributionTypeController extends Controller
 {
@@ -23,14 +22,15 @@ class ContributionTypeController extends Controller
         $contribution_types = ContributionTypeResource::collection(ContributionType::paginate());
         $members = Member::paginate(8)->through(function ($item) {
             return [
-                "id" => $item->id,
-                "name" => sprintf("%s %s", $item->first_name, $item->last_name),
-                "photo" => $item->photo_url,
-                "phone" => $item->phone,
-                "email" => $item->email,
-                "postal_address" => $item->box_no ? sprintf("P.O. Box %s%s, %s", $item->box_no, $item->post_code ? "-" . $item->post_code : "", $item->town) : '',
+                'id' => $item->id,
+                'name' => sprintf('%s %s', $item->first_name, $item->last_name),
+                'photo' => $item->photo_url,
+                'phone' => $item->phone,
+                'email' => $item->email,
+                'postal_address' => $item->box_no ? sprintf('P.O. Box %s%s, %s', $item->box_no, $item->post_code ? '-'.$item->post_code : '', $item->town) : '',
             ];
         });
+
         return Inertia::render('Contributions/Index', ['contribution_types' => $contribution_types, 'members' => $members]);
     }
 
@@ -39,7 +39,7 @@ class ContributionTypeController extends Controller
      */
     public function store(StoreContributionTypeRequest $request)
     {
-        $type = new ContributionType();
+        $type = new ContributionType;
         $type->description = $request->description;
         $type->recurrent = $request->recurrent;
         $type->recurrence_value = $request->recurrence_value;
@@ -58,7 +58,6 @@ class ContributionTypeController extends Controller
      */
     public function show(ContributionType $contribution_type)
     {
-        $contribution_type;
 
         $members = Member::with([
             'contributions.payments',
@@ -66,12 +65,12 @@ class ContributionTypeController extends Controller
                 $query->whereHas('contribution_type', function ($query) use ($contribution_type) {
                     $query->where('contribution_type_id', $contribution_type->id)->orderBy('end_at', 'DESC');
                 });
-            }
+            },
         ])->paginate(5)->through(function ($member) use ($contribution_type) {
             $contributions = $member->contributions;
 
             $contributions = $contributions->map(function ($contribution) use ($contribution_type) {
-                $description = "";
+                $description = '';
                 $deadline = $contribution_type->deadline ? Carbon::parse($contribution_type->deadline) : null;
 
                 if ($contribution_type->recurrent) {
@@ -98,14 +97,14 @@ class ContributionTypeController extends Controller
                 // return $contribution;
 
                 return (object) [
-                    "id" => $contribution->id,
-                    "contribution_date" => $contribution->contribution_date,
-                    "end_at" => $deadline,
-                    "description" => $description,
-                    "amount" => $contribution->amount ?? 0,
-                    "paid" => $paid,
-                    "balance" => $contribution->amount - $paid,
-                    "status" => $contribution->contribution_status,
+                    'id' => $contribution->id,
+                    'contribution_date' => $contribution->contribution_date,
+                    'end_at' => $deadline,
+                    'description' => $description,
+                    'amount' => $contribution->amount ?? 0,
+                    'paid' => $paid,
+                    'balance' => $contribution->amount - $paid,
+                    'status' => $contribution->contribution_status,
                 ];
             });
 
@@ -121,16 +120,16 @@ class ContributionTypeController extends Controller
             // dump($contributions->count(), $contributions_max, $contributions);
 
             return (object) [
-                "id" => $member->id,
-                "name" => trim(sprintf("%s %s", $member->first_name, $member->last_name)),
-                "photo" => $member->photo_url,
-                "phone" => $member->phone,
-                "email" => $member->email,
-                "gender" => $member->gender ? 'Male' : 'Female',
-                "amount" => $contributions->where('status', '<>', null)->sum('amount'),
-                "paid" => $contributions->where('status', '<>', null)->sum('paid'),
-                "balance" => $contributions->where('status', '<>', null)->sum('balance'),
-                "contributions" => $contributions,
+                'id' => $member->id,
+                'name' => trim(sprintf('%s %s', $member->first_name, $member->last_name)),
+                'photo' => $member->photo_url,
+                'phone' => $member->phone,
+                'email' => $member->email,
+                'gender' => $member->gender ? 'Male' : 'Female',
+                'amount' => $contributions->where('status', '<>', null)->sum('amount'),
+                'paid' => $contributions->where('status', '<>', null)->sum('paid'),
+                'balance' => $contributions->where('status', '<>', null)->sum('balance'),
+                'contributions' => $contributions,
             ];
         });
 
@@ -188,8 +187,9 @@ class ContributionTypeController extends Controller
             } elseif ($contribution_type->recurrence_unit == 'year') {
                 $count = $contribution_type->created_at->diffInYears(now());
             }
-            ++$count;
+            $count++;
         }
+
         return $count;
     }
 
@@ -199,6 +199,7 @@ class ContributionTypeController extends Controller
             $locale = 'en_KE';
             $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
             $days_count = $contribution_type->created_at->diffInDays($end_date);
+
             return sprintf('%s day', $nf->format($days_count));
         }
         if ($contribution_type->recurrence_unit == 'week') {
@@ -219,53 +220,55 @@ class ContributionTypeController extends Controller
             $all = collect(
                 range(1, $this->contributionsMax($contribution_type))
             )->map(
-                    function ($item) use ($contribution_type, $contributions) {
-                        $end_date = Carbon::parse($contribution_type->created_at);
+                function ($item) use ($contribution_type, $contributions) {
+                    $end_date = Carbon::parse($contribution_type->created_at);
 
-                        if ($contribution_type->recurrence_unit == 'day') {
-                            $end_date->addDays($item);
-                        }
-                        if ($contribution_type->recurrence_unit == 'week') {
-                            $end_date->addWeeks($item);
-                        }
-                        if ($contribution_type->recurrence_unit == 'month') {
-                            $end_date->addMonths($item);
-                        }
-                        if ($contribution_type->recurrence_unit == 'year') {
-                            $end_date->addYears($item);
-                        }
-
-                        $description = $this->contributionDescription($end_date, $contribution_type);
-
-                        foreach ($contributions as $i) {
-                            if ($i->end_at->isSameDay($end_date)) {
-                                $payments = Payment::where('contribution_id', $i->id)->get();
-                                $paid = $payments->sum('amount');
-
-                                return (object) [
-                                    "id" => $i->id,
-                                    "contribution_date" => $i->contribution_date,
-                                    "end_at" => $i->end_at,
-                                    "description" => $description,
-                                    "amount" => $i->amount,
-                                    "paid" => $paid,
-                                    "balance" => $i->amount - $paid,
-                                    "status" => $i->status,
-                                ];
-                            }
-                        }
-                        return (object) [
-                            "id" => null,
-                            "contribution_date" => null,
-                            "end_at" => $end_date,
-                            "description" => $description,
-                            "amount" => $contribution_type->amount ?? null,
-                            "paid" => 0,
-                            "balance" => $contribution_type->amount - 0,
-                            "status" => null,
-                        ];
+                    if ($contribution_type->recurrence_unit == 'day') {
+                        $end_date->addDays($item);
                     }
-                );
+                    if ($contribution_type->recurrence_unit == 'week') {
+                        $end_date->addWeeks($item);
+                    }
+                    if ($contribution_type->recurrence_unit == 'month') {
+                        $end_date->addMonths($item);
+                    }
+                    if ($contribution_type->recurrence_unit == 'year') {
+                        $end_date->addYears($item);
+                    }
+
+                    $description = $this->contributionDescription($end_date, $contribution_type);
+
+                    foreach ($contributions as $i) {
+                        if ($i->end_at->isSameDay($end_date)) {
+                            $payments = Payment::where('contribution_id', $i->id)->get();
+                            $paid = $payments->sum('amount');
+
+                            return (object) [
+                                'id' => $i->id,
+                                'contribution_date' => $i->contribution_date,
+                                'end_at' => $i->end_at,
+                                'description' => $description,
+                                'amount' => $i->amount,
+                                'paid' => $paid,
+                                'balance' => $i->amount - $paid,
+                                'status' => $i->status,
+                            ];
+                        }
+                    }
+
+                    return (object) [
+                        'id' => null,
+                        'contribution_date' => null,
+                        'end_at' => $end_date,
+                        'description' => $description,
+                        'amount' => $contribution_type->amount ?? null,
+                        'paid' => 0,
+                        'balance' => $contribution_type->amount - 0,
+                        'status' => null,
+                    ];
+                }
+            );
+
             return $all;
         }
 
@@ -273,15 +276,15 @@ class ContributionTypeController extends Controller
 
         return collect([
             (object) [
-                "id" => null,
-                "contribution_date" => null,
-                "end_at" => $end_date,
-                "description" => $contribution_type->description,
-                "amount" => $contribution_type->amount ?? 0,
-                "paid" => 0,
-                "balance" => $contribution_type->amount - 0,
-                "status" => null,
-            ]
+                'id' => null,
+                'contribution_date' => null,
+                'end_at' => $end_date,
+                'description' => $contribution_type->description,
+                'amount' => $contribution_type->amount ?? 0,
+                'paid' => 0,
+                'balance' => $contribution_type->amount - 0,
+                'status' => null,
+            ],
         ]);
     }
 }

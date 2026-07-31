@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 class Tithe extends Model
 {
@@ -14,8 +14,6 @@ class Tithe extends Model
 
     /**
      * Get the user that owns the Tithe
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -25,8 +23,8 @@ class Tithe extends Model
     public function tithedOn(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => Carbon::parse($value)->isoFormat('dddd, D MMM, Y'),
-            set: fn($value) => Carbon::parse($value),
+            get: fn ($value) => Carbon::parse($value)->isoFormat('dddd, D MMM, Y'),
+            set: fn ($value) => Carbon::parse($value),
         );
     }
 }

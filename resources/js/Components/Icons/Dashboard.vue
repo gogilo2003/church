@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template>
     <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M204 48H68C56.9543 48 48 56.9543 48 68V204C48 215.046 56.9543 224 68 224H204C215.046 224 224 215.046 224 204V68C224 56.9543 215.046 48 204 48Z" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>

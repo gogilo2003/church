@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sms;
-use Inertia\Inertia;
+use App\Http\Requests\StoreSmsRequest;
+use App\Http\Requests\UpdateSmsRequest;
 use App\Models\Member;
+use App\Models\Sms;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use App\Http\Requests\StoreSmsRequest;
-use App\Http\Requests\UpdateSmsRequest;
+use Inertia\Inertia;
 
 class SmsController extends Controller
 {
@@ -54,13 +54,13 @@ class SmsController extends Controller
             return $query->where('type', $recipient_type);
         })
             ->get()
-            ->map(fn(Member $member) => [
+            ->map(fn (Member $member) => [
                 'id' => $member->id,
                 'name' => sprintf('%s %s', $member->first_name, $member->last_name),
                 'phone' => $member->phone,
             ]);
 
-        return Inertia::render('Messaging/Sms/Index', ["messages" => $messages, "recipients" => $recipients]);
+        return Inertia::render('Messaging/Sms/Index', ['messages' => $messages, 'recipients' => $recipients]);
     }
 
     /**
@@ -68,10 +68,11 @@ class SmsController extends Controller
      */
     public function store(StoreSmsRequest $request)
     {
-        $sms = new Sms();
+        $sms = new Sms;
         $sms->message = $request->message;
         $sms->save();
         $sms->recipients()->sync($request->recipients);
+
         return redirect()->back()->with('success', 'SMS Received for processing');
     }
 
@@ -82,6 +83,7 @@ class SmsController extends Controller
     {
         $sms->message = $request->message;
         $sms->save();
+
         return redirect()->back()->with('success', 'SMS Updated');
     }
 
@@ -91,10 +93,11 @@ class SmsController extends Controller
     public function destroy(Sms $sms)
     {
         $sms->delete();
+
         return redirect()->back()->with('success', 'SMS deleted');
     }
 
-    function callback(Request $request): void
+    public function callback(Request $request): void
     {
         $data = $request->all();
 

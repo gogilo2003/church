@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { formatCurrency, formatDate } from '../../helpers';
+import { iContributionType } from '../../types';
 
-defineProps({
-    item: Object
-})
+defineProps<{
+    item?: iContributionType;
+}>();
 </script>
 <template>
     <div>

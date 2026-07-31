@@ -29,7 +29,7 @@ class OfferingTypeController extends Controller
      */
     public function store(StoreOfferingTypeRequest $request)
     {
-        $offeringType = new OfferingType();
+        $offeringType = new OfferingType;
 
         $offeringType->name = $request->name;
 

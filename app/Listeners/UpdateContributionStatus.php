@@ -2,8 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Models\Contribution;
 use App\Events\PaymentRegistered;
+use App\Models\Contribution;
 
 class UpdateContributionStatus
 {

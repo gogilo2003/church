@@ -60,15 +60,17 @@ const submit = () => {
     })
 }
 
-const previewSrc = ref()
+const previewSrc = ref<string | null>(null);
 
-const selectPicture = (event: any) => {
-    form.photo = event?.target?.files[0]
+const selectPicture = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    const file = target?.files?.[0];
+    form.photo = file ?? null;
     if (form.photo) {
         const reader = new FileReader();
 
         reader.onload = (e) => {
-            previewSrc.value = e?.target?.result;
+            previewSrc.value = (e.target?.result as string) ?? null;
         };
 
         reader.readAsDataURL(form.photo);
@@ -89,7 +91,7 @@ const close = () => {
                 <div class="flex items-center justify-center w-full ">
                     <label for="memberPhotoUpload"
                         class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                        <img v-if="form.photo" :src="previewSrc" alt="Preview" class="w-full h-full object-contain">
+                        <img v-if="form.photo" :src="previewSrc ?? undefined" alt="Preview" class="w-full h-full object-contain">
                         <div v-else class="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">

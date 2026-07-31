@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template>
     <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M256 464C141.31 464 48 370.69 48 256C48 141.31 141.31 48 256 48C370.69 48 464 141.31 464 256C464 370.69 370.69 464 256 464ZM256 80C159 80 80 159 80 256C80 353 159 432 256 432C353 432 432 353.05 432 256C432 158.95 353.05 80 256 80Z" fill="currentColor"/>

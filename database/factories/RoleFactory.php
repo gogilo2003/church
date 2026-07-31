@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Role>
+ * @extends Factory<Role>
  */
 class RoleFactory extends Factory
 {
@@ -17,8 +18,8 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            "title" => "Admin",
-            "permissions" => null
+            'title' => 'Admin',
+            'permissions' => null,
         ];
     }
 }
