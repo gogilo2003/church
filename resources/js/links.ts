@@ -1,10 +1,10 @@
 import { ref, Ref } from 'vue'
 import { SidebarLink } from './types'
 
-export const links: Ref<SidebarLink[]> = ref([
+export const tenantLinks: Ref<SidebarLink[]> = ref([
     {
         name: "dashboard",
-        caption: "Dashboard",
+        caption: "Church Dashboard",
         icon: "dashboard",
         items: null,
         show: true,
@@ -69,6 +69,36 @@ export const links: Ref<SidebarLink[]> = ref([
         permission: 0,
     },
 ])
+
+export const centralAdminLinks: Ref<SidebarLink[]> = ref([
+    {
+        name: "central.admin.dashboard",
+        caption: "Central Dashboard",
+        icon: "dashboard",
+        items: null,
+        show: true,
+        permission: 1,
+    },
+    {
+        name: "central.admin.tenants.index",
+        caption: "Tenant Management",
+        icon: "home",
+        items: null,
+        show: true,
+        permission: 1,
+    },
+    {
+        name: "central.register-tenant.create",
+        caption: "Register Church",
+        icon: "add",
+        items: null,
+        show: true,
+        permission: 1,
+    },
+])
+
+// Backwards compatibility alias
+export const links = tenantLinks
 
 export const linksBottom: Ref<SidebarLink[]> = ref([
     {
