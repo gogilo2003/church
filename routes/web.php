@@ -44,7 +44,7 @@ Route::middleware([
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     // Central Admin Dashboard & Tenant Management Routes
-    Route::get('/admin/dashboard', CentralDashboardController::class)->name('central.admin.dashboard');
+    Route::get('/admin', CentralDashboardController::class)->name('central.admin.dashboard');
 
     Route::prefix('admin/tenants')->name('central.admin.tenants.')->group(function () {
         Route::get('', [TenantManagementController::class, 'index'])->name('index');

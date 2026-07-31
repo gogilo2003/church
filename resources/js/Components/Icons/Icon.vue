@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, Component } from 'vue';
+import { computed, type Component } from 'vue';
 import Dashboard from './Dashboard.vue';
 import Product from './Product.vue';
 import Logout from './Logout.vue';
