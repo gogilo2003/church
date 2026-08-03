@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
 class Member extends Model
@@ -15,9 +17,16 @@ class Member extends Model
 
     protected $fillable = [
         'org_unit_id',
+        'household_id',
+        'user_id',
+        'member_number',
         'first_name',
+        'middle_name',
         'last_name',
         'gender',
+        'marital_status',
+        'occupation',
+        'national_id',
         'phone',
         'email',
         'box_no',
@@ -25,24 +34,68 @@ class Member extends Model
         'town',
         'address',
         'date_of_birth',
+        'status',
+        'spiritual_milestones',
+        'date_joined',
         'photo',
     ];
 
-    protected $appends = ['photo_url'];
+    protected $casts = [
+        'date_of_birth' => 'date',
+        'date_joined' => 'date',
+        'spiritual_milestones' => 'array',
+    ];
 
-    protected $dates = ['date_of_birth'];
+    protected $appends = ['photo_url', 'full_name'];
 
-    /**
-     * The groups that belong to the Member
-     */
+    public function fullName(): Attribute
+    {
+        return Attribute::get(function () {
+            return trim(implode(' ', array_filter([
+                $this->first_name,
+                $this->middle_name,
+                $this->last_name,
+            ])));
+        });
+    }
+
+    public function orgUnit(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationalUnit::class, 'org_unit_id');
+    }
+
+    public function household(): BelongsTo
+    {
+        return $this->belongsTo(Household::class, 'household_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function households(): BelongsToMany
+    {
+        return $this->belongsToMany(Household::class, 'household_member')
+            ->withPivot('relationship')
+            ->withTimestamps();
+    }
+
+    public function visitorFollowUp(): HasOne
+    {
+        return $this->hasOne(VisitorFollowUp::class);
+    }
+
+    public function lifecycleLogs(): HasMany
+    {
+        return $this->hasMany(MemberLifecycleLog::class)->latest();
+    }
+
     public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class);
     }
 
-    /**
-     * Get the URL to the members's photo.
-     */
     public function photoUrl(): Attribute
     {
         return Attribute::get(function () {
@@ -52,59 +105,22 @@ class Member extends Model
         });
     }
 
-    /**
-     * Get the default profile photo URL if no profile photo has been uploaded.
-     *
-     * @return string
-     */
-    protected function defaultProfilePhotoUrl()
+    protected function defaultProfilePhotoUrl(): string
     {
-        if ($this->gender) {
-            if (Storage::disk('public')->exists('members/female-placeholder.png')) {
-                $photoPath = Storage::disk('public')->path('members/female-placeholder.png');
-                // Convert the photo to base64
-                $photoBase64 = base64_encode(file_get_contents($photoPath));
-                $photoMimeType = mime_content_type($photoPath);
-
-                return "data:$photoMimeType;base64,$photoBase64";
-            }
-        } else {
-            if (Storage::disk('public')->exists('members/female-placeholder.png')) {
-                $photoPath = Storage::disk('public')->path('members/male-placeholder.png');
-                // Convert the photo to base64
-                $photoBase64 = base64_encode(file_get_contents($photoPath));
-                $photoMimeType = mime_content_type($photoPath);
-
-                return "data:$photoMimeType;base64,$photoBase64";
-            }
-        }
-
-        $name = trim(collect(explode(' ', sprintf('%s %s', $this->first_name, $this->last_name)))->map(function ($segment) {
-            return mb_substr($segment, 0, 1);
-        })->join(' '));
-
-        return 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
+        $name = $this->full_name ?: 'Member';
+        return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=4F46E5&background=EEF2FF';
     }
 
-    /**
-     * The attendances that belong to the Member
-     */
     public function attendances(): BelongsToMany
     {
         return $this->belongsToMany(Attendance::class);
     }
 
-    /**
-     * Get all of the contributions for the Member
-     */
     public function contributions(): HasMany
     {
         return $this->hasMany(Contribution::class);
     }
 
-    /**
-     * The sms that belong to the Member
-     */
     public function sms(): BelongsToMany
     {
         return $this->belongsToMany(Sms::class, 'member_sms', 'member_id', 'sms_id')

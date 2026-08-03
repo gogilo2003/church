@@ -25,6 +25,21 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Contracts\RoleRepositoryInterface::class,
             \App\Repositories\Eloquent\RoleRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Contracts\MemberRepositoryInterface::class,
+            \App\Repositories\Eloquent\MemberRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Contracts\HouseholdRepositoryInterface::class,
+            \App\Repositories\Eloquent\HouseholdRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Contracts\VisitorFollowUpRepositoryInterface::class,
+            \App\Repositories\Eloquent\VisitorFollowUpRepository::class
+        );
     }
 
     /**
