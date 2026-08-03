@@ -46,6 +46,7 @@ Route::prefix('admin')->name('central.admin.')->group(function () {
         Route::prefix('tenants')->name('tenants.')->group(function () {
             Route::get('', [TenantManagementController::class, 'index'])->name('index');
             Route::post('', [TenantManagementController::class, 'store'])->name('store');
+            Route::put('/{tenant}', [TenantManagementController::class, 'update'])->name('update');
             Route::post('/add-custom-domain', [TenantManagementController::class, 'addCustomDomain'])->name('add-custom-domain');
             Route::post('/migrate', [TenantManagementController::class, 'migrate'])->name('migrate');
         });

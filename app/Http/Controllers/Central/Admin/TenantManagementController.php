@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Central\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Central\AddCustomDomainRequest;
 use App\Http\Requests\Central\TenantRegistrationRequest;
+use App\Http\Requests\Central\UpdateTenantRequest;
 use App\Services\Central\TenantMigrationService;
 use App\Services\Central\TenantProvisioningService;
 use Illuminate\Http\RedirectResponse;
@@ -35,6 +36,14 @@ final class TenantManagementController extends Controller
 
         return redirect()->route('central.admin.tenants.index')
             ->with('notification', ['success' => 'Tenant provisioned successfully.']);
+    }
+
+    public function update(UpdateTenantRequest $request, string $tenant): RedirectResponse
+    {
+        $this->provisioningService->updateTenantDetails($tenant, $request->validated());
+
+        return redirect()->route('central.admin.tenants.index')
+            ->with('notification', ['success' => 'Tenant details updated successfully.']);
     }
 
     public function addCustomDomain(AddCustomDomainRequest $request): RedirectResponse

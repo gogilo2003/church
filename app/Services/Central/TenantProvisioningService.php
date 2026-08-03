@@ -52,4 +52,31 @@ final class TenantProvisioningService
             'is_primary' => false,
         ]);
     }
+
+    /**
+     * Update existing tenant configuration details.
+     */
+    public function updateTenantDetails(string $tenantId, array $data): Tenant
+    {
+        $tenant = Tenant::findOrFail($tenantId);
+        $tenantData = $tenant->data ?? [];
+
+        if (isset($data['church_name'])) {
+            $tenantData['church_name'] = trim($data['church_name']);
+        }
+        if (isset($data['admin_name'])) {
+            $tenantData['admin_name'] = trim($data['admin_name']);
+        }
+        if (isset($data['admin_email'])) {
+            $tenantData['admin_email'] = trim($data['admin_email']);
+        }
+        if (isset($data['phone'])) {
+            $tenantData['phone'] = trim($data['phone']);
+        }
+
+        $tenant->data = $tenantData;
+        $tenant->save();
+
+        return $tenant;
+    }
 }
