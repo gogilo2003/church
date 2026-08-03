@@ -166,15 +166,43 @@ Route::middleware([
 
         // Member Management
         Route::prefix('members')
-            ->name('members')
+            ->name('members.')
             ->controller(MemberController::class)
             ->group(function () {
-                Route::get('', 'index');
-                Route::post('', 'store')->name('-store');
-                Route::patch('{member}', 'update')->name('-update');
-                Route::delete('{member}', 'destroy')->name('-delete');
-                Route::post('photo', 'photo')->name('-photo');
-                Route::get('/download', 'download')->name('-download');
+                Route::get('', 'index')->name('index');
+                Route::get('create', 'create')->name('create');
+                Route::post('', 'store')->name('store');
+                Route::get('download', 'download')->name('download');
+                Route::get('{member}', 'show')->name('show');
+                Route::get('{member}/edit', 'edit')->name('edit');
+                Route::put('{member}', 'update')->name('update');
+                Route::patch('{member}/status', 'updateStatus')->name('status');
+                Route::delete('{member}', 'destroy')->name('destroy');
+                Route::post('photo', 'photo')->name('photo');
+            });
+
+        // Household Management
+        Route::prefix('households')
+            ->name('households.')
+            ->controller(\App\Http\Controllers\HouseholdController::class)
+            ->group(function () {
+                Route::get('', 'index')->name('index');
+                Route::post('', 'store')->name('store');
+                Route::get('{household}', 'show')->name('show');
+                Route::put('{household}', 'update')->name('update');
+                Route::delete('{household}', 'destroy')->name('destroy');
+            });
+
+        // Visitor Follow-up Management
+        Route::prefix('visitors')
+            ->name('visitors.')
+            ->controller(\App\Http\Controllers\VisitorFollowUpController::class)
+            ->group(function () {
+                Route::get('', 'index')->name('index');
+                Route::post('', 'store')->name('store');
+                Route::patch('{followUp}/stage', 'updateStage')->name('stage');
+                Route::post('{followUp}/convert', 'convert')->name('convert');
+                Route::patch('{followUp}/leader', 'assignLeader')->name('leader');
             });
 
         // Attendance Management

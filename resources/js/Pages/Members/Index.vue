@@ -1,312 +1,262 @@
 <script setup lang="ts">
-import AppLayout from '../../Layouts/AppLayout.vue';
-import Container from '../../Components/Custom/Container.vue';
-import Modal from '../../Components/Modal.vue'
-import { ref } from "vue";
-import PrimaryButton from '../../Components/PrimaryButton.vue'
-import Icon from '../../Components/Icons/Icon.vue';
-import { useForm, router } from '@inertiajs/vue3';
-import TextInput from '../../Components/FlowBite/TextInput.vue';
-import SelectInput from '../../Components/FlowBite/SelectInput.vue';
-import SecondaryButton from '../../Components/SecondaryButton.vue';
-import InputLabel from '../../Components/InputLabel.vue';
-import InputError from '../../Components/InputError.vue';
-import Photo from './Photo.vue';
-import Show from './Show.vue';
-import Swal from 'sweetalert2';
-import { format } from 'date-fns';
-import Paginator from '../../Components/Paginator.vue';
-import { iMembers, iNotification, iMember } from '../../types';
+import { ref, watch } from 'vue';
+import { Head, router } from '@inertiajs/vue3';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import PageHeader from '@/Components/PageHeader.vue';
+import PageToolbar from '@/Components/PageToolbar.vue';
+import SearchBox from '@/Components/SearchBox.vue';
+import DataTable, { TableColumn } from '@/Components/DataTable.vue';
+import StatusBadge from '@/Components/StatusBadge.vue';
+import Paginator from '@/Components/Paginator.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import PrimaryLink from '@/Components/PrimaryLink.vue';
+import ConfirmationDialog from '@/Components/ConfirmationDialog.vue';
+
+interface MemberItem {
+    id: number;
+    member_number: string | null;
+    full_name: string;
+    first_name: string;
+    last_name: string;
+    email: string | null;
+    phone: string;
+    gender: string;
+    status: string;
+    photo_url: string;
+    date_of_birth: string | null;
+    date_joined: string | null;
+    household?: { id: number; name: string } | null;
+    org_unit?: { id: number; name: string } | null;
+}
 
 const props = defineProps<{
-    members: iMembers,
-    notification?: iNotification
-}>()
+    members: {
+        data: MemberItem[];
+        links: any[];
+        current_page: number;
+        last_page: number;
+        total: number;
+    };
+    filters: {
+        search?: string;
+        status?: string;
+        org_unit_id?: string;
+    };
+    orgUnits: { id: number; name: string }[];
+}>();
 
-const form = useForm<{
-    id: number | null;
-    first_name: string | null;
-    last_name: string | null;
-    phone: string | null;
-    email: string | null;
-    box_no: string | null;
-    post_code: string | null;
-    town: string | null;
-    address: string | null;
-    date_of_birth: string | null;
-    gender: string | null;
-}>({
-    id: null,
-    first_name: null,
-    last_name: null,
-    phone: null,
-    email: null,
-    box_no: null,
-    post_code: null,
-    town: null,
-    address: null,
-    date_of_birth: null,
-    gender: null,
-})
+const search = ref(props.filters.search || '');
+const selectedStatus = ref(props.filters.status || '');
+const selectedOrgUnit = ref(props.filters.org_unit_id || '');
 
-const showDialog = ref(false)
-const titleDialog = ref('New Member')
-const edit = ref(false)
+const statusTabs = [
+    { value: '', label: 'All Members' },
+    { value: 'active', label: 'Active' },
+    { value: 'visitor', label: 'Visitors' },
+    { value: 'new_convert', label: 'New Converts' },
+    { value: 'new_member', label: 'New Members' },
+    { value: 'inactive', label: 'Inactive' },
+];
 
-const submit = () => {
-    if (edit.value) {
-        form.patch(route('members-update', form.id!), {
-            onSuccess: () => {
-                Swal.fire({
-                    icon: 'success',
-                    text: props?.notification?.success
-                })
-                closeDialog()
-            },
-            onError: () => {
-                if (props?.notification?.danger) {
-                    Swal.fire({
-                        title: 'Error',
-                        icon: 'error',
-                        text: props?.notification?.success
-                    })
-                } else {
-                    if (form.errors) {
-                        Swal.fire({
-                            title: "Validation Error",
-                            icon: 'warning',
-                            text: 'Some fields failed validation! Please check and try again'
-                        })
-                    } else {
-                        Swal.fire({
-                            title: 'Error',
-                            icon: 'error',
-                            text: "An error occurred! Please try again later"
-                        })
-                    }
-                }
-            }
-        })
-    } else {
-        form.post(route('members-store'), {
-            onSuccess: () => {
-                Swal.fire({
-                    icon: 'success',
-                    text: props?.notification?.success
-                })
-                closeDialog()
-            },
-            onError: () => {
-                if (props?.notification?.danger) {
-                    Swal.fire({
-                        icon: 'error',
-                        text: props?.notification?.success
-                    })
-                } else {
-                    if (form.errors) {
-                        Swal.fire({
-                            title: 'Validation Error',
-                            icon: 'warning',
-                            text: 'Some fields failed validation! Please check and try again'
-                        })
-                    } else {
-                        Swal.fire({
-                            title: 'Error',
-                            icon: 'error',
-                            text: "An error occurred! Please try again later"
-                        })
-                    }
-                }
-            }
-        })
+const columns: TableColumn[] = [
+    { key: 'full_name', label: 'Member Name', sortable: true },
+    { key: 'contact', label: 'Contact Details' },
+    { key: 'status', label: 'Lifecycle Status', sortable: true },
+    { key: 'household', label: 'Household' },
+    { key: 'org_unit', label: 'Parish / Unit' },
+];
 
-    }
-}
+const applyFilters = () => {
+    router.get(
+        route('members.index'),
+        {
+            search: search.value || undefined,
+            status: selectedStatus.value || undefined,
+            org_unit_id: selectedOrgUnit.value || undefined,
+        },
+        { preserveState: true, replace: true }
+    );
+};
 
-const editMember = (member: iMember) => {
+const filterByStatus = (statusVal: string) => {
+    selectedStatus.value = statusVal;
+    applyFilters();
+};
 
-    form.id = member.id
-    form.first_name = member.first_name
-    form.last_name = member.last_name
-    form.phone = member.phone
-    form.email = member.email
-    form.box_no = member.box_no ?? null
-    form.post_code = member.post_code ?? null
-    form.town = member.town ?? null
-    form.address = member.address ?? null
-    form.date_of_birth = member.date_of_birth ?? null
-    form.gender = member.gender
+watch([selectedOrgUnit], () => {
+    applyFilters();
+});
 
-    edit.value = true
-    titleDialog.value = `Edit Member (${member.first_name} ${member.last_name})`
-    showDialog.value = true
-}
+// Delete confirmation modal state
+const confirmDeleteModal = ref(false);
+const memberToDelete = ref<MemberItem | null>(null);
 
-const closeDialog = () => {
-    edit.value = false
-    titleDialog.value = "New Member"
-    form.reset()
-    showDialog.value = false
-}
+const promptDelete = (member: MemberItem) => {
+    memberToDelete.value = member;
+    confirmDeleteModal.value = true;
+};
 
-const photoId = ref<number | undefined>(undefined)
-const showPhoto = ref(false)
-const updatePhoto = (id: number) => {
-    photoId.value = id
-    showPhoto.value = true
-}
-
-const uploadingPhoto = () => { }
-const uploadedPhoto = () => {
-    photoId.value = undefined
-    showPhoto.value = false
-}
-
-const showViewDialog = ref(false)
-const selectedMember = ref<iMember | null>(null)
-const closeViewDialog = () => {
-    selectedMember.value = null;
-    showViewDialog.value = false
-}
-const openViewDialog = (member: iMember) => {
-    selectedMember.value = member
-    showViewDialog.value = true
-}
-
-const deleteMember = (member: iMember) => {
-    router.delete(route('members-delete', member.id), {
+const deleteMember = () => {
+    if (!memberToDelete.value) return;
+    router.delete(route('members.destroy', memberToDelete.value.id), {
         onSuccess: () => {
-            if (props?.notification?.success) {
-                Swal.fire({
-                    icon: 'success',
-                    text: props?.notification?.success
-                })
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    text: props?.notification?.danger
-                })
-            }
-        }
-    })
-}
-
-const downloadMembers = () => {
-    let url: string = route('members-download');
-    window.open(url, '_blank');
-}
-const formatDate = (date: string | Date) => {
-    const dt = typeof date === 'string' ? new Date(date) : date;
-    return format(dt, 'eee, do MMM, yyyy')
-}
+            confirmDeleteModal.value = false;
+            memberToDelete.value = null;
+        },
+    });
+};
 </script>
 
 <template>
-    <Photo :show="showPhoto" :member-id="photoId" @uploading="uploadingPhoto" @uploaded="uploadedPhoto"
-        @close="uploadedPhoto" />
-    <Show :show="showViewDialog" :member="selectedMember" @close="closeViewDialog" />
-    <AppLayout title="Members">
-        <template #header>
-            Members
-        </template>
+    <Head title="Member Directory" />
 
-        <Container>
-            <div class="p-6">
-                <div class="py-3 flex items-center gap-2">
-                    <PrimaryButton class="flex items-center gap-1" @click="showDialog = true">
-                        <Icon class="h-5 w-5" type="add" />
-                        New Member
-                    </PrimaryButton>
-                    <SecondaryButton @click="downloadMembers">
-                        <Icon class="h-5 w-5" type="download" />
-                        Download
-                    </SecondaryButton>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <div v-for="member in members.data"
-                        class="shadow p-3 rounded-lg border flex flex-col lg:flex-row items-start gap-2 md:justify-between">
-                        <div class="flex gap-2 items-center">
-                            <img :src="member.photo_url" class="flex-none w-16 h-16 object-cover" />
-                            <div class="flex-1">
-                                <div class="text-base font-semibold uppercase"
-                                    v-text="`${member.first_name} ${member.last_name}`">
-                                </div>
-                                <div class="flex items-center gap-2 text-sm text-gray-600">
-                                    <span v-text="member.phone"></span>&nbsp;|&nbsp;
-                                    <span v-text="member.email"></span>
-                                </div>
+    <AppLayout>
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <PageHeader
+                title="Member Directory"
+                description="Manage church membership, spiritual profiles, households, and lifecycle transitions."
+            >
+                <template #actions>
+                    <PrimaryLink :href="route('members.create')">
+                        + Register New Member
+                    </PrimaryLink>
+                </template>
+            </PageHeader>
+
+            <!-- Status Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-4 scrollbar-none">
+                <button
+                    v-for="tab in statusTabs"
+                    :key="tab.value"
+                    @click="filterByStatus(tab.value)"
+                    :class="[
+                        'px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all',
+                        selectedStatus === tab.value
+                            ? 'bg-gray-800 text-white shadow-sm'
+                            : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50'
+                    ]"
+                >
+                    {{ tab.label }}
+                </button>
+            </div>
+
+            <!-- Toolbar & Search -->
+            <PageToolbar>
+                <template #search>
+                    <SearchBox
+                        v-model="search"
+                        @search="applyFilters"
+                        placeholder="Search by member name, ID, phone, or email..."
+                    />
+                </template>
+                <template #filters>
+                    <select
+                        v-model="selectedOrgUnit"
+                        class="text-xs rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+                    >
+                        <option value="">All Parishes / Units</option>
+                        <option v-for="unit in orgUnits" :key="unit.id" :value="unit.id">
+                            {{ unit.name }}
+                        </option>
+                    </select>
+                </template>
+            </PageToolbar>
+
+            <!-- Members Data Table -->
+            <DataTable
+                :columns="columns"
+                :data="members.data"
+                empty-title="No members registered yet"
+                empty-description="Register church members or visitors to begin tracking spiritual profiles."
+            >
+                <template #cell-full_name="{ row }">
+                    <div class="flex items-center gap-3">
+                        <img
+                            :src="row.photo_url"
+                            :alt="row.full_name"
+                            class="w-9 h-9 rounded-full object-cover border border-gray-200 dark:border-gray-700"
+                        />
+                        <div>
+                            <button
+                                @click="router.get(route('members.show', row.id))"
+                                class="font-bold text-gray-900 dark:text-white text-sm hover:text-indigo-600 text-left transition-colors"
+                            >
+                                {{ row.full_name }}
+                            </button>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                {{ row.member_number || `#MEM-${row.id}` }}
                             </div>
                         </div>
-                        <div class="flex gap-1 self-start lg:self-end">
-                            <SecondaryButton @click="updatePhoto(member.id)">
-                                <Icon type="image" class="h-4 w-4" /><span class="hidden lg:inline-flex">Photo</span>
-                            </SecondaryButton>
-                            <SecondaryButton @click="openViewDialog(member)">
-                                <Icon type="id-card" class="h-4 w-4" /><span class="hidden lg:inline-flex">View</span>
-                            </SecondaryButton>
-                            <SecondaryButton @click="editMember(member)">
-                                <Icon type="edit" class="h-4 w-4" /><span class="hidden lg:inline-flex">Edit</span>
-                            </SecondaryButton>
-                            <SecondaryButton class="text-red-500" @click="deleteMember(member)">
-                                <Icon type="delete" class="h-4 w-4" /><span class="hidden lg:inline-flex">Delete</span>
-                            </SecondaryButton>
+                    </div>
+                </template>
+
+                <template #cell-contact="{ row }">
+                    <div>
+                        <div class="text-xs font-semibold text-gray-800 dark:text-gray-200">
+                            {{ row.phone }}
+                        </div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                            {{ row.email || 'No email' }}
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="px-4">
-                <Paginator :items="members" />
-            </div>
-        </Container>
-    </AppLayout>
-    <Modal :show="showDialog">
-        <div class="p-3 flex items-center justify-between text-gray-700 border-b">
-            <div class="font-semibold uppercase" v-text="titleDialog"></div>
-            <Icon type="times" @click="closeDialog" class="cursor-pointer" />
-        </div>
-        <div class="p-4">
-            <form @submit.prevent="submit">
-                <div class="grid gap-2 grid-cols-1 md:grid-cols-2 mb-6">
-                    <TextInput id="inputFirstName" label="First Name" :error="form.errors.first_name"
-                        v-model="form.first_name" />
-                    <TextInput id="inputLastName" label="Last Name" :error="form.errors.last_name"
-                        v-model="form.last_name" />
-                </div>
-                <div class="grid gap-2 grid-cols-1 md:grid-cols-2 mb-6">
-                    <TextInput id="inputPhone" label="Phone" :error="form.errors.phone" v-model="form.phone" />
-                    <TextInput id="inputEmail" label="Email" :error="form.errors.email" v-model="form.email" />
-                </div>
-                <div class="grid gap-2 grid-cols-1 md:grid-cols-2 mb-6">
-                    <!-- <div>
-                        <TextInput id="inputDateOfBirth" label="Date Of Birth" :error="form.errors.date_of_birth"
-                            v-model="form.date_of_birth" />
-                    </div> -->
-                    <div class="relative z-10 group">
-                        <label for="inputDateOfBirth"
-                            class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Date
-                            of Birth</label>
-                        <VueDatePicker id="inputDateOfBirth" v-model="form.date_of_birth" :format="formatDate" />
-                        <InputError :message="form.errors.date_of_birth" />
+                </template>
+
+                <template #cell-status="{ row }">
+                    <StatusBadge :status="row.status" />
+                </template>
+
+                <template #cell-household="{ row }">
+                    <span v-if="row.household" class="text-xs font-medium text-gray-700 dark:text-gray-300">
+                        {{ row.household.name }}
+                    </span>
+                    <span v-else class="text-xs text-gray-400">None</span>
+                </template>
+
+                <template #cell-org_unit="{ row }">
+                    <span v-if="row.org_unit" class="text-xs font-medium text-gray-700 dark:text-gray-300">
+                        {{ row.org_unit.name }}
+                    </span>
+                    <span v-else class="text-xs text-gray-400">Main Church</span>
+                </template>
+
+                <template #actions="{ row }">
+                    <div class="flex items-center justify-end gap-2">
+                        <button
+                            @click="router.get(route('members.show', row.id))"
+                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 text-xs font-semibold"
+                        >
+                            View
+                        </button>
+                        <span class="text-gray-300 dark:text-gray-700">•</span>
+                        <button
+                            @click="router.get(route('members.edit', row.id))"
+                            class="text-gray-600 dark:text-gray-400 hover:text-gray-900 text-xs font-semibold"
+                        >
+                            Edit
+                        </button>
+                        <span class="text-gray-300 dark:text-gray-700">•</span>
+                        <button
+                            @click="promptDelete(row)"
+                            class="text-rose-600 dark:text-rose-400 hover:text-rose-900 text-xs font-semibold"
+                        >
+                            Delete
+                        </button>
                     </div>
-                    <SelectInput id="inputGender" label="Gender" :error="form.errors.gender" v-model="form.gender"
-                        :options="['Male', 'Female']" />
-                </div>
-                <div class="grid gap-2 grid-cols-1 md:grid-cols-3 mb-6">
-                    <TextInput id="inputBoxNo" label="Box No" :error="form.errors.box_no" v-model="form.box_no" />
-                    <TextInput id="inputPostCode" label="Post Code" :error="form.errors.post_code"
-                        v-model="form.post_code" />
-                    <TextInput id="inputTown" label="Town" :error="form.errors.town" v-model="form.town" />
-                </div>
-                <TextInput class="mb-6" id="inputAddress" label="Address" :error="form.errors.address"
-                    v-model="form.address" />
-                <div class="flex justify-between">
-                    <PrimaryButton :class="{ 'opacity-30': form.processing }" :disabled="form.processing" type="submit">
-                        Save
-                    </PrimaryButton>
-                    <SecondaryButton @click="closeDialog">Cancel</SecondaryButton>
-                </div>
-            </form>
+                </template>
+            </DataTable>
+
+            <Paginator :items="members as any" />
         </div>
 
-    </Modal>
+        <ConfirmationDialog
+            :show="confirmDeleteModal"
+            title="Delete Member Record"
+            :message="`Are you sure you want to delete member ${memberToDelete?.full_name}? This action cannot be undone.`"
+            confirm-button-text="Delete Member"
+            @confirm="deleteMember"
+            @close="confirmDeleteModal = false"
+        />
+    </AppLayout>
 </template>

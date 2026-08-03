@@ -29,9 +29,22 @@ export const tenantLinks: Ref<SidebarLink[]> = ref([
     },
     {
         name: "members",
-        caption: "Members",
+        caption: "Members & Families",
         icon: "id-card",
-        items: null,
+        items: [
+            {
+                name: "members.index",
+                caption: "Member Directory",
+            },
+            {
+                name: "households.index",
+                caption: "Households & Families",
+            },
+            {
+                name: "visitors.index",
+                caption: "Visitor Follow-up",
+            },
+        ],
         show: true,
         permission: 0,
     },
