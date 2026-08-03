@@ -12,6 +12,14 @@ class Offering extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'org_unit_id',
+        'user_id',
+        'offering_type_id',
+        'amount',
+        'offering_date',
+    ];
+
     /**
      * Get the user that owns the Offering
      */

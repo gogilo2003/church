@@ -12,6 +12,14 @@ class Tithe extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'org_unit_id',
+        'user_id',
+        'member_id',
+        'amount',
+        'tithed_on',
+    ];
+
     /**
      * Get the user that owns the Tithe
      */

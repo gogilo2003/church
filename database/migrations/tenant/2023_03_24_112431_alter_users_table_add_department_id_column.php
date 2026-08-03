@@ -12,9 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_admin')->default(false);
-            $table->foreignId('department_id')->nullable();
-            $table->foreign('department_id')->references('id')->on('departments');
+            if (! Schema::hasColumn('users', 'is_admin')) {
+                $table->boolean('is_admin')->default(false);
+            }
+            if (! Schema::hasColumn('users', 'department_id')) {
+                $table->foreignId('department_id')->nullable();
+                $table->foreign('department_id')->references('id')->on('departments');
+            }
         });
     }
 

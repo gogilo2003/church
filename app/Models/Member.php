@@ -13,6 +13,21 @@ class Member extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'org_unit_id',
+        'first_name',
+        'last_name',
+        'gender',
+        'phone',
+        'email',
+        'box_no',
+        'post_code',
+        'town',
+        'address',
+        'date_of_birth',
+        'photo',
+    ];
+
     protected $appends = ['photo_url'];
 
     protected $dates = ['date_of_birth'];
