@@ -1,68 +1,86 @@
-# Role-Based Access Control (RBAC) & Authorization
+# Role-Based Access Control (RBAC) & Authorization Architecture
 
-## Roles Hierarchy (Tenant Scope)
+## Architecture Overview
+
+The system operates a **Dual-Level RBAC & Scope Model**:
+
+1. **Central SaaS Platform Level**: Controls access for Central Platform Staff (`/admin/*` domain routes).
+   - Roles: `super_admin`, `support_agent`, `finance_manager`, `onboarding_agent`.
+   - Evaluated via `EnsureCentralUser` middleware and `$user->isSuperAdmin()` / `$user->hasCentralPermission(...)`.
+2. **Tenant Church Workspace Level**: Controls access for local church staff within isolated tenant subdomains (`/dashboard`, `/members`, `/accounts`, etc.).
+   - Evaluated via `$user->is_admin` (Tenant Super-User bypass) or `$user->hasPermission(...)`.
+
+---
+
+## User & Role Schema (Many-to-Many)
 
 ```
-              ┌───────────────────────────┐
-              │     Church Super Admin    │
-              └─────────────┬─────────────┘
-                            │
-              ┌─────────────┴─────────────┐
-              │                           │
-    ┌─────────▼─────────┐       ┌─────────▼─────────┐
-    │   Pastor / Leader │       │ Finance Manager   │
-    └─────────┬─────────┘       └─────────┬─────────┘
-              │                           │
-    ┌─────────▼─────────┐       ┌─────────▼─────────┐
-    │   Ministry Staff  │       │  Data Collector   │
-    └───────────────────┘       └───────────────────┘
+┌──────────────┐         ┌───────────┐         ┌──────────────┐
+│    User      │ 1     * │ role_user │ *     1 │    Role      │
+├──────────────┤─────────┼───────────┼─────────├──────────────┤
+│ id           │         │ user_id   │         │ id           │
+│ name         │         │ role_id   │         │ title        │
+│ email        │         └───────────┘         │ name         │
+│ is_admin     │                               │ permissions  │ (JSON array)
+│ role         │                               └──────────────┘
+└──────────────┘
 ```
 
-## Permission Matrix
+---
 
-| Module | Super Admin | Pastor / Leader | Finance Manager | Ministry Staff |
-| :--- | :---: | :---: | :---: | :---: |
-| **Members (View/Create/Edit)** | Full | Full | View Only | View / Edit |
-| **Members (Delete)** | Full | Denied | Denied | Denied |
-| **Tithes & Offerings** | Full | View Summary | Full | Denied |
-| **Attendance (Mark/Edit)** | Full | Full | View Only | Full |
-| **SMS Messaging Center** | Full | Full | Denied | Send Only |
-| **Settings & Branding** | Full | Denied | Denied | Denied |
+## Permission Aggregation (`$user->permissions`)
 
-## Implementation Standard
+The `User` model aggregates permissions from all assigned roles into a combined array accessible via `$user->permissions`:
 
-### Spatie Laravel-Permission Integration
-Roles and Permissions exist inside each tenant database schema.
-
-### Policy Method Pattern
 ```php
-declare(strict_types=1);
-
-namespace App\Policies\Tenant;
-
-use App\Models\Tenant\User;
-use App\Models\Tenant\Member;
-
-final class MemberPolicy
+// Backend Model Accessor (App\Models\User)
+public function permissions(): Attribute
 {
-    public function viewAny(User $user): bool
-    {
-        return $user->hasPermissionTo('members.view');
-    }
+    return Attribute::get(function () {
+        if ($this->is_admin) {
+            return ['*']; // Wildcard full access for admins
+        }
 
-    public function create(User $user): bool
-    {
-        return $user->hasPermissionTo('members.create');
-    }
-
-    public function update(User $user, Member $member): bool
-    {
-        return $user->hasPermissionTo('members.edit');
-    }
-
-    public function delete(User $user, Member $member): bool
-    {
-        return $user->hasPermissionTo('members.delete');
-    }
+        return $this->roles
+            ->pluck('permissions')
+            ->filter()
+            ->map(fn ($p) => is_string($p) ? json_decode($p, true) : $p)
+            ->flatten()
+            ->unique()
+            ->values()
+            ->all();
+    });
 }
 ```
+
+---
+
+## Backend Authorization Standard
+
+In Controllers, Middleware, or Policies:
+
+```php
+// Check specific granular permission (Admin automatically bypasses with true)
+if (! $request->user()->hasPermission('members.create')) {
+    abort(403, 'Unauthorized module access');
+}
+```
+
+---
+
+## Frontend Authorization Standard (Vue 3 + Inertia)
+
+Because `permissions` is appended to `User` array serialization (`$appends = ['permissions']`), `$page.props.auth.user.permissions` is automatically exposed to all Vue components:
+
+```vue
+<template>
+    <!-- Wildcard or specific permission check -->
+    <button 
+        v-if="$page.props.auth.user.permissions.includes('*') || $page.props.auth.user.permissions.includes('members.create')"
+        @click="openCreateModal"
+    >
+        + Add New Member
+    </button>
+</template>
+```
+

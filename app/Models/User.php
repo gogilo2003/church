@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasProfilePhoto;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,6 +26,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'username',
+        'phone_number',
+        'status',
         'password',
         'is_admin',
     ];
@@ -50,6 +54,16 @@ class User extends Authenticatable
         'is_admin' => 'boolean',
     ];
 
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->status === 'suspended';
+    }
+
     /**
      * The accessors to append to the model's array form.
      *
@@ -57,6 +71,7 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'permissions',
     ];
 
     /**
@@ -67,9 +82,61 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
     }
 
+    /**
+     * Accessor to crunch permissions from all assigned roles.
+     */
+    public function permissions(): Attribute
+    {
+        return Attribute::get(function () {
+            if ($this->is_admin) {
+                return ['*'];
+            }
+
+            return $this->roles
+                ->pluck('permissions')
+                ->filter()
+                ->map(function ($perms) {
+                    return is_string($perms) ? json_decode($perms, true) : $perms;
+                })
+                ->flatten()
+                ->unique()
+                ->values()
+                ->all();
+        });
+    }
+
     public function isAdmin(): bool
     {
         return (bool) $this->is_admin;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        if ($this->is_admin) {
+            return true;
+        }
+
+        return $this->roles()->whereIn('title', ['Super Admin', 'super_admin'])->exists();
+    }
+
+    public function hasCentralPermission(string $permission): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        return in_array('*', $this->permissions, true) || in_array($permission, $this->permissions, true);
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->is_admin) {
+            return true;
+        }
+
+        $userPerms = $this->permissions;
+
+        return in_array('*', $userPerms, true) || in_array($permission, $userPerms, true);
     }
 
     /**
@@ -94,5 +161,13 @@ class User extends Authenticatable
     public function tithes(): HasMany
     {
         return $this->hasMany(Tithe::class);
+    }
+
+    /**
+     * Get all scope assignments for the User
+     */
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(Assignment::class);
     }
 }

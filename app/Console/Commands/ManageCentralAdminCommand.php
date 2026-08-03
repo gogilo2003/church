@@ -23,14 +23,15 @@ final class ManageCentralAdminCommand extends Command
     protected $signature = 'central:admin
                             {action? : Action to perform (create|list|promote|demote|delete)}
                             {--email= : Target user email address}
-                            {--name= : User full name for creation}';
+                            {--name= : User full name for creation}
+                            {--role= : Central user role (super_admin|support_agent|finance_manager|onboarding_agent)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create, list, promote, demote, or delete Central Platform Admin users';
+    protected $description = 'Create, list, promote, demote, or delete Central Platform Staff users';
 
     /**
      * Execute the console command.
@@ -41,13 +42,13 @@ final class ManageCentralAdminCommand extends Command
 
         if (! $action) {
             $action = select(
-                label: 'Select central admin management action:',
+                label: 'Select central platform management action:',
                 options: [
-                    'create' => 'Create a new Central Admin user',
-                    'list' => 'List all Central Admin users',
-                    'promote' => 'Promote an existing user to Central Admin',
-                    'demote' => 'Demote a Central Admin to regular user',
-                    'delete' => 'Delete a Central Admin user',
+                    'create' => 'Create a new Central Platform Staff user',
+                    'list' => 'List all Central Platform Staff users',
+                    'promote' => 'Promote an existing user to Central Platform Role',
+                    'demote' => 'Demote a Central User to regular status',
+                    'delete' => 'Delete a Central Platform Staff user',
                 ],
                 default: 'create'
             );
@@ -82,6 +83,17 @@ final class ManageCentralAdminCommand extends Command
             }
         );
 
+        $role = $this->option('role') ?? select(
+            label: 'Select Central Platform Role:',
+            options: [
+                'super_admin' => 'Super Admin (Full Platform Control)',
+                'support_agent' => 'Support Agent (Tenant Status & Help)',
+                'finance_manager' => 'Finance Manager (SaaS Subscriptions)',
+                'onboarding_agent' => 'Onboarding Agent (Church Registration)',
+            ],
+            default: 'super_admin'
+        );
+
         $rawPassword = password(
             label: 'Enter admin password:',
             required: true,
@@ -92,11 +104,18 @@ final class ManageCentralAdminCommand extends Command
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($rawPassword),
-            'is_admin' => true,
+            'is_admin' => $role === 'super_admin',
             'email_verified_at' => now(),
         ]);
 
-        $this->info("Central Admin user [{$user->name}] ({$user->email}) created successfully.");
+        $roleModel = \App\Models\Role::firstOrCreate(
+            ['title' => ucwords(str_replace('_', ' ', $role))],
+            ['name' => $role, 'permissions' => $role === 'super_admin' ? ['*'] : ["{$role}.access"]]
+        );
+
+        $user->roles()->sync([$roleModel->id]);
+
+        $this->info("Central Staff user [{$user->name}] ({$user->email}) with role [{$roleModel->title}] created successfully.");
 
         return self::SUCCESS;
     }
