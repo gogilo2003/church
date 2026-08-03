@@ -12,11 +12,20 @@ export const tenantLinks: Ref<SidebarLink[]> = ref([
     },
     {
         name: "users",
-        caption: "Users",
+        caption: "Users & Roles",
         icon: "people",
-        items: null,
+        items: [
+            {
+                name: "users.index",
+                caption: "Users List",
+            },
+            {
+                name: "roles.index",
+                caption: "Role Management",
+            },
+        ],
         show: true,
-        permission: 1,
+        permission: 0,
     },
     {
         name: "members",
@@ -63,6 +72,23 @@ export const tenantLinks: Ref<SidebarLink[]> = ref([
             {
                 name: "accounts-contributions",
                 caption: "Contributions",
+            },
+        ],
+        show: true,
+        permission: 0,
+    },
+    {
+        name: "setup",
+        caption: "Setup & Config",
+        icon: "settings",
+        items: [
+            {
+                name: "setup-departments",
+                caption: "Departments",
+            },
+            {
+                name: "setup-organization",
+                caption: "Organization Hierarchy",
             },
         ],
         show: true,
