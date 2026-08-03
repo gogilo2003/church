@@ -19,6 +19,9 @@ Route::get('/', function () {
     ]);
 });
 
+// Central domain login alias
+Route::get('/login', fn () => redirect()->route('central.admin.login'))->name('login');
+
 // Central Tenant Self-Onboarding Routes
 Route::prefix('register-tenant')->name('central.register-tenant.')->group(function () {
     Route::get('', [RegisterTenantController::class, 'create'])->name('create');
