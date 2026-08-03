@@ -10,18 +10,34 @@ const props = defineProps<{
     toggle?: boolean;
 }>()
 
-const classes = computed(() => {
-    return route().current(props.link.name) || (route().current()?.startsWith(props.link.name) ?? false)
-        ? 'bg-gray-100 text-gray-700 after:shadow-gray-100 before:shadow-gray-100'
-        : 'before:shadow-transparent after:shadow-transparent'
-})
+const getRouteUrl = (name?: string) => {
+    if (!name) return '#';
+    try {
+        return route().has(name) ? route(name) : '#';
+    } catch {
+        return '#';
+    }
+};
 
+const classes = computed(() => {
+    if (!props.link.name) return 'before:shadow-transparent after:shadow-transparent';
+    try {
+        const isCurrent = route().has(props.link.name) && (
+            route().current(props.link.name) || (route().current()?.startsWith(props.link.name) ?? false)
+        );
+        return isCurrent
+            ? 'bg-gray-100 text-gray-700 after:shadow-gray-100 before:shadow-gray-100'
+            : 'before:shadow-transparent after:shadow-transparent';
+    } catch {
+        return 'before:shadow-transparent after:shadow-transparent';
+    }
+});
 </script>
 
 <template>
     <Component :is="link.items ? 'span' : Link" :as="link.as"
         class="cursor-pointer relative text-left before:pointer-events-none after:pointer-events-none w-full flex whitespace-nowrap items-center h-16 gap-4 py-0 pr-4 pl-0 rounded-l-full hover:bg-gray-100 hover:text-gray-700  before:w-[40px] before:h-[40px] before:absolute before:bg-transparent before:-top-[40px] before:right-0 before:shadow-[30px_30px_0_10px] hover:before:shadow-gray-100 before:rounded-full after:w-[40px] after:h-[40px] after:absolute after:bg-transparent after:-bottom-[40px] after:right-0 after:shadow-[30px_-30px_0_10px] hover:after:shadow-gray-100 after:rounded-full hover:before:pointer-events-none hover:after:pointer-events-none group"
-        :href="link.items ? null : route(link.name)" :class="classes">
+        :href="link.items ? null : getRouteUrl(link.name)" :class="classes">
         <div class="h-full w-16 flex-none">
             <Icon :type="link.icon" class="w-8 h-16 mx-4" />
         </div>
@@ -32,7 +48,7 @@ const classes = computed(() => {
             class="absolute z-10 top-full left-16 right-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] overflow-hidden bg-gray-200 min-w-fit transition-all duration-500 rounded-b-3xl">
             <div class="flex flex-col overflow-hidden group-hover:py-4 transition-all duration-500 gap-2">
                 <Link class="mx-2 px-3 py-2 hover:bg-gray-50 rounded-lg" v-for="{ name, caption } in link.items"
-                    :href="route(name)">{{
+                    :href="getRouteUrl(name)">{{
         caption }}</Link>
             </div>
         </div>

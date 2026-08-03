@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import Dropdown from '../Components/Dropdown.vue';
 import DropdownLink from '../Components/DropdownLink.vue';
 import ResponsiveNavLink from '../Components/ResponsiveNavLink.vue';
@@ -19,8 +19,67 @@ const page = usePage<PageProps>();
 
 const showingNavigationDropdown = ref(false);
 
+const isCentral = computed(() => page.url.startsWith('/admin'));
+
+const dashboardRouteUrl = computed(() => {
+    try {
+        if (isCentral.value && route().has('central.admin.dashboard')) {
+            return route('central.admin.dashboard');
+        }
+        return route().has('dashboard') ? route('dashboard') : '#';
+    } catch {
+        return '#';
+    }
+});
+
+const isDashboardActive = computed(() => {
+    try {
+        if (isCentral.value && route().has('central.admin.dashboard')) {
+            return route().current('central.admin.dashboard');
+        }
+        return route().has('dashboard') && route().current('dashboard');
+    } catch {
+        return false;
+    }
+});
+
+const profileRouteUrl = computed(() => {
+    try {
+        return route().has('profile.edit') ? route('profile.edit') : '#';
+    } catch {
+        return '#';
+    }
+});
+
+const hasProfileRoute = computed(() => {
+    try {
+        return route().has('profile.edit');
+    } catch {
+        return false;
+    }
+});
+
+const isProfileActive = computed(() => {
+    try {
+        return route().has('profile.edit') && route().current('profile.edit');
+    } catch {
+        return false;
+    }
+});
+
+const logoutRouteUrl = computed(() => {
+    try {
+        if (isCentral.value && route().has('central.admin.logout')) {
+            return route('central.admin.logout');
+        }
+        return route().has('logout') ? route('logout') : '#';
+    } catch {
+        return '#';
+    }
+});
+
 const logout = () => {
-    router.post(route('logout'));
+    router.post(logoutRouteUrl.value);
 };
 
 const toggle = () => {
@@ -31,7 +90,7 @@ const toggle = () => {
 <template>
     <nav class="bg-white border-b border-gray-100">
         <!-- Primary Navigation Menu -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mx-4 px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex flex-1">
                     <!-- Menu start-->
@@ -57,14 +116,14 @@ const toggle = () => {
 
                             <template #content>
                                 <!-- Account Management -->
-                                <DropdownLink :href="route('profile.edit')">
+                                <DropdownLink v-if="hasProfileRoute" :href="profileRouteUrl">
                                     Profile
                                 </DropdownLink>
 
-                                <div class="border-t border-gray-200" />
+                                <div v-if="hasProfileRoute" class="border-t border-gray-200" />
 
                                 <!-- Authentication -->
-                                <DropdownLink :href="route('logout')" method="post" as="button">
+                                <DropdownLink :href="logoutRouteUrl" method="post" as="button">
                                     Log Out
                                 </DropdownLink>
                             </template>
@@ -95,7 +154,7 @@ const toggle = () => {
         <!-- Responsive Navigation Menu -->
         <div :class="{ 'block': showingNavigationDropdown, 'hidden': !showingNavigationDropdown }" class="sm:hidden">
             <div class="pt-2 pb-3 space-y-1">
-                <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                <ResponsiveNavLink :href="dashboardRouteUrl" :active="isDashboardActive">
                     Dashboard
                 </ResponsiveNavLink>
             </div>
@@ -119,12 +178,12 @@ const toggle = () => {
                 </div>
 
                 <div class="mt-3 space-y-1">
-                    <ResponsiveNavLink :href="route('profile.edit')" :active="route().current('profile.edit')">
+                    <ResponsiveNavLink v-if="hasProfileRoute" :href="profileRouteUrl" :active="isProfileActive">
                         Profile
                     </ResponsiveNavLink>
 
                     <!-- Authentication -->
-                    <ResponsiveNavLink :href="route('logout')" method="post" as="button">
+                    <ResponsiveNavLink :href="logoutRouteUrl" method="post" as="button">
                         Log Out
                     </ResponsiveNavLink>
                 </div>
