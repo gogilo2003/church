@@ -29,7 +29,7 @@ defineProps<{
         </template>
 
         <div class="py-6">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mx-4 sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6">
                     <DataTable :value="members.data" responsiveLayout="scroll">
                         <Column field="id" header="ID"></Column>

@@ -97,25 +97,22 @@ const deleteUnit = (id: number) => {
             </h2>
         </template>
 
-        <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+        <div class="py-12 mx-4 sm:px-6 lg:px-8 space-y-8">
             <!-- Header Banner -->
-            <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-gray-900 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div
+                class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-gray-900 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h3 class="text-2xl font-bold">{{ organization.name }}</h3>
-                    <p class="text-indigo-200 text-sm mt-1">{{ definition.name }} • Configured Levels: {{ levels.length }}</p>
+                    <p class="text-indigo-200 text-sm mt-1">{{ definition.name }} • Configured Levels: {{ levels.length
+                        }}</p>
                 </div>
                 <div class="flex gap-3">
-                    <button
-                        @click="showLevelModal = true"
-                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow transition"
-                    >
+                    <button @click="showLevelModal = true"
+                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow transition">
                         + Add Structure Level
                     </button>
-                    <button
-                        @click="showUnitModal = true"
-                        :disabled="levels.length === 0"
-                        class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow transition"
-                    >
+                    <button @click="showUnitModal = true" :disabled="levels.length === 0"
+                        class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow transition">
                         + Add Unit / Branch
                     </button>
                 </div>
@@ -128,17 +125,18 @@ const deleteUnit = (id: number) => {
                 </h4>
 
                 <div v-if="levels.length === 0" class="text-center py-8 text-gray-500 text-sm">
-                    No hierarchy levels defined yet. Click <strong>"+ Add Structure Level"</strong> to define your structure (e.g., Region → Diocese → District → Parish → Church).
+                    No hierarchy levels defined yet. Click <strong>"+ Add Structure Level"</strong> to define your
+                    structure
+                    (e.g., Region → Diocese → District → Parish → Church).
                 </div>
 
                 <div v-else class="flex flex-wrap items-center gap-3">
-                    <div
-                        v-for="(lvl, index) in levels"
-                        :key="lvl.id"
-                        class="flex items-center gap-3"
-                    >
-                        <div class="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 text-center min-w-[140px]">
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-500">Level {{ lvl.depth + 1 }}</span>
+                    <div v-for="(lvl, index) in levels" :key="lvl.id" class="flex items-center gap-3">
+                        <div
+                            class="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 text-center min-w-[140px]">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-500">Level {{
+                                lvl.depth + 1
+                                }}</span>
                             <div class="font-extrabold text-gray-900 text-base mt-0.5">{{ lvl.name }}</div>
                             <span class="text-xs text-gray-500">({{ lvl.plural_name }})</span>
                         </div>
@@ -175,7 +173,8 @@ const deleteUnit = (id: number) => {
                                     {{ unit.name }}
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">
                                         {{ unit.level?.name || 'N/A' }}
                                     </span>
                                 </td>
@@ -190,10 +189,8 @@ const deleteUnit = (id: number) => {
                                     <div class="text-gray-400">{{ unit.email || '' }}</div>
                                 </td>
                                 <td class="py-3 px-4 text-right">
-                                    <button
-                                        @click="deleteUnit(unit.id)"
-                                        class="text-red-600 hover:text-red-800 font-bold text-xs"
-                                    >
+                                    <button @click="deleteUnit(unit.id)"
+                                        class="text-red-600 hover:text-red-800 font-bold text-xs">
                                         Delete
                                     </button>
                                 </td>
@@ -205,46 +202,57 @@ const deleteUnit = (id: number) => {
         </div>
 
         <!-- Add Hierarchy Level Modal -->
-        <div v-if="showLevelModal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div v-if="showLevelModal"
+            class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Add Structure Level</h3>
                 <form @submit.prevent="submitLevel" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Singular Name</label>
-                        <input v-model="levelForm.name" type="text" placeholder="e.g., Diocese or District" class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required />
+                        <input v-model="levelForm.name" type="text" placeholder="e.g., Diocese or District"
+                            class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required />
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Plural Name</label>
-                        <input v-model="levelForm.plural_name" type="text" placeholder="e.g., Dioceses or Districts" class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required />
+                        <input v-model="levelForm.plural_name" type="text" placeholder="e.g., Dioceses or Districts"
+                            class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required />
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Rank / Depth Index</label>
-                        <input v-model="levelForm.depth" type="number" min="0" class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required />
+                        <input v-model="levelForm.depth" type="number" min="0"
+                            class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required />
                     </div>
                     <div class="flex justify-end gap-3 pt-4">
-                        <button type="button" @click="showLevelModal = false" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100">Cancel</button>
-                        <button type="submit" :disabled="levelForm.processing" class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow">Save Level</button>
+                        <button type="button" @click="showLevelModal = false"
+                            class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100">Cancel</button>
+                        <button type="submit" :disabled="levelForm.processing"
+                            class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow">Save
+                            Level</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- Add Organizational Unit Modal -->
-        <div v-if="showUnitModal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div v-if="showUnitModal"
+            class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Add Organizational Unit</h3>
                 <form @submit.prevent="submitUnit" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Structure Level</label>
-                        <select v-model="unitForm.hierarchy_level_id" class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required>
+                        <select v-model="unitForm.hierarchy_level_id"
+                            class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required>
                             <option v-for="lvl in levels" :key="lvl.id" :value="lvl.id">
                                 {{ lvl.name }} (Level {{ lvl.depth + 1 }})
                             </option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Parent Unit (Optional)</label>
-                        <select v-model="unitForm.parent_id" class="w-full rounded-xl border-gray-300 shadow-sm text-sm">
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Parent Unit
+                            (Optional)</label>
+                        <select v-model="unitForm.parent_id"
+                            class="w-full rounded-xl border-gray-300 shadow-sm text-sm">
                             <option value="">— None (Top Level) —</option>
                             <option v-for="u in units" :key="u.id" :value="u.id">
                                 {{ u.name }} ({{ u.level?.name || 'Unit' }})
@@ -253,25 +261,32 @@ const deleteUnit = (id: number) => {
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Unit Name</label>
-                        <input v-model="unitForm.name" type="text" placeholder="e.g., St. Paul Parish or Western Region" class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required />
+                        <input v-model="unitForm.name" type="text" placeholder="e.g., St. Paul Parish or Western Region"
+                            class="w-full rounded-xl border-gray-300 shadow-sm text-sm" required />
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Code / Abbreviation</label>
-                        <input v-model="unitForm.code" type="text" placeholder="e.g., REG-01" class="w-full rounded-xl border-gray-300 shadow-sm text-sm" />
+                        <input v-model="unitForm.code" type="text" placeholder="e.g., REG-01"
+                            class="w-full rounded-xl border-gray-300 shadow-sm text-sm" />
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Phone</label>
-                            <input v-model="unitForm.phone" type="text" placeholder="+123..." class="w-full rounded-xl border-gray-300 shadow-sm text-sm" />
+                            <input v-model="unitForm.phone" type="text" placeholder="+123..."
+                                class="w-full rounded-xl border-gray-300 shadow-sm text-sm" />
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Email</label>
-                            <input v-model="unitForm.email" type="email" placeholder="unit@church.org" class="w-full rounded-xl border-gray-300 shadow-sm text-sm" />
+                            <input v-model="unitForm.email" type="email" placeholder="unit@church.org"
+                                class="w-full rounded-xl border-gray-300 shadow-sm text-sm" />
                         </div>
                     </div>
                     <div class="flex justify-end gap-3 pt-4">
-                        <button type="button" @click="showUnitModal = false" class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100">Cancel</button>
-                        <button type="submit" :disabled="unitForm.processing" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow">Save Unit</button>
+                        <button type="button" @click="showUnitModal = false"
+                            class="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100">Cancel</button>
+                        <button type="submit" :disabled="unitForm.processing"
+                            class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow">Save
+                            Unit</button>
                     </div>
                 </form>
             </div>

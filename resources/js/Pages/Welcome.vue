@@ -18,11 +18,15 @@ defineProps<{
         <!-- Background Ambient Glow Overlay -->
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-b from-gray-950/90 via-gray-950/75 to-gray-950"></div>
-            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-indigo-600/20 blur-[120px] pointer-events-none rounded-full"></div>
-            <div class="absolute top-1/3 left-1/3 w-[300px] h-[250px] bg-amber-500/10 blur-[100px] pointer-events-none rounded-full"></div>
+            <div
+                class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-indigo-600/20 blur-[120px] pointer-events-none rounded-full">
+            </div>
+            <div
+                class="absolute top-1/3 left-1/3 w-[300px] h-[250px] bg-amber-500/10 blur-[100px] pointer-events-none rounded-full">
+            </div>
         </div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative z-10 mx-4 px-4 sm:px-6 lg:px-8">
             <!-- Navigation Header -->
             <header class="flex items-center justify-between py-6 border-b border-white/10">
                 <div class="flex items-center gap-3">
@@ -51,16 +55,18 @@ defineProps<{
                     <span class="text-amber-400">🕊️</span>
                     Built for Pastors, Finance Officers & Ministry Leaders
                 </span>
-                
+
                 <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.15]">
                     Focus Less on Admin, <br class="hidden sm:inline" />
-                    <span class="bg-gradient-to-r from-amber-200 via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
+                    <span
+                        class="bg-gradient-to-r from-amber-200 via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
                         More on Shepherding Your People
                     </span>
                 </h1>
-                
+
                 <p class="mt-6 text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-normal">
-                    Replace chaotic spreadsheets and fragmented paper files. Effortlessly manage your member directory, track tithes & offerings, and send instant SMS updates—all in one warm, intuitive workspace.
+                    Replace chaotic spreadsheets and fragmented paper files. Effortlessly manage your member directory,
+                    track tithes & offerings, and send instant SMS updates—all in one warm, intuitive workspace.
                 </p>
 
                 <!-- Primary Self-Onboarding CTA -->
@@ -85,8 +91,10 @@ defineProps<{
             <!-- Problem-to-Solution Feature Section -->
             <section class="py-16 border-t border-white/10">
                 <div class="text-center max-w-2xl mx-auto mb-14">
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">Designed to Solve Daily Ministry Challenges</h2>
-                    <p class="text-base text-gray-400 mt-3">Simple, intentional tools that help your team stay organized so your congregation can thrive.</p>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">Designed to Solve Daily
+                        Ministry Challenges</h2>
+                    <p class="text-base text-gray-400 mt-3">Simple, intentional tools that help your team stay organized
+                        so your congregation can thrive.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -99,7 +107,8 @@ defineProps<{
                         </div>
                         <h3 class="text-xl font-bold text-white">Centralized Member Directory</h3>
                         <p class="text-sm text-gray-300 mt-2.5 leading-relaxed">
-                            No more missing records. Keep full member profiles, family groups, baptism dates, and ministry departments structured and instantly searchable.
+                            No more missing records. Keep full member profiles, family groups, baptism dates, and
+                            ministry departments structured and instantly searchable.
                         </p>
                     </div>
 
@@ -112,7 +121,8 @@ defineProps<{
                         </div>
                         <h3 class="text-xl font-bold text-white">Tithes & Giving Clarity</h3>
                         <p class="text-sm text-gray-300 mt-2.5 leading-relaxed">
-                            Record tithes, Sunday offerings, and building fund contributions accurately. Generate transparent financial reports for leadership in clicks.
+                            Record tithes, Sunday offerings, and building fund contributions accurately. Generate
+                            transparent financial reports for leadership in clicks.
                         </p>
                     </div>
 
@@ -125,7 +135,8 @@ defineProps<{
                         </div>
                         <h3 class="text-xl font-bold text-white">Instant Congregation Reach</h3>
                         <p class="text-sm text-gray-300 mt-2.5 leading-relaxed">
-                            Send targeted SMS broadcasts for Sunday reminders, prayer requests, or emergency updates directly to specific departments or the whole church.
+                            Send targeted SMS broadcasts for Sunday reminders, prayer requests, or emergency updates
+                            directly to specific departments or the whole church.
                         </p>
                     </div>
                 </div>
@@ -134,7 +145,8 @@ defineProps<{
                 <div
                     class="mt-14 bg-gradient-to-r from-indigo-950/80 via-gray-900 to-indigo-950/80 border border-indigo-500/30 rounded-3xl p-8 sm:p-10 text-center max-w-3xl mx-auto shadow-2xl backdrop-blur-md">
                     <h3 class="text-2xl font-extrabold text-white">Ready to simplify your church administration?</h3>
-                    <p class="text-sm sm:text-base text-gray-300 mt-3 max-w-xl mx-auto">Create your church's dedicated database and workspace right now. It takes less than a minute.</p>
+                    <p class="text-sm sm:text-base text-gray-300 mt-3 max-w-xl mx-auto">Create your church's dedicated
+                        database and workspace right now. It takes less than a minute.</p>
                     <div class="mt-7">
                         <Link :href="route('central.register-tenant.create')"
                             class="inline-flex items-center px-7 py-3.5 rounded-xl text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg shadow-indigo-600/30 hover:-translate-y-0.5">
