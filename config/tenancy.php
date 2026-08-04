@@ -24,9 +24,10 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        '127.0.0.1',
-        'localhost',
-        'church.test',
+        // '127.0.0.1',
+        // 'localhost',
+        // 'church.test',
+        env('CENTRAL_DOMAIN', 'church.test'),
     ],
 
     /**
@@ -59,7 +60,7 @@ return [
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'tenant',
+        'prefix' => 'tenant_',
         'suffix' => '',
 
         /**
@@ -71,13 +72,13 @@ return [
             'mariadb' => MySQLDatabaseManager::class,
             'pgsql' => PostgreSQLDatabaseManager::class,
 
-        /**
+            /**
          * Use this database manager for MySQL to have a DB user created for each tenant database.
          * You can customize the grants given to these users by changing the $grants property.
          */
             // 'mysql' => Stancl\Tenancy\TenantDatabaseManagers\PermissionControlledMySQLDatabaseManager::class,
 
-        /**
+            /**
          * Disable the pgsql manager above, and enable the one below if you
          * want to separate tenant DBs by schemas rather than databases.
          */
