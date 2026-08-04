@@ -26,6 +26,7 @@ return [
     'central_domains' => [
         '127.0.0.1',
         'localhost',
+        'church.test',
     ],
 
     /**
