@@ -15,9 +15,27 @@ use App\Services\HierarchicalReportService;
 use App\Services\HierarchyService;
 use App\Services\ScopeAuthorizationService;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
 beforeEach(function () {
     $this->artisan('migrate', [
-        '--path' => 'database/migrations/tenant',
+        '--path' => [
+            'database/migrations/tenant/2026_08_01_000001_create_organizations_table.php',
+            'database/migrations/tenant/2026_08_01_000002_create_hierarchy_definitions_table.php',
+            'database/migrations/tenant/2026_08_01_000003_create_hierarchy_levels_table.php',
+            'database/migrations/tenant/2026_08_01_000004_create_organizational_units_table.php',
+            'database/migrations/tenant/2026_08_01_000005_create_org_unit_closures_table.php',
+            'database/migrations/tenant/2026_08_01_000006_create_institutions_table.php',
+            'database/migrations/tenant/2026_08_01_000007_create_projects_table.php',
+            'database/migrations/tenant/2026_08_01_000008_create_assignments_table.php',
+            'database/migrations/tenant/2026_08_01_000009_add_org_unit_id_to_domain_tables.php',
+            'database/migrations/tenant/2023_07_24_061459_create_members_table.php',
+            'database/migrations/tenant/2023_09_11_054852_create_attendances_table.php',
+            'database/migrations/tenant/2024_03_09_050413_create_tithes_table.php',
+            'database/migrations/tenant/2024_03_09_050519_create_offerings_table.php',
+        ],
     ]);
 });
 

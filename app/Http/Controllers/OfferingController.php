@@ -53,7 +53,18 @@ class OfferingController extends Controller
         $offering->amount = $request->amount;
         $offering->offering_type_id = $request->type;
         $offering->user_id = $request->user()->id;
+        $offering->org_unit_id = $request->org_unit_id ?? $request->user()->org_unit_id;
         $offering->save();
+
+        if ($offering->org_unit_id) {
+            app(\App\Services\RevenueSharingService::class)->processTransaction(
+                $offering,
+                'offering_type',
+                $offering->offering_type_id ? (int) $offering->offering_type_id : null,
+                (int) $offering->org_unit_id,
+                (float) $offering->amount
+            );
+        }
 
         return redirect()->back()->with('success', 'Offering stored');
     }

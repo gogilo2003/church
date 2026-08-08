@@ -52,6 +52,9 @@ Route::middleware([
         Route::prefix('setup')
             ->name('setup')
             ->group(function () {
+                Route::get('vote-heads', [\App\Http\Controllers\VoteHeadController::class, 'index'])->name('-vote-heads');
+                Route::post('vote-heads', [\App\Http\Controllers\VoteHeadController::class, 'store'])->name('-vote-heads-store');
+
                 Route::prefix('departments')
                     ->name('-departments')
                     ->group(function () {
@@ -233,6 +236,16 @@ Route::middleware([
                         Route::post('', 'store')->name('-store');
                         Route::patch('', 'update')->name('-update');
                     });
+            });
+
+        // Revenue Sharing & Distribution Management
+        Route::prefix('revenue-sharing')
+            ->name('revenue-sharing.')
+            ->controller(\App\Http\Controllers\RevenueSharingController::class)
+            ->group(function () {
+                Route::get('', 'index')->name('index');
+                Route::post('rules', 'storeRule')->name('rules.store');
+                Route::post('simulate', 'simulate')->name('simulate');
             });
     });
 

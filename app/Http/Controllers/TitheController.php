@@ -41,7 +41,18 @@ class TitheController extends Controller
         $tithe->tithed_on = $request->tithed_on;
         $tithe->amount = $request->amount;
         $tithe->user_id = $request->user()->id;
+        $tithe->org_unit_id = $request->org_unit_id ?? $request->user()->org_unit_id;
         $tithe->save();
+
+        if ($tithe->org_unit_id) {
+            app(\App\Services\RevenueSharingService::class)->processTransaction(
+                $tithe,
+                'tithe',
+                null,
+                (int) $tithe->org_unit_id,
+                (float) $tithe->amount
+            );
+        }
 
         return redirect()->back()->with('success', 'Tithe stored');
     }
