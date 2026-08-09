@@ -47,5 +47,8 @@ final class TenantDefaultSeeder extends Seeder
                 $type
             );
         }
+
+        // Seed Default Tenant Roles with Granular Permissions
+        $this->call(TenantRoleSeeder::class);
     }
 }

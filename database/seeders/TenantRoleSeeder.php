@@ -11,9 +11,8 @@ class TenantRoleSeeder extends Seeder
     {
         $roles = [
             [
-                'title' => 'Pastor',
+                'title' => 'Pastor / Senior Leader',
                 'name' => 'pastor',
-                'display_name' => 'Pastor / Senior Leader',
                 'description' => 'Full access to members, spiritual growth, attendance, pastoral care, and communication.',
                 'permissions' => json_encode([
                     'members.view', 'members.create', 'members.edit',
@@ -23,9 +22,8 @@ class TenantRoleSeeder extends Seeder
                 ]),
             ],
             [
-                'title' => 'Finance Officer',
+                'title' => 'Finance Officer / Treasurer',
                 'name' => 'finance_officer',
-                'display_name' => 'Finance Officer / Treasurer',
                 'description' => 'Access to tithes, offerings, contributions, payment tracking, and financial statements.',
                 'permissions' => json_encode([
                     'accounts.view', 'accounts.create', 'accounts.edit',
@@ -34,9 +32,8 @@ class TenantRoleSeeder extends Seeder
                 ]),
             ],
             [
-                'title' => 'Secretary',
+                'title' => 'Church Secretary / Administrator',
                 'name' => 'secretary',
-                'display_name' => 'Church Secretary / Administrator',
                 'description' => 'Access to member directory, attendance entry, SMS announcements, and general admin tasks.',
                 'permissions' => json_encode([
                     'members.view', 'members.create', 'members.edit',
@@ -45,9 +42,8 @@ class TenantRoleSeeder extends Seeder
                 ]),
             ],
             [
-                'title' => 'Department Leader',
+                'title' => 'Department / Ministry Leader',
                 'name' => 'department_leader',
-                'display_name' => 'Department / Ministry Leader',
                 'description' => 'Access to department member lists and department service attendance.',
                 'permissions' => json_encode([
                     'members.view',
@@ -55,9 +51,8 @@ class TenantRoleSeeder extends Seeder
                 ]),
             ],
             [
-                'title' => 'Auditor',
+                'title' => 'Financial Auditor',
                 'name' => 'auditor',
-                'display_name' => 'Financial Auditor',
                 'description' => 'Read-only access to financial ledgers, tithes, offerings, and compliance records.',
                 'permissions' => json_encode([
                     'accounts.view', 'tithes.view', 'offerings.view', 'contributions.view',
