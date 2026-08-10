@@ -8,6 +8,13 @@ use Stancl\Tenancy\Events\TenantCreated;
 
 uses(RefreshDatabase::class);
 
+test('guest can view central landing page', function () {
+    $response = $this->get('/');
+
+    $response->assertOk()
+        ->assertInertia(fn ($page) => $page->component('Welcome'));
+});
+
 test('guest can view tenant self-registration page', function () {
     $response = $this->get(route('central.register-tenant.create'));
 
