@@ -23,12 +23,12 @@ return [
      *
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
-    'central_domains' => [
-        // '127.0.0.1',
-        // 'localhost',
-        // 'church.test',
+    'central_domains' => array_values(array_unique(array_filter([
         env('CENTRAL_DOMAIN', 'church.test'),
-    ],
+        'church.test',
+        'localhost',
+        '127.0.0.1',
+    ]))),
 
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.
