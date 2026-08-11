@@ -27,7 +27,7 @@ foreach ($centralDomains as $domain) {
         })->name('welcome');
 
         // Central domain login alias
-        Route::get('/login', fn() => redirect()->route('central.admin.login'))->name('login');
+        Route::get('/login', fn() => redirect()->route('central.admin.login'))->name('central.login');
 
         // Central Tenant Self-Onboarding Routes
         Route::prefix('register-tenant')->name('central.register-tenant.')->group(function () {

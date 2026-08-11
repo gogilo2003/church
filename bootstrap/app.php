@@ -17,12 +17,15 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectGuestsTo(function (Request $request) {
-            if ($request->is('admin*') || $request->is('admin')) {
+            $centralDomains = array_values(array_unique(array_filter((array) config('tenancy.central_domains', []))));
+            if (in_array($request->getHost(), $centralDomains, true) || $request->is('admin*') || $request->is('admin')) {
                 return route('central.admin.login');
             }
+
             if (Route::has('login')) {
                 return route('login');
             }
+
             return route('central.admin.login');
         });
 
