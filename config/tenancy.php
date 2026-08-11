@@ -25,9 +25,9 @@ return [
      */
     'central_domains' => array_values(array_unique(array_filter([
         env('CENTRAL_DOMAIN', 'church.test'),
-        'church.test',
-        'localhost',
-        '127.0.0.1',
+        // 'church.test',
+        // 'localhost',
+        // '127.0.0.1',
     ]))),
 
     /**

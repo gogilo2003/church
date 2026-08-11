@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Central Domain Routes (Protected by EnsureCentralDomain middleware)
-$centralDomains = array_unique(array_filter(config('tenancy.central_domains', ['church.test', '127.0.0.1', 'localhost'])));
+$centralDomains = array_unique(array_filter(config('tenancy.central_domains')));
 
 foreach ($centralDomains as $domain) {
     Route::domain($domain)->middleware(EnsureCentralDomain::class)->group(function () {
@@ -24,10 +24,10 @@ foreach ($centralDomains as $domain) {
                 'laravelVersion' => Application::VERSION,
                 'phpVersion' => PHP_VERSION,
             ]);
-        });
+        })->name('welcome');
 
         // Central domain login alias
-        Route::get('/login', fn () => redirect()->route('central.admin.login'))->name('login');
+        Route::get('/login', fn() => redirect()->route('central.admin.login'))->name('login');
 
         // Central Tenant Self-Onboarding Routes
         Route::prefix('register-tenant')->name('central.register-tenant.')->group(function () {
@@ -71,4 +71,4 @@ foreach ($centralDomains as $domain) {
     });
 }
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
