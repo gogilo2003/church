@@ -13,10 +13,6 @@ final class EnsureCentralDomain
     {
         $centralDomains = config('tenancy.central_domains');
 
-        // if (app()->environment('testing') && in_array($request->getHost(), ['localhost', '127.0.0.1'], true)) {
-        //     return $next($request);
-        // }
-
         if (! in_array($request->getHost(), $centralDomains, true)) {
             abort(404);
         }

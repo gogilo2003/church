@@ -59,8 +59,8 @@ final class RegisterTenantController extends Controller
 
         // Redirect user to tenant login or confirmation URL
         $tenantDomain = $tenant->domains()->where('is_primary', true)->first()?->domain ?? $dto->subdomain;
-        $appHost = config('app.url', 'http://localhost');
-        $scheme = parse_url($appHost, PHP_URL_SCHEME) ?? 'http';
+        $appHost = config('app.url', 'https://church.test');
+        $scheme = parse_url($appHost, PHP_URL_SCHEME) ?? 'https';
         $baseHost = parse_url($appHost, PHP_URL_HOST) ?? 'church.test';
 
         $redirectUrl = "{$scheme}://{$tenantDomain}.{$baseHost}/login";
