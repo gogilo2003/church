@@ -25,10 +25,10 @@ class UserController extends Controller
     public function index(Request $request): Response
     {
         $filters = $request->only(['search', 'status', 'sort_by', 'sort_order']);
-        $users = $this->userService->getPaginatedUsers($filters, 15);
+        $users = $this->userService->getUsersPageData($filters, 15);
 
         return Inertia::render('Users/Index', [
-            'users' => UserResource::collection($users),
+            'users' => $users,
             'filters' => $filters,
         ]);
     }

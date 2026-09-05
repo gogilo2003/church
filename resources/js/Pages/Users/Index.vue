@@ -30,7 +30,13 @@ interface UserItem {
 }
 
 const props = defineProps<{
-    users: any;
+    users: {
+        data: UserItem[];
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+    };
     filters?: {
         search?: string;
         status?: string;

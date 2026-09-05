@@ -2,20 +2,32 @@
 
 namespace App\Services;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use App\Repositories\Eloquent\UserRepository;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    public function __construct(
-        protected UserRepositoryInterface $userRepository
-    ) {}
+    protected UserRepository $userRepository;
 
-    public function getPaginatedUsers(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    public function __construct(
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->userRepository = $userRepository;
+    }
+
+    public function getUsersPageData(array $filters = [], int $perPage = 15): array
     {
-        return $this->userRepository->getPaginated($filters, $perPage);
+        $users = UserResource::collection($this->userRepository->getPaginated($filters, $perPage))
+            ->response()
+            ->getData(true);
+
+        return array_merge($users['meta'], [
+            'data' => $users['data'],
+            'links' => $users['meta']['links'],
+        ]);
     }
 
     public function findUser(int $id): ?User
