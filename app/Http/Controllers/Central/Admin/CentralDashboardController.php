@@ -25,8 +25,8 @@ final class CentralDashboardController extends Controller
             ->get()
             ->map(fn ($tenant) => [
                 'id' => $tenant->id,
-                'church_name' => $tenant->data['church_name'] ?? $tenant->id,
-                'admin_email' => $tenant->data['admin_email'] ?? null,
+                'church_name' => $tenant->church_name ?? $tenant->id,
+                'admin_email' => $tenant->admin_email ?? null,
                 'subdomain' => $tenant->domains->where('is_primary', true)->first()?->domain ?? $tenant->id,
                 'custom_domains' => $tenant->domains->where('is_primary', false)->pluck('domain')->all(),
                 'created_at' => $tenant->created_at?->diffForHumans() ?? 'Recently',

@@ -20,14 +20,12 @@ final class TenantProvisioningService
         return DB::connection($connection)->transaction(function () use ($data) {
             $tenant = Tenant::create([
                 'id' => $data->subdomain,
-                'data' => [
-                    'church_name' => $data->churchName,
-                    'admin_name' => $data->adminName,
-                    'admin_email' => $data->adminEmail,
-                    'admin_password' => bcrypt($data->adminPassword),
-                    'phone' => $data->phone,
-                    'is_central_admin_created' => $data->isCentralAdminCreated,
-                ],
+                'church_name' => $data->churchName,
+                'admin_name' => $data->adminName,
+                'admin_email' => $data->adminEmail,
+                'admin_password' => bcrypt($data->adminPassword),
+                'phone' => $data->phone,
+                'is_central_admin_created' => $data->isCentralAdminCreated,
             ]);
 
             // Register internal subdomain (storing ONLY the alphanumeric string, e.g. "abc")
@@ -59,22 +57,20 @@ final class TenantProvisioningService
     public function updateTenantDetails(string $tenantId, array $data): Tenant
     {
         $tenant = Tenant::findOrFail($tenantId);
-        $tenantData = $tenant->data ?? [];
 
         if (isset($data['church_name'])) {
-            $tenantData['church_name'] = trim($data['church_name']);
+            $tenant->church_name = trim($data['church_name']);
         }
         if (isset($data['admin_name'])) {
-            $tenantData['admin_name'] = trim($data['admin_name']);
+            $tenant->admin_name = trim($data['admin_name']);
         }
         if (isset($data['admin_email'])) {
-            $tenantData['admin_email'] = trim($data['admin_email']);
+            $tenant->admin_email = trim($data['admin_email']);
         }
         if (isset($data['phone'])) {
-            $tenantData['phone'] = trim($data['phone']);
+            $tenant->phone = trim($data['phone']);
         }
 
-        $tenant->data = $tenantData;
         $tenant->save();
 
         return $tenant;

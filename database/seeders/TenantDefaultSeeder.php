@@ -18,9 +18,9 @@ final class TenantDefaultSeeder extends Seeder
         $tenant = tenant();
 
         if ($tenant) {
-            $adminEmail = $tenant->data['admin_email'] ?? 'admin@church.test';
-            $adminName = $tenant->data['admin_name'] ?? 'Church Administrator';
-            $adminPassword = $tenant->data['admin_password'] ?? Hash::make('password');
+            $adminEmail = $tenant->admin_email ?? 'admin@church.test';
+            $adminName = $tenant->admin_name ?? 'Church Administrator';
+            $adminPassword = $tenant->admin_password ?? Hash::make('password');
 
             // Seed Tenant Admin User in tenant DB
             User::firstOrCreate(
