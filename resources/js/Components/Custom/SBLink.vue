@@ -2,13 +2,15 @@
 import { Link } from '@inertiajs/vue3'
 import Icon from '../../Components/Icons/Icon.vue'
 import { computed } from 'vue';
-import { LinkSubItem, SidebarLink } from '@/types';
+import { SidebarLink } from '@/types';
+import { useLinks } from '@/Composables/useLinks';
 
 const props = defineProps<{
     link: SidebarLink;
-    active: boolean;
     toggle?: boolean;
 }>()
+
+const { isLinkActive } = useLinks();
 
 const getRouteUrl = (name?: string) => {
     if (!name) return '#';
@@ -22,10 +24,7 @@ const getRouteUrl = (name?: string) => {
 const classes = computed(() => {
     if (!props.link.name) return 'before:shadow-transparent after:shadow-transparent';
     try {
-        const isCurrent = route().has(props.link.name) && (
-            route().current(props.link.name) || (route().current()?.startsWith(props.link.name) ?? false)
-        );
-        return isCurrent
+        return isLinkActive(props.link)
             ? 'bg-gray-100 text-gray-700 after:shadow-gray-100 before:shadow-gray-100'
             : 'before:shadow-transparent after:shadow-transparent';
     } catch {

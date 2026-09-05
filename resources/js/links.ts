@@ -4,11 +4,10 @@ import { SidebarLink } from './types'
 export const tenantLinks: Ref<SidebarLink[]> = ref([
     {
         name: "dashboard",
-        caption: "Church Dashboard",
+        caption: "Dashboard",
         icon: "dashboard",
         items: null,
         show: true,
-        permission: 0,
     },
     {
         name: "users",
@@ -25,7 +24,6 @@ export const tenantLinks: Ref<SidebarLink[]> = ref([
             },
         ],
         show: true,
-        permission: 0,
     },
     {
         name: "members",
@@ -46,7 +44,7 @@ export const tenantLinks: Ref<SidebarLink[]> = ref([
             },
         ],
         show: true,
-        permission: 0,
+        permission: "members.view",
     },
     {
         name: "attendance",
@@ -54,7 +52,7 @@ export const tenantLinks: Ref<SidebarLink[]> = ref([
         icon: "attendance",
         items: null,
         show: true,
-        permission: 0,
+        permission: "attendance.view",
     },
     {
         name: "messaging",
@@ -67,7 +65,7 @@ export const tenantLinks: Ref<SidebarLink[]> = ref([
             },
         ],
         show: true,
-        permission: 0,
+        permission: "sms.send",
     },
     {
         name: "accounts",
@@ -88,7 +86,7 @@ export const tenantLinks: Ref<SidebarLink[]> = ref([
             },
         ],
         show: true,
-        permission: 0,
+        permission: "accounts.view",
     },
     {
         name: "setup",
@@ -105,7 +103,7 @@ export const tenantLinks: Ref<SidebarLink[]> = ref([
             },
         ],
         show: true,
-        permission: 0,
+        permission: "organization.view",
     },
 ])
 
@@ -116,7 +114,7 @@ export const centralAdminLinks: Ref<SidebarLink[]> = ref([
         icon: "dashboard",
         items: null,
         show: true,
-        permission: 1,
+        permission: "admin",
     },
     {
         name: "central.admin.tenants.index",
@@ -124,7 +122,7 @@ export const centralAdminLinks: Ref<SidebarLink[]> = ref([
         icon: "home",
         items: null,
         show: true,
-        permission: 1,
+        permission: "admin",
     },
     {
         name: "central.register-tenant.create",
@@ -132,7 +130,7 @@ export const centralAdminLinks: Ref<SidebarLink[]> = ref([
         icon: "add",
         items: null,
         show: true,
-        permission: 1,
+        permission: "admin",
     },
 ])
 
@@ -146,7 +144,6 @@ export const linksBottom: Ref<SidebarLink[]> = ref([
         icon: "people",
         items: null,
         show: true,
-        permission: 0,
     },
     {
         name: "logout",
@@ -154,7 +151,6 @@ export const linksBottom: Ref<SidebarLink[]> = ref([
         icon: "logout",
         items: null,
         show: true,
-        permission: 0,
         as: 'button',
         method: 'post'
     },

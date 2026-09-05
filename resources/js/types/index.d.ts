@@ -293,7 +293,7 @@ export interface SidebarLink {
     icon?: string;
     items?: LinkSubItem[] | null;
     show?: boolean;
-    permission?: number;
+    permission?: number | string | string[];
     as?: string;
     method?: string;
 }

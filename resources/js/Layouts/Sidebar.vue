@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import ApplicationLogo from '../Components/ApplicationLogo.vue';
-import { tenantLinks, centralAdminLinks, linksBottom } from '../links';
 import SBLink from '../Components/Custom/SBLink.vue';
+import { useLinks } from '@/Composables/useLinks';
 
 withDefaults(defineProps<{
     toggleState?: boolean;
@@ -11,17 +10,7 @@ withDefaults(defineProps<{
     toggleState: () => localStorage.getItem('toggleMenu') == '1'
 });
 
-const isCentralContext = computed(() => {
-    return route().current()?.startsWith('central.') ?? false;
-});
-
-const activeNavLinks = computed(() => {
-    if (isCentralContext.value) {
-        return centralAdminLinks.value;
-    }
-
-    return tenantLinks.value;
-});
+const { topLinks, bottomLinks, isCentralContext } = useLinks();
 </script>
 
 <template>
@@ -36,21 +25,19 @@ const activeNavLinks = computed(() => {
         <!-- Sidebar Navigation List -->
         <div class="flex-1 flex justify-between flex-col">
             <ul class="relative">
-                <li class="relative block w-76" v-for="link in activeNavLinks" :key="link.name">
+                <li class="relative block w-76" v-for="link in topLinks" :key="link.name">
                     <SBLink
                         :link="link"
-                        :active="route().current(link.name) || (route().current()?.startsWith(link.name) ?? false)"
                         :toggle="toggleState"
                     />
                 </li>
             </ul>
             <ul class="relative">
-                <li class="relative block w-76" v-for="link in linksBottom" :key="link.name">
+                <li class="relative block w-76" v-for="link in bottomLinks" :key="link.name">
                     <SBLink
                         :method="link?.method"
                         :as="link?.as ?? 'a'"
                         :link="link"
-                        :active="route().current(link.name)"
                         :toggle="toggleState"
                     />
                 </li>
