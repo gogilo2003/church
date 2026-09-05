@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use App\Repositories\Contracts\RoleRepositoryInterface;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class RoleService
@@ -13,9 +13,16 @@ class RoleService
         protected RoleRepositoryInterface $roleRepository
     ) {}
 
-    public function getPaginatedRoles(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    public function getRolesPageData(array $filters = [], int $perPage = 15): array
     {
-        return $this->roleRepository->getPaginated($filters, $perPage);
+        $roles = RoleResource::collection($this->roleRepository->getPaginated($filters, $perPage))
+            ->response()
+            ->getData(true);
+
+        return array_merge($roles['meta'], [
+            'data' => $roles['data'],
+            'links' => $roles['meta']['links'],
+        ]);
     }
 
     public function getAllRoles(): Collection

@@ -26,10 +26,10 @@ class RoleController extends Controller
     public function index(Request $request): Response
     {
         $filters = $request->only(['search', 'sort_by', 'sort_order']);
-        $roles = $this->roleService->getPaginatedRoles($filters, 15);
+        $roles = $this->roleService->getRolesPageData($filters, 15);
 
         return Inertia::render('Roles/Index', [
-            'roles' => RoleResource::collection($roles),
+            'roles' => $roles,
             'filters' => $filters,
         ]);
     }
