@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Head, useForm, router } from '@inertiajs/vue3';
+import { Head, Link, useForm, router } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Modal from '@/Components/Modal.vue';
 import TextInput from '@/Components/TextInput.vue';
@@ -234,6 +234,11 @@ const runMigrations = (tenantId?: string) => {
                             class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-900 text-xs font-semibold">
                             + Domain
                         </button>
+                        <span class="text-gray-300 dark:text-gray-700">•</span>
+                        <Link :href="route('central.admin.tenants.users.index', row.id)"
+                            class="text-blue-600 dark:text-blue-400 hover:text-blue-900 text-xs font-semibold">
+                            Users
+                        </Link>
                         <span class="text-gray-300 dark:text-gray-700">•</span>
                         <button @click="runMigrations(row.id)"
                             class="text-amber-600 dark:text-amber-400 hover:text-amber-900 text-xs font-semibold">

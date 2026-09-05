@@ -4,6 +4,18 @@ namespace App\Providers;
 
 use App\Events\PaymentRegistered;
 use App\Listeners\UpdateContributionStatus;
+use App\Repositories\Contracts\HouseholdRepositoryInterface;
+use App\Repositories\Contracts\MemberRepositoryInterface;
+use App\Repositories\Contracts\RoleRepositoryInterface;
+use App\Repositories\Contracts\TenantUserRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\Contracts\VisitorFollowUpRepositoryInterface;
+use App\Repositories\Eloquent\HouseholdRepository;
+use App\Repositories\Eloquent\MemberRepository;
+use App\Repositories\Eloquent\RoleRepository;
+use App\Repositories\Eloquent\TenantUserRepository;
+use App\Repositories\Eloquent\UserRepository;
+use App\Repositories\Eloquent\VisitorFollowUpRepository;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Vite;
@@ -17,28 +29,33 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            \App\Repositories\Contracts\UserRepositoryInterface::class,
-            \App\Repositories\Eloquent\UserRepository::class
+            UserRepositoryInterface::class,
+            UserRepository::class
         );
 
         $this->app->bind(
-            \App\Repositories\Contracts\RoleRepositoryInterface::class,
-            \App\Repositories\Eloquent\RoleRepository::class
+            RoleRepositoryInterface::class,
+            RoleRepository::class
         );
 
         $this->app->bind(
-            \App\Repositories\Contracts\MemberRepositoryInterface::class,
-            \App\Repositories\Eloquent\MemberRepository::class
+            MemberRepositoryInterface::class,
+            MemberRepository::class
         );
 
         $this->app->bind(
-            \App\Repositories\Contracts\HouseholdRepositoryInterface::class,
-            \App\Repositories\Eloquent\HouseholdRepository::class
+            HouseholdRepositoryInterface::class,
+            HouseholdRepository::class
         );
 
         $this->app->bind(
-            \App\Repositories\Contracts\VisitorFollowUpRepositoryInterface::class,
-            \App\Repositories\Eloquent\VisitorFollowUpRepository::class
+            VisitorFollowUpRepositoryInterface::class,
+            VisitorFollowUpRepository::class
+        );
+
+        $this->app->bind(
+            TenantUserRepositoryInterface::class,
+            TenantUserRepository::class
         );
     }
 

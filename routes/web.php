@@ -3,7 +3,10 @@
 use App\Http\Controllers\Central\Admin\CentralAuthController;
 use App\Http\Controllers\Central\Admin\CentralDashboardController;
 use App\Http\Controllers\Central\Admin\TenantManagementController;
+use App\Http\Controllers\Central\Admin\TenantUserController;
 use App\Http\Controllers\Central\RegisterTenantController;
+use App\Http\Controllers\OnboardingWizardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SmsController;
 use App\Http\Middleware\EnsureCentralDomain;
 use App\Http\Middleware\EnsureCentralUser;
@@ -27,7 +30,7 @@ foreach ($centralDomains as $domain) {
         })->name('welcome');
 
         // Central domain login alias
-        Route::get('/login', fn() => redirect()->route('central.admin.login'))->name('central.login');
+        Route::get('/login', fn () => redirect()->route('central.admin.login'))->name('central.login');
 
         // Central Tenant Self-Onboarding Routes
         Route::prefix('register-tenant')->name('central.register-tenant.')->group(function () {
@@ -36,16 +39,16 @@ foreach ($centralDomains as $domain) {
         });
         Route::get('/api/central/check-subdomain', [RegisterTenantController::class, 'checkSubdomain'])->name('central.check-subdomain');
 
-        Route::get('/onboarding/wizard', [\App\Http\Controllers\OnboardingWizardController::class, 'wizard'])->name('central.onboarding.wizard');
-        Route::post('/api/central/apply-preset', [\App\Http\Controllers\OnboardingWizardController::class, 'applyPreset'])->name('central.onboarding.apply-preset');
+        Route::get('/onboarding/wizard', [OnboardingWizardController::class, 'wizard'])->name('central.onboarding.wizard');
+        Route::post('/api/central/apply-preset', [OnboardingWizardController::class, 'applyPreset'])->name('central.onboarding.apply-preset');
 
         // Central SMS Callback
         Route::post('/messaging/sms-callback', [SmsController::class, 'callback']);
 
         Route::middleware(['auth'])->group(function () {
-            Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
-            Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-            Route::delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         });
 
         // Central Platform Staff Authentication Routes
@@ -65,10 +68,18 @@ foreach ($centralDomains as $domain) {
                     Route::put('/{tenant}', [TenantManagementController::class, 'update'])->name('update');
                     Route::post('/add-custom-domain', [TenantManagementController::class, 'addCustomDomain'])->name('add-custom-domain');
                     Route::post('/migrate', [TenantManagementController::class, 'migrate'])->name('migrate');
+
+                    Route::prefix('{tenant}/users')->name('users.')->controller(TenantUserController::class)->group(function () {
+                        Route::get('', 'index')->name('index');
+                        Route::post('', 'store')->name('store');
+                        Route::patch('{user}', 'update')->name('update');
+                        Route::patch('{user}/status', 'toggleStatus')->name('toggle-status');
+                        Route::post('{user}/reset-password', 'resetPassword')->name('reset-password');
+                    });
                 });
             });
         });
     });
 }
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
