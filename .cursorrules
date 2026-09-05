@@ -21,8 +21,8 @@
    - Always verify PHP backend changes with `php artisan test` or `vendor/bin/pint --test`.
 
 ## Primary Knowledge Base
-- System Architecture: `.ai/knowledge/architecture.md`
-- Multi-Tenancy Specs: `.ai/knowledge/tenancy.md`
-- Coding Standards: `.ai/knowledge/coding-standards.md`
-- Implementation Playbooks: `.ai/skills/`
-- Full AI Context: `.ai/context.md`
+- System Architecture: `docs/knowledge/architecture.md`
+- Multi-Tenancy Specs: `docs/knowledge/tenancy.md`
+- Coding Standards: `docs/knowledge/coding-standards.md`
+- Implementation Playbooks: `.agents/skills/`
+- Full AI Context: `.agents/context.md`

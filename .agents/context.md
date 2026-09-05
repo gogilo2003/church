@@ -8,11 +8,14 @@
 ## Project Structure Overview
 
 ```
-.ai/
-├── knowledge/         # Architectural knowledge base & system standards
-├── skills/            # Actionable implementation playbooks
+.agents/
 ├── agents/            # Specialized AI agent roles & responsibilities
+├── skills/            # Actionable implementation playbooks
+├── rules/             # Agent workflow rules
 └── context.md         # System overview & agent orientation
+
+docs/
+└── knowledge/         # Architectural knowledge base & system standards
 ```
 
 ## Architectural Guidelines Summary
@@ -21,4 +24,4 @@
 3. **Frontend**: Vue 3 `<script setup lang="ts">`. No `any` types. PrimeVue UI components styled with Tailwind CSS.
 4. **Testing**: Feature & Tenant tests written in Pest PHP.
 
-Before writing code, AI agents MUST consult the relevant file in `.ai/knowledge/` and follow the execution steps in `.ai/skills/`.
+Before writing code, AI agents MUST consult the relevant file in `docs/knowledge/` and follow the execution steps in `.agents/skills/`.

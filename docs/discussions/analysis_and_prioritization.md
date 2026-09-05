@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-The User Requirements Specification (`.ai/discussions/notes.md`) outlines a vision for an **all-in-one Church Operations & Ministry Ecosystem**. It elevates the platform from a standard local-church tracking tool into a multi-tier, hierarchical SaaS platform capable of managing independent local congregations as well as large denominational structures (e.g., General Council → Diocese → District → Parish → Local Church).
+The User Requirements Specification (`docs/discussions/notes.md`) outlines a vision for an **all-in-one Church Operations & Ministry Ecosystem**. It elevates the platform from a standard local-church tracking tool into a multi-tier, hierarchical SaaS platform capable of managing independent local congregations as well as large denominational structures (e.g., General Council → Diocese → District → Parish → Local Church).
 
 ---
 
@@ -110,5 +110,5 @@ To avoid building a monolithic, bloated application all at once, we recommend ex
 
 ## 5. Next Action Plan
 
-1. **Store Analysis File**: Created `.ai/discussions/analysis_and_prioritization.md` for team alignment.
+1. **Store Analysis File**: Created `docs/discussions/analysis_and_prioritization.md` for team alignment.
 2. **Begin Phase 1 Implementation**: Start with **Member Lifecycle**, **Family / Household Relationships**, and **Visitor Follow-up Pipeline**.
