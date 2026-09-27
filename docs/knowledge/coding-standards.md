@@ -1,22 +1,23 @@
 # Coding Standards & Design Conventions
 
-## PHP 8.4 & Laravel Standards
+## PHP 8.3+ & Laravel Standards
 
 ### PHP Features Usage
 - **Strict Types**: Every PHP file MUST start with `declare(strict_types=1);`.
-- **Property Hooks & Asymmetric Visibility**: Utilize PHP 8.4 property hooks where beneficial for calculated attributes.
-- **Constructor Property Promotion**: Always use constructor property promotion in Services, Repositories, and Actions.
+- **Constructor Property Promotion**: Always use constructor property promotion with `private readonly` properties in Services, Repositories, and Actions.
 - **Match Expressions**: Prefer `match` expressions over `switch` statements.
 - **Enums**: Use Backed Enums (`string` backed) for all domain statuses and static types (`MemberStatus`, `PaymentMethod`, `SmsStatus`).
+- **PHP 8.4 Features**: Avoid PHP 8.4-specific syntax (e.g. property hooks or asymmetric visibility) until the execution runtime environment is upgraded past PHP 8.3.
 
-### Code Formatting
+### Code Formatting & Verification
 - Follow **PSR-12** standards strictly.
-- Run `composer lint` (Pint) before committing.
+- Format code with `composer pint`.
+- Verify full project compliance (Pint + TypeScript) with `composer check`.
 
 ```php
 declare(strict_types=1);
 
-namespace App\Services\Tenant;
+namespace App\Services;
 
 use App\Enums\MemberStatus;
 use App\Repositories\Contracts\MemberRepositoryInterface;
@@ -76,9 +77,9 @@ const fullName = computed(() => `${props.member.first_name} ${props.member.last_
 ```
 
 ## Naming Conventions
-- **Controllers**: Singular noun + `Controller` (`MemberController.php`).
+- **Controllers**: Singular noun + `Controller` (`MemberController.php`). Maximum 15 lines per method.
 - **Services**: Singular noun + `Service` (`AttendanceService.php`).
-- **Repositories**: `Interface` suffix for contract (`MemberRepositoryInterface.php`), `Repository` suffix for implementation (`MemberRepository.php`).
+- **Repositories**: `Interface` suffix for contract in `App\Repositories\Contracts\` (`MemberRepositoryInterface.php`), `Repository` suffix for implementation in `App\Repositories\Eloquent\` (`MemberRepository.php`).
 - **FormRequests**: Action + Resource + `Request` (`StoreMemberRequest.php`, `UpdateTitheRequest.php`).
 - **Policies**: Resource + `Policy` (`MemberPolicy.php`).
 - **Vue Components**: PascalCase (`MemberCard.vue`, `SelectInput.vue`).

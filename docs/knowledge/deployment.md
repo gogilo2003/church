@@ -1,7 +1,7 @@
 # Deployment & DevOps Pipeline
 
 ## Production Infrastructure Requirements
-- **PHP**: 8.4 CLI + FPM (`bcmath`, `ctype`, `fileinfo`, `json`, `mbstring`, `openssl`, `pdo_mysql`, `tokenizer`, `xml`)
+- **PHP**: 8.3+ CLI + FPM (`bcmath`, `ctype`, `fileinfo`, `json`, `mbstring`, `openssl`, `pdo_mysql`, `tokenizer`, `xml`)
 - **MySQL**: 8.0+ or MariaDB 10.11+ (Support for dynamic database creation)
 - **Node.js**: 20+ LTS
 - **Redis**: 7.0+ (Session, Cache, Queue driver)
