@@ -1,4 +1,4 @@
-# Gemini / Antigravity AI Guidelines
+# GitHub Copilot Instructions
 
 This repository uses [`AGENTS.md`](file:///home/ogilo/Projects/church/current/AGENTS.md) as the canonical instructions for all AI coding assistants.
 
